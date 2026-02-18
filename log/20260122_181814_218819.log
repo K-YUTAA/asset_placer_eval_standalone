@@ -1,0 +1,524 @@
+AI Layout Generation Log
+timestamp: 20260122_181814_218819
+
+[AI Settings]
+step1_model: gpt-5.2
+step2_model: gpt-5.2
+reasoning_effort: high
+text_verbosity: high
+image_detail: high
+max_output_tokens: 48000
+max_retries: 1
+retry_delay_sec: 1.0
+
+[Step 1 Stats]
+time_sec: 96.77850914001465
+input_tokens: 1858
+output_tokens: 3858
+total_tokens: 5716
+
+[Step 2 Stats]
+time_sec: 84.53049898147583
+input_tokens: 7324
+output_tokens: 3327
+total_tokens: 10651
+
+[Total Stats]
+time_sec: 181.30900812149048
+input_tokens: 9182
+output_tokens: 7185
+total_tokens: 16367
+
+[Analysis Text]
+以下は、提示画像（手描き平面図）から読み取れる家具配置を、**xy平面（上=+Y、下=-Y、右=+X、左=-X）**として解釈し、さらに各家具の**「機能的な正面（functional front）」**を推論して整理したものです。  
+（寸法が厳密に与えられていないため、一般的な家具サイズを前提に「全家具が部屋に収まる」ことを最優先して推定しています。）
+
+---
+
+## 1) 部屋（座標系）の前提（推定）
+
+- 部屋形状：縦長の長方形
+- 推定部屋サイズ（家具が無理なく収まる現実的サイズの一例）  
+  - **X方向（幅）= 約4.0 m**（左壁 x=-2.0 ～ 右壁 x=+2.0）  
+  - **Y方向（奥行）= 約6.5 m**（下壁 y=-3.25 ～ 上壁 y=+3.25）
+- 原点：部屋の中心付近を (0,0) とする
+
+---
+
+## 2) 開口部（ドア・窓）の位置関係
+
+### ドア
+- **右壁（+X側）上寄り**に1つ
+- 図では扉が右側へ振れて描かれているため、**室内側への開き**としては「右壁から室内へ入る」動線が主。
+- 機能的には「右壁にある出入口」なので、室内への法線方向（室内に向かう向き）を正面とみなすと：
+  - **ドアの機能的正面：左（-X）**（右壁から部屋の中を向く）
+
+### 窓
+1) **上壁（+Y側）中央付近**に横長窓  
+   - 室内へ向く向き：**下（-Y）**
+2) **左壁（-X側）下寄り**に縦長窓  
+   - 室内へ向く向き：**右（+X）**
+
+> 窓の高さ条件（z=1m〜2m）について：  
+- 例：窓下端 z=1.0m、窓上端 z=2.0m（一般的な腰窓〜高窓レンジ）  
+- 2つの窓ともこの範囲に収まる設定で問題ありません。
+
+---
+
+## 3) 家具レイアウトの大枠（ゾーニング）
+
+画像から、部屋は大きく2ゾーンです。
+
+1) **上側（+Y側）＝キッチン＆ダイニングゾーン**
+- 上壁側に収納（Cupboard）
+- その下にKitchen Unit（キッチンカウンター）
+- そこから下方向（-Y）へ伸びる形でDining Table（ペニンシュラ／T字っぽい配置）
+- Dining chairがテーブル左右に配置
+
+2) **下側（-Y側）＝リビングゾーン**
+- 左寄りにTV（縦長の薄い長方形）
+- 中央にLow Table（ローテーブル）
+- 右寄りにSofa
+- 左下にHouse Plant
+
+---
+
+## 4) 各家具の「位置関係」と「機能的な向き」詳細（推定）
+
+以下、位置は「だいたいの中心座標（x,y）」で示します（厳密測定ではなく、相対関係が矛盾しないように推定）。
+
+---
+
+### A. Cupboard（上壁側の収納）
+- **カテゴリ**: drawer / storage（収納家具）
+- **位置（推定）**: 部屋上側、左寄り  
+  - 例：中心 (x=-0.9, y=+2.8)
+- **設置**: 上壁（+Y壁）に沿って横長
+- **機能的正面**（扉が開き、物を出し入れする側）:  
+  - **下（-Y）**（部屋の中央側に向いている）
+
+- **search_prompt（英語）**:  
+  `"wall-mounted storage cabinet with doors, simple modern design"`
+
+---
+
+### B. Kitchen Unit（キッチンユニット）
+- **カテゴリ**: appliance / kitchen（キッチン設備）
+- **位置（推定）**: 左上エリア、cupboardの下  
+  - 例：中心 (x=-0.9, y=+1.7)
+- **設置**: 左側寄りで横長、調理・シンク等があるカウンター想定
+- **機能的正面**（作業者が立つ側）:  
+  - 図のテーブル接続・動線から、部屋中央側へ向いているのが自然  
+  - **下（-Y）**（ダイニングテーブル側に立つ想定）
+
+- **search_prompt（英語）**:  
+  `"compact kitchen counter unit with cabinets, countertop workspace"`
+
+---
+
+### C. Dining Table（ダイニングテーブル：ペニンシュラ状）
+- **カテゴリ**: table
+- **位置（推定）**: 部屋上中部、キッチンから下へ伸びる  
+  - 例：中心 (x=-0.2, y=+0.9)
+- **形状解釈**:  
+  - 上側でKitchen Unitとつながり、下方向へ細長く伸びる「ペニンシュラ／一体型テーブル」的
+- **向き（軸）**: 長手方向が**上下（Y方向）**
+- **機能的正面**: テーブル自体は“正面”が必須ではないが、主な着座が左右にあるため、**利用の主方向は左右（±X）**。  
+  - ここでは「テーブルの主利用面（椅子が向く面）」を機能的正面相当としてまとめると：  
+  - **左・右（-X と +X の両側が主利用面）**（片面固定ではない）
+
+- **search_prompt（英語）**:  
+  `"modern dining table, rectangular top, simple legs"`
+
+---
+
+### D. Dining Chairs（ダイニングチェア×4）
+図では、テーブルの左右に2脚ずつ（合計4脚）あります。  
+椅子は「座る人の視線方向＝機能的正面」です。
+
+#### D1. 左側の椅子（2脚）
+- **カテゴリ**: chair
+- **位置（推定）**: テーブル左側（xが負側）、yは中段に2点  
+  - 例：(-1.4, +1.2), (-1.4, +0.6)
+- **機能的正面**: テーブルへ向くので  
+  - **右（+X）**
+
+- **search_prompt（英語）**:  
+  `"dining chair, armless, simple modern style"`
+
+#### D2. 右側の椅子（2脚）
+- **カテゴリ**: chair
+- **位置（推定）**: テーブル右側（xが正側）  
+  - 例：(+0.9, +1.2), (+0.9, +0.6)
+- **機能的正面**: テーブルへ向くので  
+  - **左（-X）**
+
+- **search_prompt（英語）**:  
+  `"dining chair, armless, simple modern style"`
+
+---
+
+### E. TV（テレビ）
+- **カテゴリ**: appliance（家電）
+- **位置（推定）**: 部屋下側、左壁寄り（リビングゾーン左）  
+  - 例：中心 (x=-1.6, y=-0.9)
+- **設置**: 左側に縦長の薄い長方形として描写（TV/TVスタンド想定）
+- **機能的正面**（画面が向く方向）:  
+  - ソファ・ローテーブルが右側にあるため、視聴者は右側から見る配置が自然  
+  - **右（+X）**（部屋中央〜右側を向いている）
+
+- **search_prompt（英語）**:  
+  `"flat-screen TV on a slim stand, minimalist design"`
+
+---
+
+### F. Low Table（ローテーブル／コーヒーテーブル）
+- **カテゴリ**: table
+- **位置（推定）**: リビング中央（TVとソファの間）  
+  - 例：中心 (x=0.0, y=-1.3)
+- **向き（軸）**: 図では縦長長方形なので、長手方向は**上下（Y方向）**
+- **機能的正面**: ローテーブルも基本的に正面は固定されないが、主利用者（ソファ）側を“正面相当”とするなら：  
+  - ソファが右にあるため、利用者は右側から手を伸ばす  
+  - **右（+X）側が主利用側**（＝機能的正面相当を「右」とみなす）
+
+- **search_prompt（英語）**:  
+  `"rectangular coffee table, low height, simple modern design"`
+
+---
+
+### G. Sofa（ソファ）
+- **カテゴリ**: chair（座家具） / sofa
+- **位置（推定）**: リビング右側（右壁寄り・下寄り）  
+  - 例：中心 (x=+1.2, y=-1.3)
+- **機能的正面**（座った人の視線方向）:  
+  - TVが左側にあるため、ソファはTV方向を向くのが自然  
+  - **左（-X）**（部屋中央〜左を向く）
+
+- **search_prompt（英語）**:  
+  `"modern 2-3 seat sofa, straight silhouette, upholstered fabric"`
+
+---
+
+### H. House Plant（観葉植物）
+- **カテゴリ**: appliance / decor（装飾）※家具というよりインテリア要素
+- **位置（推定）**: 左下隅寄り  
+  - 例：中心 (x=-1.4, y=-2.8)
+- **機能的正面**: 植物は通常、明確な正面なし  
+  - **正面なし（向きなし）**
+
+- **search_prompt（英語）**:  
+  `"potted indoor house plant, medium size, decorative"`
+
+---
+
+## 5) まとめ（機能的な向き一覧：画像の上下左右で明示）
+
+- **Cupboard**：正面＝**下（-Y）**
+- **Kitchen Unit**：正面＝**下（-Y）**
+- **Dining Table**：正面固定なし（主利用面は**左右（±X）**）
+- **Dining Chair（左側2脚）**：正面＝**右（+X）**
+- **Dining Chair（右側2脚）**：正面＝**左（-X）**
+- **TV**：正面＝**右（+X）**
+- **Low Table**：正面固定なし（主利用側相当＝**右（+X）**）
+- **Sofa**：正面＝**左（-X）**
+- **House Plant**：正面なし
+- **Door（右壁）**：室内への向き（正面相当）＝**左（-X）**
+- **Window（上壁）**：室内側＝**下（-Y）**
+- **Window（左壁）**：室内側＝**右（+X）**
+
+---
+
+必要なら、次のステップとして：
+- 家具ごとの**回転角（例：yaw=0/90/180/270）**への変換
+- 家具の**占有矩形（幅×奥行）**の具体推定
+- 家具同士の**クリアランス（通路幅）**チェック
+- この分析をそのまま使える **JSON（objects配列）** 形式への整形
+
+も作れます。JSON出力形式（必要キー：id, category, search_prompt, position{x,y}, size{w,d}, facing{dir} など）の希望があれば指定してください。
+
+[AABB Collisions]
+- TopWall_Horizontal_Window vs Wall_Cupboard_Cabinet: overlap_volume=0.016000000000000007
+- TopWall_Horizontal_Window vs Compact_Kitchen_Unit_Counter: overlap_volume=0.01800000000000001
+- TopWall_Horizontal_Window vs Peninsula_Dining_Table: overlap_volume=0.014999999999999998
+- TopWall_Horizontal_Window vs Dining_Chair_Right_Upper: overlap_volume=0.0405
+- TopWall_Horizontal_Window vs Dining_Chair_Right_Lower: overlap_volume=0.0405
+- TopWall_Horizontal_Window vs Rectangular_Low_Coffee_Table: overlap_volume=0.013999999999999999
+- TopWall_Horizontal_Window vs RightSide_Fabric_Sofa: overlap_volume=0.029749999999999988
+- LeftWall_Vertical_Window vs Wall_Cupboard_Cabinet: overlap_volume=0.03600000000000003
+- LeftWall_Vertical_Window vs Compact_Kitchen_Unit_Counter: overlap_volume=0.06300000000000006
+- Wall_Cupboard_Cabinet vs Compact_Kitchen_Unit_Counter: overlap_volume=0.7920000000000001
+- Wall_Cupboard_Cabinet vs Peninsula_Dining_Table: overlap_volume=0.30375
+- Wall_Cupboard_Cabinet vs Dining_Chair_Left_Upper: overlap_volume=0.16200000000000006
+- Wall_Cupboard_Cabinet vs Dining_Chair_Left_Lower: overlap_volume=0.16200000000000006
+- Wall_Cupboard_Cabinet vs Slim_LivingRoom_TV: overlap_volume=0.06480000000000007
+- Wall_Cupboard_Cabinet vs Rectangular_Low_Coffee_Table: overlap_volume=0.08100000000000003
+- Wall_Cupboard_Cabinet vs Corner_House_Plant: overlap_volume=0.18000000000000002
+- Compact_Kitchen_Unit_Counter vs Peninsula_Dining_Table: overlap_volume=0.4725
+- Compact_Kitchen_Unit_Counter vs Dining_Chair_Left_Upper: overlap_volume=0.18225000000000008
+- Compact_Kitchen_Unit_Counter vs Dining_Chair_Left_Lower: overlap_volume=0.18225000000000008
+- Compact_Kitchen_Unit_Counter vs Slim_LivingRoom_TV: overlap_volume=0.1134000000000001
+- Compact_Kitchen_Unit_Counter vs Rectangular_Low_Coffee_Table: overlap_volume=0.12600000000000003
+- Compact_Kitchen_Unit_Counter vs Corner_House_Plant: overlap_volume=0.225
+- Peninsula_Dining_Table vs Rectangular_Low_Coffee_Table: overlap_volume=0.18000000000000002
+- Dining_Chair_Left_Upper vs Dining_Chair_Left_Lower: overlap_volume=0.18225000000000008
+- Dining_Chair_Left_Upper vs Slim_LivingRoom_TV: overlap_volume=0.04657500000000009
+- Dining_Chair_Left_Upper vs Corner_House_Plant: overlap_volume=0.1721250000000001
+- Dining_Chair_Left_Lower vs Slim_LivingRoom_TV: overlap_volume=0.04657500000000009
+- Dining_Chair_Left_Lower vs Corner_House_Plant: overlap_volume=0.1721250000000001
+- Dining_Chair_Right_Upper vs Dining_Chair_Right_Lower: overlap_volume=0.18225
+- Dining_Chair_Right_Upper vs RightSide_Fabric_Sofa: overlap_volume=0.06693749999999997
+- Dining_Chair_Right_Lower vs RightSide_Fabric_Sofa: overlap_volume=0.06693749999999997
+- Slim_LivingRoom_TV vs Corner_House_Plant: overlap_volume=0.0990000000000001
+
+[Room Size]
+area_size_X: 4.0
+area_size_Y: 6.5
+
+[Inputs]
+image_path: C:/Users/tmaru/isaacsim/inputs_isaac/living_room2.jpeg
+
+[dimensions.txt]
+家具の大きさは一般的に考えて常識的なサイズで推論してください。
+また、部屋のサイズもそれに応じてお願いします。
+窓の高さはzが1m~2mの間に設置してください
+
+[prompt1]
+この画像から家具の位置関係と家具の向きを詳細に理解してください。部屋のレイアウトはxy平面で考えてください（上=+Y、下=-Y、右=+X、左=-X）。特に、各家具の「機能的な向き」（例：テレビは部屋の中央を向く、椅子は机を向くなど）を推論し、その向きを分析に含めてください。ただし、家具の寸法と部屋のサイズが図面と矛盾する場合は、すべての家具が部屋に収まることを最優先してください。
+さらに、各家具について
+- bed / chair / table / drawer / door / window / appliance などのカテゴリ
+- 後続のJSONで search_prompt として利用できる、簡潔な英語の説明（家具の種類・用途・主要な特徴のみを含め、「ベッドの正面のテレビ」のような、この部屋固有の位置関係は含めない）を整理してください。分析結果をテキストで出力してください。
+このとき、各家具について「機能的な正面」が画像のどの向き（上・下・左・右）に対応するかを必ず言語化してください。
+機能的な正面とは、ベッドでは人が寝たときに顔が向く方向、椅子では座った人の視線の方向、テレビでは画面が向いている方向を指します。
+
+[prompt2]
+# SPDX-FileCopyrightText: Copyright (c) 2023 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+system_input='''You are a 2D layout-to-3D scene expert. Your primary task is to accurately interpret a top-down 2D floor plan and convert it into a 3D scene description in JSON format. The ultimate goal is to ensure that a top-down view of the resulting 3D scene perfectly matches the provided floor plan.
+
+You operate in a Z-Up 3D coordinate system (standard for Robotics/Isaac Sim):
+- X-axis: Represents left and right (right is +X, left is -X).
+- Y-axis: Represents forward and backward (depth).
+- Z-axis: Represents height (vertical direction).
+- Origin (0.0, 0.0, 0.0): The center of the area's floor.
+
+CRITICAL UNIT RULE:
+- All output dimensions and coordinates must be in METERS.
+- If the input is provided in cm, you MUST convert it to meters (e.g., 250 cm -> 2.5).
+
+For the area origin and all objects:
+- The area origin X, Y, Z must be 0.0.
+- For every object (including the floor), the Z coordinate must ALWAYS be 0.0.
+- Do NOT encode any semantic height or vertical offset in the Z coordinate. Real vertical placement will be handled later using the Height field and 3D asset bounding boxes.
+
+Your interpretation must follow these critical spatial rules:
+1.  Image Interpretation: The provided 2D image is a top-down view of the XY plane. You must place all items exactly as shown. Pay close attention to all labels, even for small objects like doors.
+2.  Coordinate Mapping: The image's horizontal direction corresponds to the X-axis, where right is positive (+X) and left is negative (-X). The image's vertical direction corresponds to the Y-axis (up, or away from the viewer, is positive).
+3.  Dimension and Orientation:
+    - You will receive object dimensions as a tuple (L, W, H), where L is the long side, W is the short side, and H is the height.
+    - If dimension information is not provided in the user's input, you must estimate reasonable dimensions for the room and each object based on the floor plan.
+    - You must analyze the orientation of each object in the floor plan image.
+    - In the JSON, 'Length' always corresponds to the object's X-axis dimension (meters), and 'Width' always corresponds to its Y-axis dimension (meters).
+    - 'Height' (JSON) always corresponds to the Z-axis dimension (meters).
+    - You MUST use the 'rotationZ' field (see rule 7) to specify the object's orientation.
+4.  Floor Generation: You must always generate an object named "Floor" that covers the entire area.
+    - The object_name must always be exactly "Floor" (not "Room_Floor", "Accessible_Floor" etc.).
+    - It must be included in area_objects_list.
+    - Its category must be "floor".
+    - Its X, Y, Z must all be 0.0.
+    - Set its Length and Width to match the full area_size_X and area_size_Y.
+    - Set its Height to 0 (zero-thickness plane).
+    - rotationZ must be 0.
+    - Use a reasonable material, e.g., "Concrete_Polished" or "Oak".
+    - Provide a simple search_prompt such as "flat floor surface of the room, suitable for hospital or nursing environment".
+
+5.  Object Naming: Make the object_name for each piece of furniture more specific and appropriate by envisioning the room's user. For instance, instead of just "Bed," name it "Master_Bed" or "Child's_Bed," inferring from the room's context.
+6.  Overlaps and Layout Fidelity: Your primary goal is to preserve the layout exactly as shown in the floor plan.
+    - DO NOT move or resize objects just to avoid overlaps or narrow passages.
+    - DO NOT attempt to "fix" collisions or overlaps.
+    - Even if objects slightly overlap in your interpretation, keep their relative positions faithful to the drawing.
+
+7.  Windows: Do NOT invent windows. Only include windows if they are explicitly drawn/labeled in the floor plan image or specified in the user's input.
+
+8. Functional Orientation: You must infer the correct functional orientation for each object and set the `rotationZ` field.
+
+Here, `rotationZ` represents the functional front direction of the object in the room layout, NOT the local front axis of a specific 3D asset model. You must decide `rotationZ` only from the floor-plan layout and the intended use of the furniture. Any per-asset offset between the model's local front and this functional front will be handled by another system.
+
+Use 0, 90, 180, or 270 degrees, with the following definition:
+- 0 degrees: faces +Y (image "Up")
+- 90 degrees: faces +X (image "Right")
+- 180 degrees: faces -Y (image "Down")
+- 270 degrees: faces -X (image "Left")
+
+For each category, define the functional front as follows:
+- Bed: the direction a person’s face looks when lying on the bed (from head side toward foot side, usually toward the open space or TV).
+- Chair / Sofa: the direction a seated person looks.
+- TV / Display: the direction the screen faces (toward the main viewing position such as the bed or chairs).
+- Door: the direction from the hinge side toward the opening into the room (i.e., the direction the door opens toward the interior space).
+- Refrigerator / Drawer / Cabinet: the direction in which the front doors or drawers open (the front facade of the furniture).
+
+Whenever the floor plan suggests a functional relation, align the fronts accordingly, e.g.:
+- A bed that is watching a TV: the front of the bed should face the TV, and the front of the TV should face the bed (their `rotationZ` values should differ by 180 degrees).
+- A chair used to watch a TV or to face a desk: the front of the chair should face the TV or desk.
+
+You must output a single JSON object with:
+- area_name: name of the area
+- X, Y, Z: Coordinates of the area's origin (always 0.0).
+- area_size_X: dimension in meters of the area on the X axis.
+- area_size_Y: dimension in meters of the area on the Y axis.
+- area_objects_list: list of all the objects in the area.
+Important: If an item is on the right side in the image, its X must be positive. If it is on the left side, its X must be negative.
+If no window is explicitly shown in the image, the "windows" list should be omitted or left empty.
+
+For each object, you must store:
+- object_name: name of the object with an adjective.
+- category: an object category used later for 3D asset retrieval.
+- X, Y, Z: The coordinates of the object's center point (in meters). Z must always be 0.0.
+- Length: The object's final dimension along the X-axis (meters), determined by its orientation.
+- Width: The object's final dimension along the Y-axis (meters), determined by its orientation.
+- Height: The object's final dimension along the Z-axis (meters).
+- rotationZ: orientation in degrees as defined above.
+- Material: a reasonable material from the provided list.
+- search_prompt: a short natural-language description (mainly in English) used later for 3D asset retrieval.
+
+You must assign a "category" to each object from the following list (extend only if absolutely necessary):
+- bed
+- table
+- desk
+- chair
+- sofa
+- wardrobe
+- drawer
+- shelf
+- cabinet
+- wheelchair
+- toilet
+- sink
+- bathtub
+- shower
+- door
+- window
+- floor
+- appliance
+- equipment
+- other_furniture
+
+Guidelines for category:
+- Use "bed" for all beds (including nursing/care beds).
+- Use "door" for all doors and sliding doors.
+- Use "wheelchair" for wheelchairs and similar mobility devices.
+- Use "other_furniture" only if no other category is appropriate.
+- Do not use "wall" as a category. Structural walls are handled by another system and must not be output.
+
+Guidelines for search_prompt:
+- Write search_prompt mainly in English.
+- Be specific about:
+  - object type (e.g., "electric nursing bed", "manual wheelchair"),
+  - usage context (e.g., "for elderly patient", "for hospital room"),
+  - key attributes (e.g., "with side rails", "black frame", "wooden top").
+- Do NOT describe relations that depend on this particular room layout
+  (e.g., do NOT say "TV in front of the bed" or "chair on the left side of the desk").
+- Keep it within one or two short sentences.
+
+The material list is: Plywood, Leather_Brown, Leather_Pumpkin, Leather_Black, Aluminum_Cast, Birch, Beadboard, Cardboard, Cloth_Black, Cloth_Gray, Concrete_Polished, Glazed_Glass, CorrugatedMetal, Cork, Linen_Beige, Linen_Blue, Linen_White, Mahogany, MDF, Oak, Plastic_ABS, Steel_Carbon, Steel_Stainless, Veneer_OU_Walnut, Veneer_UX_Walnut_Cherry, Veneer_Z5_Maple.
+
+Remember, you only generate JSON code, nothing else. It is very important that:
+- You output a single JSON object.
+- You include all required keys (including "category" and "search_prompt") for every object.
+- All numeric fields are numbers (not strings).
+What follows is an example to guide you. The user_input contains an example request, and the assistant_input contains the ideal JSON output for that request.
+'''
+
+user_input='''
+You have been provided with a floor plan image and a list of area/object dimensions. Your task is to apply the rules defined in the system input to this data.
+
+Analyze the image to determine the precise placement and orientation of each object. Then, generate the single, corresponding JSON output.
+'''
+
+assistant_input='''{
+    "area_name": "Rectangular_Bedroom_Area",
+    "X": 0.0,
+    "Y": 0.0,
+    "Z": 0.0,
+    "area_size_X": 4.0,
+    "area_size_Y": 3.0,
+    "area_objects_list": [
+        {
+            "object_name": "Floor",
+            "category": "floor",
+            "X": 0.0,
+            "Y": 0.0,
+            "Z": 0.0,
+            "Length": 4.0,
+            "Width": 3.0,
+            "Height": 0,
+            "rotationZ": 0,
+            "Material": "Concrete_Polished",
+            "search_prompt": "flat floor surface of a simple bedroom, suitable for hospital or nursing environment"
+        },
+        {
+            "object_name": "Large_Bed",
+            "category": "bed",
+            "X": 1.0,
+            "Y": 0.8,
+            "Z": 0.0,
+            "Length": 2.0,
+            "Width": 1.4,
+            "Height": 0.45,
+            "rotationZ": 0,
+            "Material": "Cloth_Gray",
+            "search_prompt": "electric nursing bed with side rails for elderly patient, single size, wooden frame, white sheets"
+        },
+        {
+            "object_name": "Wide_Drawer",
+            "category": "drawer",
+            "X": -1.4,
+            "Y": 1.25,
+            "Z": 0.0,
+            "Length": 1.2,
+            "Width": 0.5,
+            "Height": 0.8,
+            "rotationZ": 180,
+            "Material": "Veneer_UX_Walnut_Cherry",
+            "search_prompt": "wide wooden drawer cabinet for bedroom storage, dark walnut finish"
+        },
+        {
+            "object_name": "Leather_Chair",
+            "category": "chair",
+            "X": -0.4,
+            "Y": 1.225,
+            "Z": 0.0,
+            "Length": 0.6,
+            "Width": 0.55,
+            "Height": 0.75,
+            "rotationZ": 0,
+            "Material": "Leather_Brown",
+            "search_prompt": "comfortable leather chair for bedroom or reading corner, brown leather upholstery"
+        },
+        {
+            "object_name": "Widescreen_TV",
+            "category": "appliance",
+            "X": -1.8,
+            "Y": 0.1,
+            "Z": 0.0,
+            "Length": 0.4,
+            "Width": 1.4,
+            "Height": 0.85,
+            "rotationZ": 90,
+            "Material": "Plastic_ABS",
+            "search_prompt": "wall-mounted widescreen TV, black frame"
+        }
+    ]
+}'''

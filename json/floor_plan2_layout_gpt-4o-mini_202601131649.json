@@ -1,0 +1,88 @@
+{
+    "area_name": "Assisted_Living_Room",
+    "X": 0.0,
+    "Y": 0.0,
+    "Z": 0.0,
+    "area_size_X": 3.2,
+    "area_size_Y": 3.2,
+    "area_objects_list": [
+        {
+            "object_name": "Floor",
+            "category": "floor",
+            "X": 0.0,
+            "Y": 0.0,
+            "Z": 0.0,
+            "Length": 3.2,
+            "Width": 3.2,
+            "Height": 0,
+            "rotationZ": 0,
+            "Material": "Concrete_Polished",
+            "search_prompt": "flat floor surface of a living room, suitable for hospital or nursing environment"
+        },
+        {
+            "object_name": "Single_Bed",
+            "category": "bed",
+            "X": 0.8,
+            "Y": 1.1,
+            "Z": 0.0,
+            "Length": 1.95,
+            "Width": 1.2,
+            "Height": 0.4,
+            "rotationZ": 0,
+            "Material": "Cloth_Gray",
+            "search_prompt": "single bed suitable for assisted living, with side rails for safety"
+        },
+        {
+            "object_name": "Compact_Drawer",
+            "category": "drawer",
+            "X": -0.45,
+            "Y": 1.1,
+            "Z": 0.0,
+            "Length": 0.9,
+            "Width": 0.45,
+            "Height": 0.96,
+            "rotationZ": 180,
+            "Material": "Veneer_UX_Walnut_Cherry",
+            "search_prompt": "compact drawer for bedroom storage, dark wood finish"
+        },
+        {
+            "object_name": "Sturdy_Chair",
+            "category": "chair",
+            "X": -1.0,
+            "Y": 1.4,
+            "Z": 0.0,
+            "Length": 0.5,
+            "Width": 0.5,
+            "Height": 0.8,
+            "rotationZ": 90,
+            "Material": "Leather_Brown",
+            "search_prompt": "sturdy armchair for sitting, leather upholstery, suitable for comfort"
+        },
+        {
+            "object_name": "Wall_Mounted_TV",
+            "category": "appliance",
+            "X": -1.5,
+            "Y": 1.0,
+            "Z": 0.0,
+            "Length": 1.2,
+            "Width": 0.35,
+            "Height": 0.7,
+            "rotationZ": 0,
+            "Material": "Plastic_ABS",
+            "search_prompt": "wall-mounted television, ideal for watching shows, sleek black design"
+        },
+        {
+            "object_name": "Entrance_Door",
+            "category": "door",
+            "X": 0.0,
+            "Y": -1.6,
+            "Z": 0.0,
+            "Length": 0.8,
+            "Width": 0.05,
+            "Height": 2.2,
+            "rotationZ": 270,
+            "Material": "Plywood",
+            "search_prompt": "door for entrance to the room, suitable for easy access"
+        }
+    ]
+}

@@ -1,0 +1,325 @@
+AI Layout Generation Log
+timestamp: 20260218_132635_775130
+
+[AI Settings]
+step1_model: gpt-5.2
+step2_model: gpt-5.2
+reasoning_effort: high
+max_output_tokens: 48000
+text_verbosity: high
+image_detail: high
+
+[Step 1 Stats]
+time_sec: 147.39176726341248
+input_tokens: 2048
+output_tokens: 7072
+total_tokens: 9120
+
+[Step 2 Stats]
+time_sec: 67.3363926410675
+input_tokens: 2119
+output_tokens: 4567
+total_tokens: 6686
+
+[Total Stats]
+time_sec: 214.72815990447998
+input_tokens: 4167
+output_tokens: 11639
+total_tokens: 15806
+
+[Analysis Text]
+{
+  "area_size_X": 4.63,
+  "area_size_Y": 5.19,
+  "outer_polygon": [
+    { "X": 0.0, "Y": 0.0 },
+    { "X": 4.63, "Y": 0.0 },
+    { "X": 4.63, "Y": 5.19 },
+    { "X": 0.0, "Y": 5.19 }
+  ],
+  "scene_context": "compact bedroom with attached toilet, simple modern furnishings and wall-mounted fixtures",
+  "rooms": [
+    {
+      "room_id": "room_1",
+      "room_name": "Bedroom",
+      "room_polygon": [
+        { "X": 0.0, "Y": 0.0 },
+        { "X": 4.63, "Y": 0.0 },
+        { "X": 4.63, "Y": 5.19 },
+        { "X": 1.55, "Y": 5.19 },
+        { "X": 1.55, "Y": 3.35 },
+        { "X": 0.0, "Y": 3.35 }
+      ],
+      "openings": [
+        { "type": "door", "X": 2.35, "Y": 5.19, "Width": 1.6, "Height": 2.0, "SillHeight": 0.0 },
+        { "type": "door", "X": 1.55, "Y": 4.15, "Width": 0.8, "Height": 2.0, "SillHeight": 0.0 },
+        { "type": "window", "X": 3.05, "Y": 0.0, "Width": 2.5, "Height": 1.2, "SillHeight": 1.0 }
+      ]
+    },
+    {
+      "room_id": "room_2",
+      "room_name": "Toilet",
+      "room_polygon": [
+        { "X": 0.0, "Y": 3.35 },
+        { "X": 1.55, "Y": 3.35 },
+        { "X": 1.55, "Y": 5.19 },
+        { "X": 0.0, "Y": 5.19 }
+      ],
+      "openings": [
+        { "type": "door", "X": 1.55, "Y": 4.15, "Width": 0.8, "Height": 2.0, "SillHeight": 0.0 }
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "object_name": "door_north_sliding_1",
+      "category": "door",
+      "cx": 2.35,
+      "cy": 5.165,
+      "dx_world": 1.6,
+      "dy_world": 0.05,
+      "height": 2.0,
+      "rotationZ": 180,
+      "attach_wall": "north"
+    },
+    {
+      "object_name": "door_toilet_sliding_1",
+      "category": "door",
+      "cx": 1.525,
+      "cy": 4.15,
+      "dx_world": 0.05,
+      "dy_world": 0.8,
+      "height": 2.0,
+      "rotationZ": 90,
+      "attach_wall": "none"
+    },
+    {
+      "object_name": "bed_1",
+      "category": "bed",
+      "cx": 1.1,
+      "cy": 2.0,
+      "dx_world": 1.5,
+      "dy_world": 2.0,
+      "height": 0.5,
+      "rotationZ": 0,
+      "attach_wall": "west"
+    },
+    {
+      "object_name": "chair_1",
+      "category": "chair",
+      "cx": 3.1,
+      "cy": 2.55,
+      "dx_world": 0.6,
+      "dy_world": 0.6,
+      "height": 0.9,
+      "rotationZ": 90,
+      "attach_wall": "none"
+    },
+    {
+      "object_name": "tv_cabinet_1",
+      "category": "cabinet",
+      "cx": 4.405,
+      "cy": 2.5,
+      "dx_world": 0.45,
+      "dy_world": 1.6,
+      "height": 0.8,
+      "rotationZ": 270,
+      "attach_wall": "east"
+    },
+    {
+      "object_name": "sink_1",
+      "category": "sink",
+      "cx": 4.355,
+      "cy": 4.0,
+      "dx_world": 0.55,
+      "dy_world": 0.7,
+      "height": 0.85,
+      "rotationZ": 270,
+      "attach_wall": "east"
+    },
+    {
+      "object_name": "wardrobe_storage_left_1",
+      "category": "wardrobe",
+      "cx": 0.6,
+      "cy": 4.795,
+      "dx_world": 1.2,
+      "dy_world": 0.79,
+      "height": 2.0,
+      "rotationZ": 180,
+      "attach_wall": "north"
+    },
+    {
+      "object_name": "wardrobe_storage_right_1",
+      "category": "wardrobe",
+      "cx": 4.24,
+      "cy": 4.77,
+      "dx_world": 0.78,
+      "dy_world": 0.84,
+      "height": 2.0,
+      "rotationZ": 180,
+      "attach_wall": "north"
+    },
+    {
+      "object_name": "toilet_1",
+      "category": "toilet",
+      "cx": 0.6,
+      "cy": 4.15,
+      "dx_world": 0.7,
+      "dy_world": 0.75,
+      "height": 0.8,
+      "rotationZ": 180,
+      "attach_wall": "north"
+    }
+  ]
+}
+
+[AABB Collisions]
+- door_north_sliding_1 vs door_toilet_sliding_1: overlap_volume=0.03749999999999998
+- door_north_sliding_1 vs chair_1: overlap_volume=0.015750000000000007
+- door_toilet_sliding_1 vs bed_1: overlap_volume=0.009375000000000001
+- door_toilet_sliding_1 vs wardrobe_storage_left_1: overlap_volume=0.007499999999999996
+- bed_1 vs wardrobe_storage_left_1: overlap_volume=0.474
+- bed_1 vs toilet_1: overlap_volume=0.26249999999999996
+- tv_cabinet_1 vs sink_1: overlap_volume=0.2519999999999998
+- tv_cabinet_1 vs wardrobe_storage_right_1: overlap_volume=0.28079999999999994
+- sink_1 vs wardrobe_storage_right_1: overlap_volume=0.2921874999999996
+- wardrobe_storage_left_1 vs toilet_1: overlap_volume=0.41999999999999993
+
+[Room Size]
+area_size_X: 4.63
+area_size_Y: 5.19
+
+[Inputs]
+image_path: C:/Users/tmaru/isaacsim/source/extensions/my.research.asset_placer_isaac/inputs_isaac/oizumi-gakuen_C_24_5.194.63_v2.png
+
+[dimensions.txt]
+
+
+[prompt1]
+You are an interior layout analyst. From ONE top-down floor-plan image, extract a compact, machine-readable layout spec.
+
+Coordinate system (Z-up, Isaac Sim):
+- X: right, Y: up (toward top of image), Z: up
+- Units: meters
+- IMPORTANT ORIGIN RULE (handles concave/notched floors):
+  The origin (0,0) is the LOWER-LEFT of the *SCALE rectangle* given by LAYOUT_HINTS.
+  Even if the floor is concave and (0,0) is not on the walkable floor, you MUST still use this bounding-rectangle origin.
+- All coordinates must be non-negative.
+
+LAYOUT_HINTS (AUTHORITATIVE):
+You will also receive a key-value text block like:
+OUTLINE=RECT
+SCALE_WIDTH_M=...
+SCALE_HEIGHT_M=...
+toilet=0/1 ... etc.
+Treat SCALE_* as the absolute size of the (0..area_size_X, 0..area_size_Y) rectangle.
+
+How to measure (accuracy rules):
+1) If a 1m dotted grid is visible, use it as PRIMARY. Read object edges against grid lines.
+2) Always measure OBJECT OUTLINES (thin black borders) — ignore text labels (e.g., “TV Cabinet”, “Chair”).
+3) For each object, estimate its world-aligned footprint bbox: xmin,xmax,ymin,ymax in meters, then:
+   cx=(xmin+xmax)/2, cy=(ymin+ymax)/2, dx_world=(xmax-xmin), dy_world=(ymax-ymin).
+4) For wall-attached fixtures (sink/wardrobe/TV cabinet) that are clearly flush to a wall, set attach_wall and ensure the bbox touches that wall (within ~5cm).
+
+RotationZ convention (0/90/180/270 only):
+- rotationZ defines the object's FUNCTIONAL FRONT direction (local +Y).
+  0: front faces +Y (up), 90: +X (right), 180: -Y (down), 270: -X (left).
+- Length/Width are NOT output in Step1. Output dx_world/dy_world only.
+
+OUTPUT (STRICT JSON ONLY, no commentary):
+{
+  "area_size_X": number,
+  "area_size_Y": number,
+  "outer_polygon": [{"X":0,"Y":0},{"X":area_size_X,"Y":0},{"X":area_size_X,"Y":area_size_Y},{"X":0,"Y":area_size_Y}],
+  "scene_context": "short phrase describing the room type/style for asset search (e.g., compact Japanese studio apartment, modern minimalist)",
+  "rooms": [
+    {
+      "room_id": "room_1",
+      "room_name": "Bedroom|Living|Kitchen|Toilet|Bath|Hall",
+      "room_polygon": [{"X":number,"Y":number}, ...],   // clockwise, concave allowed
+      "openings": [
+        {"type":"door|window","X":number,"Y":number,"Width":number,"Height":number,"SillHeight":number}
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "object_name": "unique_id",
+      "category": "bed|chair|sofa|table|cabinet|wardrobe|sink|toilet|door",
+      "cx": number, "cy": number,
+      "dx_world": number, "dy_world": number,
+      "height": number,
+      "rotationZ": 0|90|180|270,
+      "attach_wall": "none|north|south|east|west"   // use when clearly flush to a wall
+    }
+  ]
+}
+
+Constraints:
+- area_size_X must equal SCALE_WIDTH_M, area_size_Y must equal SCALE_HEIGHT_M.
+- Every object must lie within the outer_polygon bounding rectangle (0..area_size_X, 0..area_size_Y).
+- If toilet=1, output a separate Toilet room polygon (and door opening) rather than mixing it into the main room.
+
+
+[prompt2]
+You are a 2D-layout → 3D-scene compiler. Convert Step1 layout_spec JSON into the final scene JSON for simulation.
+
+INPUTS you will receive:
+(A) LAYOUT_HINTS (AUTHORITATIVE sizes)
+(B) Step1 layout_spec JSON (AUTHORITATIVE geometry)
+
+CRITICAL:
+- Do NOT re-measure from the image in Step2.
+- Use Step1 numbers as the source of truth, except for the deterministic snaps below.
+
+Deterministic corrections you MUST apply:
+1) Wall-snap for attach_wall objects (flush placement):
+   - east: set X = area_size_X - dx_world/2
+   - west: set X = dx_world/2
+   - north: set Y = area_size_Y - dy_world/2
+   - south: set Y = dy_world/2
+   (Do not change the other axis.)
+2) Convert (dx_world, dy_world) → (Length, Width) based on rotationZ:
+   - if rotationZ in {0,180}: Length=dx_world, Width=dy_world
+   - if rotationZ in {90,270}: Length=dy_world, Width=dx_world
+3) Seating orientation sanity:
+   - If a chair is within 1.8m of a TV cabinet (or sofa/table), set chair rotationZ to face the nearest target (front points toward target).
+   - Optionally nudge the chair by up to 0.25m along the facing axis to maintain a ~0.10m gap (no overlap), keeping it inside its room.
+4) Output room polygons/openings exactly as Step1 (clockwise). area_size_* and outer_polygon must match LAYOUT_HINTS.
+
+Search prompts (important for asset retrieval):
+- Build a short scene-style suffix from layout_spec.scene_context (e.g., "compact Japanese studio apartment, modern minimalist").
+- For EACH object, create search_prompt = "<object description>, <material/style>, <scale> — <scene_context>".
+  Keep it concise (≈8–14 words total). Avoid brand names. Use English.
+
+FINAL OUTPUT (JSON ONLY, matches schema exactly):
+{
+  "area_name": string,
+  "area_size_X": number,
+  "area_size_Y": number,
+  "size_mode": "absolute",
+  "outer_polygon": [...],
+  "rooms": [...],
+  "area_objects_list": [
+    {
+      "object_name": string,
+      "category": string,
+      "search_prompt": string,
+      "room_id": string,
+      "X": number,
+      "Y": number,
+      "Length": number,
+      "Width": number,
+      "Height": number,
+      "rotationZ": 0|90|180|270
+    }
+  ]
+}
+
+[SIZE_MODE OVERRIDE]
+This override has highest priority over any previous size definition.
+Use top-level `size_mode` = "local".
+Length = object local +X (right), Width = object local +Y (forward / functional front), Height = local +Z.
+rotationZ defines where object local +Y points in world (0:+Y, 90:+X, 180:-Y, 270:-X).
+Do NOT swap Length/Width based on rotationZ.
+

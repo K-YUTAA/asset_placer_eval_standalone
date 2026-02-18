@@ -1,0 +1,244 @@
+{
+    "area_name": "studio_apartment",
+    "area_size_X": 5.2,
+    "area_size_Y": 9.2,
+    "outer_polygon": [
+        {
+            "X": 0.0,
+            "Y": 0.0
+        },
+        {
+            "X": 5.2,
+            "Y": 0.0
+        },
+        {
+            "X": 5.2,
+            "Y": 9.2
+        },
+        {
+            "X": 0.0,
+            "Y": 9.2
+        }
+    ],
+    "rooms": [
+        {
+            "room_id": "studio1",
+            "room_name": "Studio (open plan)",
+            "room_polygon": [
+                {
+                    "X": 0.0,
+                    "Y": 0.0
+                },
+                {
+                    "X": 5.2,
+                    "Y": 0.0
+                },
+                {
+                    "X": 5.2,
+                    "Y": 9.2
+                },
+                {
+                    "X": 0.0,
+                    "Y": 9.2
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 5.2,
+                    "Y": 7.7,
+                    "Width": 0.8,
+                    "Height": 2.1,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "window",
+                    "X": 3.3,
+                    "Y": 9.2,
+                    "Width": 1.0,
+                    "Height": 1.0,
+                    "SillHeight": 1.0
+                },
+                {
+                    "type": "window",
+                    "X": 0.0,
+                    "Y": 3.6,
+                    "Width": 1.5,
+                    "Height": 1.0,
+                    "SillHeight": 1.0
+                }
+            ]
+        }
+    ],
+    "area_objects_list": [
+        {
+            "object_name": "entry_door",
+            "category": "door",
+            "search_prompt": "interior hinged door, single leaf, modern, wood or painted finish",
+            "room_id": "studio1",
+            "X": 5.175,
+            "Y": 7.7,
+            "Length": 0.05,
+            "Width": 0.8,
+            "Height": 2.1,
+            "rotationZ": 270,
+            "Material": "painted_wood"
+        },
+        {
+            "object_name": "upper_cupboard",
+            "category": "cabinet",
+            "search_prompt": "wall-mounted kitchen cupboard, upper cabinet, modern flat-panel doors",
+            "room_id": "studio1",
+            "X": 1.4,
+            "Y": 8.9,
+            "Length": 2.8,
+            "Width": 0.6,
+            "Height": 0.7,
+            "rotationZ": 180,
+            "Material": "laminate_white"
+        },
+        {
+            "object_name": "kitchen_base_unit",
+            "category": "cabinet",
+            "search_prompt": "kitchen base cabinet run with countertop, modern, includes worktop",
+            "room_id": "studio1",
+            "X": 1.3,
+            "Y": 7.1,
+            "Length": 2.6,
+            "Width": 0.6,
+            "Height": 0.9,
+            "rotationZ": 90,
+            "Material": "laminate_white"
+        },
+        {
+            "object_name": "dining_peninsula_table",
+            "category": "table",
+            "search_prompt": "kitchen peninsula or island table with durable worktop, modern",
+            "room_id": "studio1",
+            "X": 2.1,
+            "Y": 6.0,
+            "Length": 0.9,
+            "Width": 2.2,
+            "Height": 0.9,
+            "rotationZ": 0,
+            "Material": "wood_oak"
+        },
+        {
+            "object_name": "dining_chair_left_1",
+            "category": "chair",
+            "search_prompt": "dining chair or counter stool, simple modern design, no armrests",
+            "room_id": "studio1",
+            "X": 1.2,
+            "Y": 6.4,
+            "Length": 0.45,
+            "Width": 0.45,
+            "Height": 0.9,
+            "rotationZ": 90,
+            "Material": "wood_black"
+        },
+        {
+            "object_name": "dining_chair_left_2",
+            "category": "chair",
+            "search_prompt": "dining chair or counter stool, simple modern design, no armrests",
+            "room_id": "studio1",
+            "X": 1.2,
+            "Y": 5.7,
+            "Length": 0.45,
+            "Width": 0.45,
+            "Height": 0.9,
+            "rotationZ": 90,
+            "Material": "wood_black"
+        },
+        {
+            "object_name": "dining_chair_right_1",
+            "category": "chair",
+            "search_prompt": "dining chair or counter stool, simple modern design, no armrests",
+            "room_id": "studio1",
+            "X": 3.0,
+            "Y": 6.4,
+            "Length": 0.45,
+            "Width": 0.45,
+            "Height": 0.9,
+            "rotationZ": 270,
+            "Material": "wood_black"
+        },
+        {
+            "object_name": "dining_chair_right_2",
+            "category": "chair",
+            "search_prompt": "dining chair or counter stool, simple modern design, no armrests",
+            "room_id": "studio1",
+            "X": 3.0,
+            "Y": 5.7,
+            "Length": 0.45,
+            "Width": 0.45,
+            "Height": 0.9,
+            "rotationZ": 270,
+            "Material": "wood_black"
+        },
+        {
+            "object_name": "tv_console",
+            "category": "cabinet",
+            "search_prompt": "low TV console cabinet, modern, long and narrow, for media storage",
+            "room_id": "studio1",
+            "X": 0.2,
+            "Y": 2.9,
+            "Length": 0.3,
+            "Width": 1.2,
+            "Height": 0.55,
+            "rotationZ": 90,
+            "Material": "wood_walnut"
+        },
+        {
+            "object_name": "tv_display",
+            "category": "equipment",
+            "search_prompt": "flat screen TV, modern, thin bezel, on stand",
+            "room_id": "studio1",
+            "X": 0.35,
+            "Y": 2.9,
+            "Length": 0.1,
+            "Width": 1.1,
+            "Height": 0.7,
+            "rotationZ": 90,
+            "Material": "plastic_black"
+        },
+        {
+            "object_name": "coffee_table",
+            "category": "table",
+            "search_prompt": "rectangular low coffee table, modern minimalist design",
+            "room_id": "studio1",
+            "X": 3.0,
+            "Y": 2.1,
+            "Length": 1.1,
+            "Width": 0.6,
+            "Height": 0.4,
+            "rotationZ": 0,
+            "Material": "wood_oak"
+        },
+        {
+            "object_name": "sofa",
+            "category": "sofa",
+            "search_prompt": "2-3 seat sofa, modern, fabric upholstery, simple straight shape",
+            "room_id": "studio1",
+            "X": 4.65,
+            "Y": 2.1,
+            "Length": 0.9,
+            "Width": 2.0,
+            "Height": 0.85,
+            "rotationZ": 270,
+            "Material": "fabric_gray"
+        },
+        {
+            "object_name": "house_plant",
+            "category": "other_furniture",
+            "search_prompt": "potted indoor house plant, medium size, decorative",
+            "room_id": "studio1",
+            "X": 1.0,
+            "Y": 0.8,
+            "Length": 0.4,
+            "Width": 0.4,
+            "Height": 0.8,
+            "rotationZ": 0,
+            "Material": "ceramic_white"
+        }
+    ]
+}

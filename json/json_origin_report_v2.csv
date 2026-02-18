@@ -1,0 +1,95 @@
+file,area_x,area_y,floor_x,floor_y,origin,reason,room_minx,room_miny,room_maxx,room_maxy
+atashinchi_layout_gpt-5.2_202601291620.json,11.6,11.6,,,bottom_left,polygon_min@0,0,0,11.6,11.6
+Big_house_layout_gpt-5.2_202601252234.json,17,12,,,bottom_left,polygon_min@0,0,0,17,12
+Big_house_layout_gpt-5.2_202601270534.json,14.8,10.8,,,bottom_left,polygon_min@0,0,0,14.8,10.8
+complex_test_layout_gpt-5.2_202601161644.json,8,7,0,0,center,floor@0,0 (area_objects_list),,,,
+complex_test_layout_gpt-5.2_202601162001.json,9,7,0,0,center,floor@0,0 (area_objects_list),,,,
+complex_test_layout_gpt-5.2_202601171559.json,8.5,6.5,0,0,center,floor@0,0 (area_objects_list),,,,
+complex_test_layout_gpt-5.2_202601171615.json,9,7,0,0,center,floor@0,0 (area_objects_list),,,,
+complex_test_layout_gpt-5.2_202601171709.json,9,6.5,0,0,center,floor@0,0 (area_objects_list),,,,
+complex_test_layout_gpt-5.2_202601171740.json,7,6.5,0,0,center,floor@0,0 (area_objects_list),,,,
+complex_test_layout_gpt-5.2_202601181514.json,8,6,0,0,center,floor@0,0 (area_objects_list),,,,
+complex_test_layout_gpt-5.2_202601181900.json,9,7,0,0,center,floor@0,0 (area_objects_list),,,,
+complex_test_layout_gpt-5.2_202601202214.json,8,6,0,0,center,floor@0,0 (area_objects_list),,,,
+complex_test_layout_gpt-5.2_202601202225.json,9,7,0,0,center,floor@0,0 (area_objects_list),,,,
+complex_test_layout_gpt-5.2_202601221811.json,10,8,0,0,center,floor@0,0 (area_objects_list),,,,
+floor_plan2_layout_gpt-4o-mini_202601131649.json,3.2,3.2,0,0,center,floor@0,0 (area_objects_list),,,,
+floor_plan2_layout_gpt-5.2_202601122137.json,3.2,3.2,0,0,center,floor@0,0 (area_objects_list),,,,
+floor_plan2_layout_gpt-5.2_202601122320.json,3.2,3.2,0,0,center,floor@0,0 (area_objects_list),,,,
+floor_plan2_layout_gpt-5.2_202601131747.json,3.2,3.2,0,0,center,floor@0,0 (area_objects_list),,,,
+floor_plan2_layout_gpt-5.2_202601132141.json,3.2,3.2,0,0,center,floor@0,0 (area_objects_list),,,,
+floor_plan2_layout_gpt-5.2_202601132307.json,3.2,3.2,0,0,center,floor@0,0 (area_objects_list),,,,
+floor_plan2_layout_gpt-5.2_202601140035.json,3.2,3.2,0,0,center,floor@0,0 (area_objects_list),,,,
+floor_plan2_layout_gpt-5.2_202601140053.json,3.2,3.2,0,0,center,floor@0,0 (area_objects_list),,,,
+floor_plan2_layout_gpt-5.2_202601140103.json,3.2,3.2,0,0,center,floor@0,0 (area_objects_list),,,,
+floor_plan2_layout_gpt-5.2_202601140124.json,3.2,3.2,0,0,center,floor@0,0 (area_objects_list),,,,
+floor_plan2_layout_gpt-5.2_202601182006.json,5,4.5,0,0,center,floor@0,0 (area_objects_list),,,,
+floor_plan2_layout_gpt-5.2_202601202138.json,5,4.5,0,0,center,floor@0,0 (area_objects_list),,,,
+floor_plan2_layout_gpt-5.2_202601202148.json,4.5,4.5,0,0,center,floor@0,0 (area_objects_list),,,,
+floor_plan2_layout_gpt-5.2_202601270349.json,5.2,4.6,,,bottom_left,polygon_min@0,0,0,5.2,4.6
+floor_plan3_layout_gpt-5.2_202601182129.json,3.2,3.2,0,0,center,floor@0,0 (area_objects_list),,,,
+floor_plan3_layout_gpt-5.2_202601182154.json,3.2,3.2,0,0,center,floor@0,0 (area_objects_list),,,,
+floor_plan3_layout_gpt-5.2_202601190059.json,3.2,3.2,0,0,center,floor@0,0 (area_objects_list),,,,
+floor_plan3_layout_gpt-5.2_202601202236.json,3.2,3.2,0,0,center,floor@0,0 (area_objects_list),,,,
+floor_plan3_layout_gpt-5.2_202601202244.json,3.2,3.2,0,0,center,floor@0,0 (area_objects_list),,,,
+floor_plan_ c_layout_gpt-5.2_202601192136.json,10,5.6,0,0,center,floor@0,0 (area_objects_list),,,,
+floor_plan_ c_layout_gpt-5.2_202601242046.json,15,6,,,bottom_left,polygon_min@0,0,0,15,6
+floor_plan_w_layout_gpt-5.2_202601191721.json,3.2,3.2,0,0,center,floor@0,0 (area_objects_list),,,,
+floor_plan_w_layout_gpt-5.2_202601191746.json,3.2,3.2,0,0,center,floor@0,0 (area_objects_list),,,,
+floor_plan_w_layout_gpt-5.2_202601191806.json,3.2,3.2,0,0,center,floor@0,0 (area_objects_list),,,,
+floor_plan_w_layout_gpt-5.2_202601191828.json,3.2,3.2,0,0,center,floor@0,0 (area_objects_list),,,,
+floor_plan_w_layout_gpt-5.2_202601202254.json,3.2,3.2,0,0,center,floor@0,0 (area_objects_list),,,,
+floor_plan_w_layout_gpt-5.2_202601291537.json,3.2,3.2,,,bottom_left,polygon_min@0,0,0,3.2,3.2
+floor_plan_w_layout_gpt-5.2_202601291644.json,3.2,3.2,,,bottom_left,polygon_min@0,0,0,3.2,3.2
+floor_plan_w_layout_gpt-5.2_202601291650.json,3.2,3.2,,,bottom_left,polygon_min@0,0,0,3.2,3.2
+Generated Image January 23, 2026 - 6_31PM_layout_gpt-5.2_202601231843.json,11,13,,,bottom_left,polygon_min@0,0,0,11,13
+Generated Image January 23, 2026 - 6_31PM_layout_gpt-5.2_202601232226.json,11.6,10.2,,,bottom_left,polygon_min@0,0,0,11.6,10.2
+house_garage_layout_gpt-5.2_202601252058.json,24,10,,,bottom_left,polygon_min@0,0,0,24,10
+house_garage_layout_gpt-5.2_202601270426.json,21.5,8.2,,,bottom_left,polygon_min@0,0,0,21.5,8.2
+house_garage_layout_gpt-5.2_202601271325.json,24,9.6,,,bottom_left,polygon_min@0,0,0,24,9.6
+house_garage_layout_gpt-5.2_202601291828.json,19,9,,,bottom_left,polygon_min@0,0,0,19,9
+house_garage_layout_gpt-5.2_202601292150.json,24,10,,,bottom_left,polygon_min@0,0,0,24,10
+house_garage_layout_gpt-5.2_202601292205.json,16.2,7.8,,,bottom_left,polygon_min@0,0,0,16.2,7.8
+house_garage_layout_gpt-5.2_202601301619.json,24,10,12,5,bottom_left,floor@half (area_objects_list),0,0,24,10
+house_garage_layout_gpt-5.2_202602021606.json,24,10,12,5,bottom_left,floor@half (objects.center),,,,
+house_garage_layout_gpt-5.2_202602031906.json,16,8,8,4,bottom_left,floor@half (objects.center),,,,
+house_garage_layout_gpt-5.2_202602041410.json,18,8,9,4,bottom_left,floor@half (area_objects_list),0,0,18,8
+house_garage_layout_gpt-5.2_202602050024.json,18,8.2,9,4.1,bottom_left,floor@half (area_objects_list),0,0,18,8.2
+IMG_C7B57EF2764E-1_layout_gpt-5.2_202601241621.json,10.5,13.5,,,bottom_left,polygon_min@0,0,0,10.5,13.5
+IMG_C7B57EF2764E-1_layout_gpt-5.2_202601241706.json,10.2,13.2,,,bottom_left,polygon_min@0,0,0,10.2,13.2
+IMG_C7B57EF2764E-1_layout_gpt-5.2_202601242033.json,11,11.4,,,bottom_left,polygon_min@0,0,0,11,11.4
+IMG_C7B57EF2764E-1_layout_gpt-5.2_202601242107.json,12,13,,,bottom_left,polygon_min@0,0,0,12,13
+IMG_C7B57EF2764E-1_layout_gpt-5.2_20260127.json,11.5,12,,,bottom_left,polygon_min@0,0,0,11.5,12
+img_home_large-768x1090_layout_gpt-5.2_202601211640.json,8.4,11,0,0,center,floor@0,0 (area_objects_list),,,,
+img_home_large-768x1090_layout_gpt-5.2_202601222139.json,9,12,0,0,center,floor@0,0 (area_objects_list),,,,
+img_home_large-768x1090_layout_gpt-5.2_202601230105.json,7.5,10.6,0,0,center,floor@0,0 (area_objects_list),,,,
+img_home_large-768x1090_layout_gpt-5.2_202601231749.json,8,12,0,0,center,floor@0,0 (area_objects_list),,,,
+img_home_large-768x1090_layout_gpt-5.2_202601231802.json,8,12.6,,,bottom_left,polygon_min@0,0,0,8,12.6
+living_room2_layout_gpt-5.2_202601201616.json,4.8,7.2,0,0,center,floor@0,0 (area_objects_list),,,,
+living_room2_layout_gpt-5.2_202601201837.json,4.6,8.2,0,0,center,floor@0,0 (area_objects_list),,,,
+living_room2_layout_gpt-5.2_202601201911.json,4.8,9,0,0,center,floor@0,0 (area_objects_list),,,,
+living_room2_layout_gpt-5.2_202601202039.json,4.6,8,0,0,center,floor@0,0 (area_objects_list),,,,
+living_room2_layout_gpt-5.2_202601202045.json,4.6,7,0,0,center,floor@0,0 (area_objects_list),,,,
+living_room2_layout_gpt-5.2_202601202059.json,4.2,7.2,0,0,center,floor@0,0 (area_objects_list),,,,
+living_room2_layout_gpt-5.2_202601202112.json,5,9,0,0,center,floor@0,0 (area_objects_list),,,,
+living_room2_layout_gpt-5.2_202601202304.json,4.2,8,0,0,center,floor@0,0 (area_objects_list),,,,
+living_room2_layout_gpt-5.2_202601202313.json,5,9,0,0,center,floor@0,0 (area_objects_list),,,,
+living_room2_layout_gpt-5.2_202601221551.json,4.2,7.5,0,0,center,floor@0,0 (area_objects_list),,,,
+living_room2_layout_gpt-5.2_202601221629.json,4.8,8.4,0,0,center,floor@0,0 (area_objects_list),,,,
+living_room2_layout_gpt-5.2_202601221717.json,4.2,8,0,0,center,floor@0,0 (area_objects_list),,,,
+living_room2_layout_gpt-5.2_202601221736.json,4.6,8.6,0,0,center,floor@0,0 (area_objects_list),,,,
+living_room2_layout_gpt-5.2_202601221818.json,4,6.5,0,0,center,floor@0,0 (area_objects_list),,,,
+living_room2_layout_gpt-5.2_202601230116.json,5,9,0,0,center,floor@0,0 (area_objects_list),,,,
+living_room2_layout_gpt-5.2_202601241651.json,5,9,,,bottom_left,polygon_min@0,0,0,5,9
+living_room2_layout_gpt-5.2_202601242353.json,5.2,9.2,,,bottom_left,polygon_min@0,0,0,5.2,9.2
+living_room2_layout_gpt-5.2_202601262038.json,5.6,9.2,,,bottom_left,polygon_min@0,0,0,5.6,9.2
+living_room2_layout_gpt-5.2_202601291702.json,5.6,8.8,,,bottom_left,polygon_min@0,0,0,5.6,8.8
+living_room_layout_gpt-5.2_202601201532.json,10,6,0,0,center,floor@0,0 (area_objects_list),,,,
+living_room_layout_gpt-5.2_202601241726.json,9,6,,,bottom_left,polygon_min@0,0,0,9,6
+local_test_r0.json,6,6,,,unknown,no_strong_signal,,,,
+local_test_r90.json,6,6,,,unknown,no_strong_signal,,,,
+Monica's_apartment_gpt-5.2_202601271633.json,17,10.5,,,bottom_left,polygon_min@0,0,0,17,10.5
+Monica's_apartment_layout_gpt-5.2_202601291755.json,15,11,,,bottom_left,polygon_min@0,0,0,15,11
+two-story_house_1_layout_gpt-5.2_202601291854.json,8.6,11.5,,,bottom_left,polygon_min@0,0,0,8.6,11.5
+two-story_house_1_layout_gpt-5.2_202602050052.json,8.5,11.5,4.25,5.75,bottom_left,floor@half (area_objects_list),0,0,8.5,11.5
+world_test_r0.json,6,6,,,unknown,no_strong_signal,,,,

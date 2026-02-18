@@ -1,0 +1,101 @@
+{
+    "area_name": "Wheelchair_Accessible_Patient_Bedroom",
+    "X": 0.0,
+    "Y": 0.0,
+    "Z": 0.0,
+    "area_size_X": 3.2,
+    "area_size_Y": 3.2,
+    "area_objects_list": [
+        {
+            "object_name": "Floor",
+            "category": "floor",
+            "X": 0.0,
+            "Y": 0.0,
+            "Z": 0.0,
+            "Length": 3.2,
+            "Width": 3.2,
+            "Height": 0,
+            "rotationZ": 0,
+            "Material": "Concrete_Polished",
+            "search_prompt": "flat floor surface of a wheelchair accessible patient bedroom, suitable for hospital or nursing environment"
+        },
+        {
+            "object_name": "Care_Single_Bed",
+            "category": "bed",
+            "X": -0.95,
+            "Y": 0.575,
+            "Z": 0.0,
+            "Length": 1.2,
+            "Width": 1.95,
+            "Height": 0.4,
+            "rotationZ": 180,
+            "Material": "Cloth_Gray",
+            "search_prompt": "single care bed for rehabilitation patient, simple frame, low height, with basic side rails"
+        },
+        {
+            "object_name": "Compact_Refrigerator",
+            "category": "appliance",
+            "X": 0.65,
+            "Y": 1.3,
+            "Z": 0.0,
+            "Length": 0.55,
+            "Width": 0.5,
+            "Height": 1.2,
+            "rotationZ": 180,
+            "Material": "Plastic_ABS",
+            "search_prompt": "compact freestanding refrigerator, single door, simple white or light gray finish"
+        },
+        {
+            "object_name": "Support_Dining_Chair",
+            "category": "chair",
+            "X": -0.15,
+            "Y": 1.3,
+            "Z": 0.0,
+            "Length": 0.5,
+            "Width": 0.5,
+            "Height": 0.8,
+            "rotationZ": 270,
+            "Material": "Oak",
+            "search_prompt": "sturdy armless chair with wooden frame, suitable for patient room and easy transfers"
+        },
+        {
+            "object_name": "Flat_Screen_TV_Stand",
+            "category": "appliance",
+            "X": 1.375,
+            "Y": 0.4,
+            "Z": 0.0,
+            "Length": 0.35,
+            "Width": 1.2,
+            "Height": 0.7,
+            "rotationZ": 90,
+            "Material": "Plastic_ABS",
+            "search_prompt": "flat screen TV on a slim stand, black frame, suitable for bedroom or patient room"
+        },
+        {
+            "object_name": "Wide_Wood_Dresser",
+            "category": "drawer",
+            "X": -1.05,
+            "Y": -1.325,
+            "Z": 0.0,
+            "Length": 0.9,
+            "Width": 0.45,
+            "Height": 0.96,
+            "rotationZ": 0,
+            "Material": "Veneer_UX_Walnut_Cherry",
+            "search_prompt": "wood dresser chest of drawers, 3 to 4 drawers, simple modern style, walnut finish"
+        },
+        {
+            "object_name": "Patient_Room_Door",
+            "category": "door",
+            "X": 1.15,
+            "Y": -1.575,
+            "Z": 0.0,
+            "Length": 0.8,
+            "Width": 0.05,
+            "Height": 2.2,
+            "rotationZ": 0,
+            "Material": "Beadboard",
+            "search_prompt": "interior hinged door for patient room, single leaf, about 80 cm wide, plain white finish"
+        }
+    ]
+}

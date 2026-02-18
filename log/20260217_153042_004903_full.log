@@ -1,0 +1,342 @@
+AI Layout Generation Log
+timestamp: 20260217_153042_004903
+
+[AI Settings]
+step1_model: gpt-5.2
+step2_model: gpt-5.2
+reasoning_effort: high
+max_output_tokens: 48000
+text_verbosity: high
+image_detail: high
+
+[Step 1 Stats]
+time_sec: 102.30854511260986
+input_tokens: 2007
+output_tokens: 5937
+total_tokens: 7944
+
+[Step 2 Stats]
+time_sec: 56.63131618499756
+input_tokens: 3230
+output_tokens: 3743
+total_tokens: 6973
+
+[Total Stats]
+time_sec: 158.93986129760742
+input_tokens: 5237
+output_tokens: 9680
+total_tokens: 14917
+
+[Analysis Text]
+## Overall
+- Total size: **3.04m (X width) x 5.93m (Y height)**
+- Scale reference: **SCALE_WIDTH_M=3.04, SCALE_HEIGHT_M=5.93 (authoritative)**. Dotted grid is present but not used as the primary scaler due to exact SCALE_*.
+
+## Rooms
+- **room_1 / bedroom**: polygon vertices (clockwise)  
+  - (0.00, 0.00)  
+  - (3.04, 0.00)  
+  - (3.04, 3.55)  
+  - (2.05, 3.55)  
+  - (2.05, 5.10)  
+  - (3.04, 5.10)  
+  - (3.04, 5.93)  
+  - (0.00, 5.93)
+
+- **room_2 / toilet**: polygon vertices (clockwise)  
+  - (2.05, 3.55)  
+  - (3.04, 3.55)  
+  - (3.04, 5.10)  
+  - (2.05, 5.10)
+
+## Objects
+- **Bed** (bed): center **(2.25, 1.50)**, ΔX_world **1.40**, ΔY_world **2.00**, size **(LxWxH)=1.40 x 2.00 x 0.55**, rotationZ **0°**  
+  - Notes: Headboard near bottom side; foot direction toward +Y.
+
+- **TV Cabinet** (cabinet/tv_stand): center **(0.20, 1.10)**, ΔX_world **0.35**, ΔY_world **1.10**, size **1.10 x 0.35 x 0.60**, rotationZ **90°**  
+  - Notes: Positioned along left wall; functional front faces +X (into room).
+
+- **Chair** (chair): center **(0.65, 1.15)**, ΔX_world **0.60**, ΔY_world **0.60**, size **0.60 x 0.60 x 0.90**, rotationZ **270°**  
+  - Notes: Oriented to face the TV cabinet (toward -X).
+
+- **Sink Counter** (sink/vanity): center **(0.33, 4.15)**, ΔX_world **0.55**, ΔY_world **1.20**, size **1.20 x 0.55 x 0.90**, rotationZ **90°**  
+  - Notes: Along left wall in upper half; front faces +X.
+
+- **Storage Cabinet (upper-left)** (wardrobe/storage): center **(0.48, 5.30)**, ΔX_world **0.90**, ΔY_world **1.22**, size **1.22 x 0.90 x 2.10**, rotationZ **90°**  
+  - Notes: Built-in storage zone at top-left; doors/front face +X.
+
+- **Storage Cabinet (top-right)** (wardrobe/storage): center **(2.53, 5.52)**, ΔX_world **0.98**, ΔY_world **0.76**, size **0.98 x 0.76 x 2.10**, rotationZ **180°**  
+  - Notes: Located above the toilet zone (in the bedroom top strip); front faces -Y.
+
+- **Toilet** (toilet_fixture): center **(2.60, 4.55)**, ΔX_world **0.40**, ΔY_world **0.70**, size **0.40 x 0.70 x 0.80**, rotationZ **180°**  
+  - Notes: Tank toward +Y wall; user faces -Y.
+
+## Openings
+- **Door 1 (Sliding, interior)**: center **(2.05, 4.20)**, width **0.80**, height **2.00**, connects **bedroom <-> toilet**  
+  - Door rotationZ (opens toward larger space): **270°** (into bedroom, toward -X)
+
+- **Door 2 (Sliding, exterior/top wall)**: center **(1.70, 5.93)**, width **1.60**, height **2.10**, connects **bedroom <-> outside**
+
+- **Window 1 (bottom wall)**: center **(2.10, 0.00)**, width **1.90**, height **1.20**, sill height **1.00**
+
+[AABB Collisions]
+- bed vs storage_cabinet_top_right: overlap_volume=0.3803800000000001
+- bed vs toilet: overlap_volume=0.15400000000000014
+- bed vs door_sliding_bedroom_to_toilet: overlap_volume=0.021999999999999922
+- bed vs door_sliding_top_exterior: overlap_volume=0.026125
+- tv_cabinet vs chair: overlap_volume=0.008999999999999987
+- tv_cabinet vs sink_counter: overlap_volume=0.21120000000000003
+- tv_cabinet vs storage_cabinet_upper_left: overlap_volume=0.22770000000000004
+- chair vs sink_counter: overlap_volume=0.13769999999999996
+- chair vs storage_cabinet_upper_left: overlap_volume=0.3131999999999999
+- chair vs door_sliding_top_exterior: overlap_volume=0.002250000000000002
+- sink_counter vs storage_cabinet_upper_left: overlap_volume=0.5940000000000001
+- storage_cabinet_upper_left vs door_sliding_top_exterior: overlap_volume=0.003150000000000003
+- storage_cabinet_top_right vs toilet: overlap_volume=0.22400000000000017
+- storage_cabinet_top_right vs door_sliding_bedroom_to_toilet: overlap_volume=0.05319999999999954
+- storage_cabinet_top_right vs door_sliding_top_exterior: overlap_volume=0.0483
+- toilet vs door_sliding_top_exterior: overlap_volume=0.0040000000000000036
+- door_sliding_bedroom_to_toilet vs door_sliding_top_exterior: overlap_volume=0.004999999999999983
+
+[Room Size]
+area_size_X: 3.04
+area_size_Y: 5.93
+
+[Inputs]
+image_path: C:/Users/tmaru/isaacsim/source/extensions/my.research.asset_placer_isaac/inputs_isaac/kugayama_A_18_5.933.04_v2.png
+
+[dimensions.txt]
+﻿# LAYOUT_HINTS
+OUTLINE=RECT
+SCALE_WIDTH_M=3.04
+SCALE_HEIGHT_M=5.93
+ROOMS=ldk:0,living:0,dining:0,kitchen:0,bedroom:1,kids_room:0,study:0,bathroom:0,toilet:1,washroom:0,closet:0,storage:0,hallway:0,entrance:0,garage:0,balcony:0,laundry:0,pantry:0,utility:0,office:0,guest_room:0
+DOOR_COUNT=2
+WINDOW_COUNT=1
+WINDOW_HEIGHT_M=1.2
+WINDOW_SILL_M=1.0
+
+
+[prompt1]
+You are an interior layout analyst. Generate a detailed layout description for 3D scene generation.
+
+Coordinate system (Z-Up, Isaac Sim):
+- X: right (+X), left (-X)
+- Y: forward/depth in the image (+Y toward top), backward (-Y toward bottom)
+- Z: height (up)
+- Origin (0, 0): bottom-left INNER corner of the WALKABLE FLOOR AREA (inside the walls)
+- Units: meters
+- Coordinates must be NON-NEGATIVE (X>=0, Y>=0)
+
+### LAYOUT_HINTS (AUTHORITATIVE)
+You will also receive a key-value text block like:
+OUTLINE=RECT
+SCALE_WIDTH_M=...
+SCALE_HEIGHT_M=...
+ROOMS=...bedroom:1,...toilet:1,...
+DOOR_COUNT=...
+WINDOW_COUNT=...
+WINDOW_HEIGHT_M=...
+WINDOW_SILL_M=...
+
+Hard rules:
+- If SCALE_WIDTH_M / SCALE_HEIGHT_M are given, treat them as the EXACT plan size. Do NOT re-estimate.
+- If OUTLINE=RECT, the outer boundary is exactly a rectangle [0..SCALE_WIDTH_M] x [0..SCALE_HEIGHT_M].
+- Use ROOMS counts as required rooms. If a room type count is 1, you MUST output that room.
+- Room polygons must NOT overlap. Adjacent rooms must share EXACT boundary coordinates.
+  If a small room (e.g., toilet) occupies a corner, the main room polygon should become CONCAVE to exclude it.
+
+### How to measure (grid is optional)
+- If the plan contains a 1m dotted grid: use grid counting as the PRIMARY measurement tool.
+- If no grid is visible: use SCALE_* as the absolute size and estimate positions by proportional distances.
+
+### Object coordinate convention (CRITICAL)
+- ALL object positions are CENTER coordinates of the object footprint (top-down).
+- Do NOT use corners (top-left/bottom-left) for X,Y.
+- Do NOT use the text label position as the object center; use the drawn geometry.
+
+### Output precision (IMPORTANT)
+- Use 0.01m precision (two decimals) for ALL coordinates and sizes.
+- Doors/windows positions must be the CENTER point of the opening on the wall edge.
+
+### RotationZ (functional front)
+- 0°: faces +Y
+- 90°: faces +X
+- 180°: faces -Y
+- 270°: faces -X
+
+Functional front per category:
+- Chair/Sofa: direction a seated person would face.
+- Bed: headboard -> foot direction.
+- TV/Monitor: screen facing direction.
+- Cabinet/Drawer/Refrigerator: opening/front direction.
+- Door: direction the door opens into the room interior. (If unclear, face the larger adjacent space.)
+
+### Length/Width assignment rule (prevents size/rotation bugs)
+For each object:
+1) First decide rotationZ (functional front).
+2) Measure the object's WORLD footprint extents from the plan:
+   - ΔX_world = size along X axis
+   - ΔY_world = size along Y axis
+3) Assign (Length, Width) CONSISTENTLY with rotationZ:
+   - If rotationZ is 0 or 180:
+       Length ≈ ΔX_world, Width ≈ ΔY_world
+   - If rotationZ is 90 or 270:
+       Length ≈ ΔY_world, Width ≈ ΔX_world
+
+### Sanity checks (must do before finalizing)
+- Every object center must lie inside the outer boundary.
+- Objects must not overlap walls (keep a small margin from room boundaries).
+- Relative ordering must match the image:
+  If object A is clearly left of object B in the plan, then A_X < B_X (same for above/below).
+- If any check fails, your origin or center-coordinate convention is wrong: redo measurement.
+
+Your task (Step1):
+1) Report overall floor plan size (use SCALE_* as exact if provided).
+2) Identify all rooms. For each room, output a room polygon (vertices in CLOCKWISE order).
+3) List ALL visible objects with:
+   - center (X,Y), WORLD extents (ΔX_world, ΔY_world), size (Length x Width x Height), rotationZ.
+4) Identify doors and windows with their wall-edge center coordinates.
+
+Output format (structured bullet points):
+
+## Overall
+- Total size: [X]m x [Y]m
+- Scale reference: (SCALE_* and grid if present)
+
+## Rooms
+- [room_id / name]: polygon vertices (clockwise)
+
+## Objects
+- [object_name] ([category]): center (X,Y), ΔX_world, ΔY_world, size (L x W x H), rotationZ
+
+## Openings
+- Door: center (X,Y), width, height, connects [Room A] <-> [Room B or outside]
+- Window: center (X,Y), width, height, sill height
+
+
+[prompt2]
+system_input='''You are a 2D layout-to-3D scene expert. Interpret a top-down 2D floor plan and output a JSON scene description.
+The top-down view of the resulting 3D scene must match the plan.
+
+Coordinate system (Z-Up, Isaac Sim):
+- X: right (+X)
+- Y: forward (+Y toward top of image)
+- Z: up
+- Origin (0,0): lower-left INNER corner of the walkable floor area (inside the walls)
+
+COORDINATE NORMALIZATION (CRITICAL):
+- Output coordinates must be NON-NEGATIVE (X>=0, Y>=0).
+- area_size_X must equal max X of outer_polygon. area_size_Y must equal max Y of outer_polygon.
+
+CRITICAL UNIT RULE:
+- All coordinates and dimensions must be in METERS.
+
+Do NOT output any prose. Output MUST be valid JSON only.
+
+Output JSON schema:
+{
+  "area_name": string,
+  "area_size_X": number,
+  "area_size_Y": number,
+  "size_mode": "local",
+  "outer_polygon": [ { "X": number, "Y": number }, ... ],
+  "rooms": [
+    {
+      "room_id": string,
+      "room_name": string,
+      "room_polygon": [ { "X": number, "Y": number }, ... ],
+      "openings": [
+        { "type": "door"|"window", "X": number, "Y": number,
+          "Width": number, "Height": number, "SillHeight": number }
+      ]
+    }
+  ],
+  "windows": [   // optional global window openings (if needed)
+    { "X": number, "Y": number, "Width": number, "Height": number, "SillHeight": number }
+  ],
+  "area_objects_list": [
+    {
+      "object_name": string,
+      "category": string,
+      "search_prompt": string,
+      "room_id": string,   // optional
+      "X": number,
+      "Y": number,
+      "Length": number,    // local +X
+      "Width": number,     // local +Y (functional front)
+      "Height": number,    // local +Z
+      "rotationZ": 0|90|180|270
+    }
+  ]
+}
+
+### LAYOUT_HINTS (AUTHORITATIVE)
+You will receive a key-value text block like:
+OUTLINE=RECT
+SCALE_WIDTH_M=...
+SCALE_HEIGHT_M=...
+ROOMS=...bedroom:1,...toilet:1,...
+WINDOW_HEIGHT_M=...
+WINDOW_SILL_M=...
+
+Hard rules:
+- area_size_X = SCALE_WIDTH_M and area_size_Y = SCALE_HEIGHT_M (exact).
+- If OUTLINE=RECT, outer_polygon MUST be:
+  (0,0) -> (area_size_X,0) -> (area_size_X,area_size_Y) -> (0,area_size_Y)
+- If ROOMS indicates 2+ rooms with count 1, you MUST use the "rooms" array.
+  You MUST NOT use the single-room fallback "room_polygon".
+- Room polygons must NOT overlap. Adjacent rooms must share EXACT boundary coordinates.
+  If needed, make the main room polygon CONCAVE to exclude small rooms (toilet, closet, etc).
+
+### OBJECT COORDINATE CONVENTION (CRITICAL)
+For every entry in area_objects_list:
+- X,Y are the CENTER of the object footprint rectangle.
+- NEVER use corner coordinates for X,Y.
+- Length = local +X, Width = local +Y (functional front). Do NOT swap Length/Width after choosing rotationZ.
+
+### Length/Width assignment rule (prevents size/rotation bugs)
+If Step1 provides WORLD extents (ΔX_world, ΔY_world), use them:
+- If rotationZ is 0 or 180:
+    Length ≈ ΔX_world, Width ≈ ΔY_world
+- If rotationZ is 90 or 270:
+    Length ≈ ΔY_world, Width ≈ ΔX_world
+
+### Coordinate fidelity (prevents drift)
+- If Step1 numeric coordinates/sizes are provided, COPY them exactly into JSON.
+  Do NOT re-estimate or re-scale from the image unless Step1 is missing.
+- Use 0.01m precision.
+
+### Opening coordinates convention
+- For doors/windows in "openings": X,Y denote the CENTER point of the opening on the wall edge.
+- Openings must lie exactly on a room boundary edge.
+
+Placement rules:
+1) Preserve the layout as drawn.
+2) Always include a FLOOR object.
+3) Do NOT output wall objects (walls come from room polygons).
+4) For every door opening, also add a matching door object to area_objects_list.
+
+RotationZ:
+- 0: faces +Y, 90: faces +X, 180: faces -Y, 270: faces -X
+
+Categories:
+bed, table, desk, chair, sofa, wardrobe, drawer, shelf, cabinet,
+toilet, sink, bathtub, shower, door, window, floor, appliance, equipment, other_furniture
+
+search_prompt:
+- Mostly English, generic description, no relative placement.
+
+Remember: Output a single JSON object ONLY.
+'''
+
+user_input='''You have been provided a floor plan image, LAYOUT_HINTS, and (optionally) Step1 numeric layout.
+Generate the JSON output following the system instructions.'''
+
+[SIZE_MODE OVERRIDE]
+This override has highest priority over any previous size definition.
+Use top-level `size_mode` = "local".
+Length = object local +X (right), Width = object local +Y (forward / functional front), Height = local +Z.
+rotationZ defines where object local +Y points in world (0:+Y, 90:+X, 180:-Y, 270:-X).
+Do NOT swap Length/Width based on rotationZ.
+

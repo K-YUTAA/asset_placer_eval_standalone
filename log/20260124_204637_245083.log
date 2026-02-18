@@ -1,0 +1,175 @@
+AI Layout Generation Log
+timestamp: 20260124_204637_245083
+
+[AI Settings]
+step1_model: gpt-5.2
+step2_model: gpt-5.2
+reasoning_effort: high
+text_verbosity: high
+image_detail: high
+max_output_tokens: 18000
+max_retries: 1
+retry_delay_sec: 1.0
+
+[Step 1 Stats]
+time_sec: 64.88935399055481
+input_tokens: 2002
+output_tokens: 2454
+total_tokens: 4456
+
+[Step 2 Stats]
+time_sec: 150.62050652503967
+input_tokens: 3459
+output_tokens: 5587
+total_tokens: 9046
+
+[Total Stats]
+time_sec: 215.50986051559448
+input_tokens: 5461
+output_tokens: 8041
+total_tokens: 13502
+
+[Analysis Text]
+- Overall plan, 3 identical rooms + shared corridor, center (7.5,3.0), size ≈15.0×6.0, rooms at y≈2.0–6.0 and corridor at y≈0–2.0  
+- Corridor, mostly empty circulation, center (7.5,1.0), size ≈15.0×2.0, connects to 3 room doors along north wall (y=2.0)  
+- Room 1 (left) boundary/openings, center (2.5,4.0), size ≈5.0×4.0, bounds x≈0–5 y≈2–6; door on south wall to corridor (≈0.9m) + window on north wall (z≈1–2m)  
+- Room 1 (left) key objects: bed (east side, N–S), fridge (NW), chair (near north), TV/stand (west wall), cabinet (SE), center (2.5,4.0), room size ≈5.0×4.0  
+- Room 2 (middle) boundary/openings, center (7.5,4.0), size ≈5.0×4.0, bounds x≈5–10 y≈2–6; door on south wall to corridor (≈0.9m) + window on north wall (z≈1–2m)  
+- Room 2 (middle) key objects: bed (east side, N–S), small appliance/table + chair near north, TV/stand (west wall), cabinet (SE), center (7.5,4.0), room size ≈5.0×4.0  
+- Room 3 (right) boundary/openings, center (12.5,4.0), size ≈5.0×4.0, bounds x≈10–15 y≈2–6; door on south wall to corridor (≈0.9m) + window on north wall (z≈1–2m)  
+- Room 3 (right) key objects: bed (east side, N–S), small appliance/table + chair near north, TV/stand (west wall), cabinet (SE), center (12.5,4.0), room size ≈5.0×4.0
+
+[AABB Collisions]
+- door_room1 vs refrigerator_room1: overlap_volume=0.10500000000000001
+- door_room2 vs table_room2: overlap_volume=0.015000000000000013
+- door_room3 vs table_room3: overlap_volume=0.014999999999999947
+- bed_room1 vs cabinet_room1: overlap_volume=0.1375
+- bed_room2 vs cabinet_room2: overlap_volume=0.1375
+- chair_room2 vs cabinet_room2: overlap_volume=0.020000000000000285
+- bed_room3 vs cabinet_room3: overlap_volume=0.1375
+- chair_room3 vs cabinet_room3: overlap_volume=0.020000000000000285
+
+[Room Size]
+area_size_X: 15.0
+area_size_Y: 6.0
+
+[Inputs]
+image_path: C:/Users/tmaru/isaacsim/inputs_isaac/floor_plan_ c.jpeg
+
+[dimensions.txt]
+家具の大きさは一般的に考えて常識的なサイズで推論してください。
+また、部屋のサイズもそれに応じてお願いします。
+窓の高さはzが1m~2mの間に設置してください
+
+[prompt1]
+You are an interior layout analyst. Provide a concise summary for layout generation.
+- Coordinate system: X = right, Y = up in the image (depth), Z = up.
+- Origin: lower-left inner corner of the overall plan.
+- Units: meters.
+- If the floor plan has multiple rooms, identify each room and its boundary lines and openings.
+- Output format: 8-14 bullet lines max. Each line: room name (if any), key objects, approx center (x,y),
+  approx size (LxW), and orientation/opening notes if obvious.
+- No long explanations, no headings, no tables.
+
+
+[prompt2]
+system_input='''You are a 2D layout-to-3D scene expert. Your task is to interpret a top-down 2D floor plan
+and output a JSON scene description. The top-down view of the resulting 3D scene must match the plan.
+
+Coordinate system (Z-Up, Isaac Sim):
+- X: right (+X), left (-X)
+- Y: up in the image / depth (+Y)
+- Z: up (height)
+- Origin (0,0): lower-left inner corner of the overall plan
+
+CRITICAL UNIT RULE:
+- All coordinates and dimensions must be in METERS.
+- If input is in cm, convert to meters (e.g., 250 cm -> 2.5).
+
+Do NOT output any prose. Output MUST be valid JSON only.
+
+MULTI-ROOM JSON SCHEMA (preferred):
+{
+  "area_name": string,
+  "area_size_X": number,  // meters (overall)
+  "area_size_Y": number,  // meters (overall)
+  "room_polygon": [        // optional single-room fallback
+    { "X": number, "Y": number }
+  ],
+  "outer_polygon": [       // preferred building outline (may be concave)
+    { "X": number, "Y": number }
+  ],
+  "rooms": [               // preferred for multi-room plans
+    {
+      "room_id": string,
+      "room_name": string (optional),
+      "room_polygon": [ { "X": number, "Y": number } ],
+      "openings": [        // doors/windows on room boundary
+        { "type": "door"|"window", "X": number, "Y": number,
+          "Width": number, "Height": number, "SillHeight": number }
+      ]
+    }
+  ],
+  "windows": [             // optional global window openings
+    { "X": number, "Y": number, "Width": number, "Height": number, "SillHeight": number }
+  ],
+  "area_objects_list": [
+    {
+      "object_name": string,
+      "category": string,
+      "search_prompt": string,
+      "room_id": string (optional),
+      "X": number,      // meters
+      "Y": number,      // meters
+      "Length": number, // meters (X-axis size)
+      "Width": number,  // meters (Y-axis size)
+      "Height": number, // meters (Z-axis size)
+      "rotationZ": number,  // degrees: 0/90/180/270
+      "Material": string (optional)
+    }
+  ]
+}
+
+Placement rules:
+1) The image is an XY top-down plan. Preserve the layout as drawn.
+2) Right in the image is +X. Up in the image is +Y.
+3) Use Length for the X-axis size, Width for the Y-axis size, Height for Z.
+4) Do NOT output any "wall" objects. Walls are procedural from room polygons.
+5) Doors/windows: include them in room openings when visible. Do NOT invent openings.
+   For every door opening, also add a matching door object to area_objects_list.
+   Use rotationZ to indicate the door opens into the room (interior).
+6) Keep object placement faithful to the drawing. Do not move objects to fix collisions.
+7) Room polygons must not overlap. Adjacent rooms should share the exact same boundary coordinates.
+8) Openings must lie exactly on a room boundary edge (same X or same Y for axis-aligned walls).
+   If a door is between two rooms, place it on the shared edge (can appear in both rooms or once).
+9) If the building outline is not a rectangle, include "outer_polygon" with the true outline (concave allowed).
+   Do NOT approximate the outer boundary as a rectangle.
+
+Functional orientation (rotationZ):
+- 0 degrees: faces +Y (image up)
+- 90 degrees: faces +X (image right)
+- 180 degrees: faces -Y (image down)
+- 270 degrees: faces -X (image left)
+
+Define functional front per category:
+- Bed: direction a person faces from head to foot.
+- Chair/Sofa: direction a seated person faces.
+- TV/Display: direction the screen faces.
+- Door: direction the door opens into the room (interior).
+- Refrigerator/Drawer/Cabinet: direction the front opens.
+
+Categories (use one of these unless absolutely necessary):
+bed, table, desk, chair, sofa, wardrobe, drawer, shelf, cabinet, wheelchair,
+toilet, sink, bathtub, shower, door, window, floor, appliance, equipment, other_furniture
+
+search_prompt guidelines:
+- Write mainly in English.
+- Describe object type, usage context, and key attributes.
+- Do NOT describe relative placement in this specific room.
+
+Remember: Output a single JSON object ONLY.
+'''
+
+user_input='''You have been provided a floor plan image and a list of dimensions.
+Analyze the image to determine precise placement and orientation of each object.
+Then generate the JSON output following the system instructions.'''

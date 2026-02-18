@@ -1,0 +1,878 @@
+{
+    "area_name": "Apartment",
+    "area_size_X": 11.5,
+    "area_size_Y": 12,
+    "outer_polygon": [
+      {
+        "X": 0,
+        "Y": 0
+      },
+      {
+        "X": 11.5,
+        "Y": 0
+      },
+      {
+        "X": 11.5,
+        "Y": 10
+      },
+      {
+        "X": 10.5,
+        "Y": 10
+      },
+      {
+        "X": 10.5,
+        "Y": 12
+      },
+      {
+        "X": 0,
+        "Y": 12
+      }
+    ],
+    "rooms": [
+      {
+        "room_id": "balcony",
+        "room_name": "Balcony / Veranda (L-shape)",
+        "room_polygon": [
+          {
+            "X": 0,
+            "Y": 0
+          },
+          {
+            "X": 11.5,
+            "Y": 0
+          },
+          {
+            "X": 11.5,
+            "Y": 10
+          },
+          {
+            "X": 10.5,
+            "Y": 10
+          },
+          {
+            "X": 10.5,
+            "Y": 1
+          },
+          {
+            "X": 0,
+            "Y": 1
+          }
+        ],
+        "openings": []
+      },
+      {
+        "room_id": "living_kitchen",
+        "room_name": "Living / Dining / Kitchen",
+        "room_polygon": [
+          {
+            "X": 0,
+            "Y": 1
+          },
+          {
+            "X": 6.25,
+            "Y": 1
+          },
+          {
+            "X": 6.25,
+            "Y": 5.5
+          },
+          {
+            "X": 0,
+            "Y": 5.5
+          }
+        ],
+        "openings": [
+          {
+            "type": "door",
+            "X": 5.25,
+            "Y": 5.5,
+            "Width": 0.8,
+            "Height": 2,
+            "SillHeight": 0
+          },
+          {
+            "type": "door",
+            "X": 6.25,
+            "Y": 3,
+            "Width": 0.8,
+            "Height": 2,
+            "SillHeight": 0
+          },
+          {
+            "type": "door",
+            "X": 3.6,
+            "Y": 1,
+            "Width": 2.4,
+            "Height": 2.1,
+            "SillHeight": 0
+          }
+        ]
+      },
+      {
+        "room_id": "parents_room",
+        "room_name": "Parents' Room",
+        "room_polygon": [
+          {
+            "X": 6.25,
+            "Y": 1
+          },
+          {
+            "X": 10.5,
+            "Y": 1
+          },
+          {
+            "X": 10.5,
+            "Y": 5.5
+          },
+          {
+            "X": 6.25,
+            "Y": 5.5
+          }
+        ],
+        "openings": [
+          {
+            "type": "door",
+            "X": 6.25,
+            "Y": 3,
+            "Width": 0.8,
+            "Height": 2,
+            "SillHeight": 0
+          },
+          {
+            "type": "window",
+            "X": 8.4,
+            "Y": 1,
+            "Width": 2,
+            "Height": 1,
+            "SillHeight": 1
+          },
+          {
+            "type": "window",
+            "X": 10.5,
+            "Y": 3,
+            "Width": 1.2,
+            "Height": 1,
+            "SillHeight": 1
+          }
+        ]
+      },
+      {
+        "room_id": "toilet",
+        "room_name": "Toilet",
+        "room_polygon": [
+          {
+            "X": 0,
+            "Y": 5.5
+          },
+          {
+            "X": 4.25,
+            "Y": 5.5
+          },
+          {
+            "X": 4.25,
+            "Y": 6.5
+          },
+          {
+            "X": 0,
+            "Y": 6.5
+          }
+        ],
+        "openings": [
+          {
+            "type": "door",
+            "X": 4.25,
+            "Y": 6,
+            "Width": 0.7,
+            "Height": 2,
+            "SillHeight": 0
+          }
+        ]
+      },
+      {
+        "room_id": "washroom",
+        "room_name": "Washroom",
+        "room_polygon": [
+          {
+            "X": 0,
+            "Y": 6.5
+          },
+          {
+            "X": 4.25,
+            "Y": 6.5
+          },
+          {
+            "X": 4.25,
+            "Y": 8
+          },
+          {
+            "X": 0,
+            "Y": 8
+          }
+        ],
+        "openings": [
+          {
+            "type": "door",
+            "X": 4.25,
+            "Y": 7.25,
+            "Width": 0.7,
+            "Height": 2,
+            "SillHeight": 0
+          }
+        ]
+      },
+      {
+        "room_id": "bathroom",
+        "room_name": "Bathroom",
+        "room_polygon": [
+          {
+            "X": 0,
+            "Y": 8
+          },
+          {
+            "X": 4.25,
+            "Y": 8
+          },
+          {
+            "X": 4.25,
+            "Y": 9.5
+          },
+          {
+            "X": 0,
+            "Y": 9.5
+          }
+        ],
+        "openings": [
+          {
+            "type": "door",
+            "X": 4.25,
+            "Y": 8.75,
+            "Width": 0.7,
+            "Height": 2,
+            "SillHeight": 0
+          }
+        ]
+      },
+      {
+        "room_id": "storage_nw",
+        "room_name": "Storage Room",
+        "room_polygon": [
+          {
+            "X": 0,
+            "Y": 9.5
+          },
+          {
+            "X": 4.25,
+            "Y": 9.5
+          },
+          {
+            "X": 4.25,
+            "Y": 12
+          },
+          {
+            "X": 0,
+            "Y": 12
+          }
+        ],
+        "openings": [
+          {
+            "type": "door",
+            "X": 4.25,
+            "Y": 10,
+            "Width": 0.8,
+            "Height": 2,
+            "SillHeight": 0
+          }
+        ]
+      },
+      {
+        "room_id": "hallway",
+        "room_name": "Hallway",
+        "room_polygon": [
+          {
+            "X": 4.25,
+            "Y": 5.5
+          },
+          {
+            "X": 6.25,
+            "Y": 5.5
+          },
+          {
+            "X": 6.25,
+            "Y": 10.5
+          },
+          {
+            "X": 4.25,
+            "Y": 10.5
+          }
+        ],
+        "openings": [
+          {
+            "type": "door",
+            "X": 5.25,
+            "Y": 5.5,
+            "Width": 0.8,
+            "Height": 2,
+            "SillHeight": 0
+          },
+          {
+            "type": "door",
+            "X": 4.25,
+            "Y": 6,
+            "Width": 0.7,
+            "Height": 2,
+            "SillHeight": 0
+          },
+          {
+            "type": "door",
+            "X": 4.25,
+            "Y": 7.25,
+            "Width": 0.7,
+            "Height": 2,
+            "SillHeight": 0
+          },
+          {
+            "type": "door",
+            "X": 4.25,
+            "Y": 8.75,
+            "Width": 0.7,
+            "Height": 2,
+            "SillHeight": 0
+          },
+          {
+            "type": "door",
+            "X": 4.25,
+            "Y": 10,
+            "Width": 0.8,
+            "Height": 2,
+            "SillHeight": 0
+          },
+          {
+            "type": "door",
+            "X": 6.25,
+            "Y": 7,
+            "Width": 0.8,
+            "Height": 2,
+            "SillHeight": 0
+          },
+          {
+            "type": "door",
+            "X": 6.25,
+            "Y": 10,
+            "Width": 0.8,
+            "Height": 2,
+            "SillHeight": 0
+          },
+          {
+            "type": "door",
+            "X": 5.25,
+            "Y": 10.5,
+            "Width": 0.8,
+            "Height": 2,
+            "SillHeight": 0
+          }
+        ]
+      },
+      {
+        "room_id": "entrance",
+        "room_name": "Entrance",
+        "room_polygon": [
+          {
+            "X": 4.25,
+            "Y": 10.5
+          },
+          {
+            "X": 6.25,
+            "Y": 10.5
+          },
+          {
+            "X": 6.25,
+            "Y": 12
+          },
+          {
+            "X": 4.25,
+            "Y": 12
+          }
+        ],
+        "openings": [
+          {
+            "type": "door",
+            "X": 5.25,
+            "Y": 12,
+            "Width": 0.9,
+            "Height": 2.1,
+            "SillHeight": 0
+          },
+          {
+            "type": "door",
+            "X": 5.25,
+            "Y": 10.5,
+            "Width": 0.8,
+            "Height": 2,
+            "SillHeight": 0
+          }
+        ]
+      },
+      {
+        "room_id": "yuzuhiko_room",
+        "room_name": "Yuzuhiko's Room",
+        "room_polygon": [
+          {
+            "X": 6.25,
+            "Y": 5.5
+          },
+          {
+            "X": 10.5,
+            "Y": 5.5
+          },
+          {
+            "X": 10.5,
+            "Y": 8.5
+          },
+          {
+            "X": 6.25,
+            "Y": 8.5
+          }
+        ],
+        "openings": [
+          {
+            "type": "door",
+            "X": 6.25,
+            "Y": 7,
+            "Width": 0.8,
+            "Height": 2,
+            "SillHeight": 0
+          },
+          {
+            "type": "window",
+            "X": 10.5,
+            "Y": 7,
+            "Width": 1.2,
+            "Height": 1,
+            "SillHeight": 1
+          }
+        ]
+      },
+      {
+        "room_id": "mikan_room",
+        "room_name": "Mikan's Room",
+        "room_polygon": [
+          {
+            "X": 6.25,
+            "Y": 8.5
+          },
+          {
+            "X": 10.5,
+            "Y": 8.5
+          },
+          {
+            "X": 10.5,
+            "Y": 12
+          },
+          {
+            "X": 6.25,
+            "Y": 12
+          }
+        ],
+        "openings": [
+          {
+            "type": "door",
+            "X": 6.25,
+            "Y": 10,
+            "Width": 0.8,
+            "Height": 2,
+            "SillHeight": 0
+          },
+          {
+            "type": "window",
+            "X": 10.5,
+            "Y": 10.2,
+            "Width": 1.2,
+            "Height": 1,
+            "SillHeight": 1
+          },
+          {
+            "type": "window",
+            "X": 8.5,
+            "Y": 12,
+            "Width": 1.5,
+            "Height": 1,
+            "SillHeight": 1
+          }
+        ]
+      }
+    ],
+    "area_objects_list": [
+      {
+        "object_name": "Door_MainEntry",
+        "category": "door",
+        "search_prompt": "Residential apartment entry door, single leaf, modern, neutral color",
+        "room_id": "entrance",
+        "X": 5.25,
+        "Y": 12,
+        "Length": 0.9,
+        "Width": 0.04,
+        "Height": 2.1,
+        "rotationZ": 180
+      },
+      {
+        "object_name": "Door_EntranceToHallway",
+        "category": "door",
+        "search_prompt": "Interior hinged door, standard size, modern apartment",
+        "room_id": "hallway",
+        "X": 5.25,
+        "Y": 10.5,
+        "Length": 0.8,
+        "Width": 0.04,
+        "Height": 2,
+        "rotationZ": 180
+      },
+      {
+        "object_name": "Door_HallwayToLiving",
+        "category": "door",
+        "search_prompt": "Interior hinged door, standard size, modern apartment",
+        "room_id": "living_kitchen",
+        "X": 5.25,
+        "Y": 5.5,
+        "Length": 0.8,
+        "Width": 0.04,
+        "Height": 2,
+        "rotationZ": 180
+      },
+      {
+        "object_name": "Door_HallwayToToilet",
+        "category": "door",
+        "search_prompt": "Interior hinged door, compact bathroom door, modern apartment",
+        "room_id": "toilet",
+        "X": 4.25,
+        "Y": 6,
+        "Length": 0.7,
+        "Width": 0.04,
+        "Height": 2,
+        "rotationZ": 270
+      },
+      {
+        "object_name": "Door_HallwayToWashroom",
+        "category": "door",
+        "search_prompt": "Interior hinged door, compact washroom door, modern apartment",
+        "room_id": "washroom",
+        "X": 4.25,
+        "Y": 7.25,
+        "Length": 0.7,
+        "Width": 0.04,
+        "Height": 2,
+        "rotationZ": 270
+      },
+      {
+        "object_name": "Door_HallwayToBathroom",
+        "category": "door",
+        "search_prompt": "Interior hinged door, compact bathroom door, modern apartment",
+        "room_id": "bathroom",
+        "X": 4.25,
+        "Y": 8.75,
+        "Length": 0.7,
+        "Width": 0.04,
+        "Height": 2,
+        "rotationZ": 270
+      },
+      {
+        "object_name": "Door_HallwayToStorageNW",
+        "category": "door",
+        "search_prompt": "Interior hinged door, storage room door, modern apartment",
+        "room_id": "storage_nw",
+        "X": 4.25,
+        "Y": 10,
+        "Length": 0.8,
+        "Width": 0.04,
+        "Height": 2,
+        "rotationZ": 270
+      },
+      {
+        "object_name": "Door_HallwayToYuzuhiko",
+        "category": "door",
+        "search_prompt": "Interior hinged door, bedroom door, standard size, modern apartment",
+        "room_id": "yuzuhiko_room",
+        "X": 6.25,
+        "Y": 7,
+        "Length": 0.8,
+        "Width": 0.04,
+        "Height": 2,
+        "rotationZ": 90
+      },
+      {
+        "object_name": "Door_HallwayToMikan",
+        "category": "door",
+        "search_prompt": "Interior hinged door, bedroom door, standard size, modern apartment",
+        "room_id": "mikan_room",
+        "X": 6.25,
+        "Y": 10,
+        "Length": 0.8,
+        "Width": 0.04,
+        "Height": 2,
+        "rotationZ": 90
+      },
+      {
+        "object_name": "Door_LivingToParents",
+        "category": "door",
+        "search_prompt": "Interior hinged door, bedroom door, standard size, modern apartment",
+        "room_id": "parents_room",
+        "X": 6.25,
+        "Y": 3,
+        "Length": 0.8,
+        "Width": 0.04,
+        "Height": 2,
+        "rotationZ": 90
+      },
+      {
+        "object_name": "Door_LivingToBalcony_Sliding",
+        "category": "door",
+        "search_prompt": "Sliding glass patio door, apartment balcony access, large glazing",
+        "room_id": "living_kitchen",
+        "X": 3.6,
+        "Y": 1,
+        "Length": 2.4,
+        "Width": 0.06,
+        "Height": 2.1,
+        "rotationZ": 0
+      },
+      {
+        "object_name": "Sofa_Living",
+        "category": "sofa",
+        "search_prompt": "Modern 3-seat sofa, fabric, living room seating, simple design",
+        "room_id": "living_kitchen",
+        "X": 3.5,
+        "Y": 4.8,
+        "Length": 2.2,
+        "Width": 0.9,
+        "Height": 0.8,
+        "rotationZ": 180
+      },
+      {
+        "object_name": "LowTable_Living",
+        "category": "table",
+        "search_prompt": "Low coffee table, rectangular, living room, wood or neutral finish",
+        "room_id": "living_kitchen",
+        "X": 3.5,
+        "Y": 3.9,
+        "Length": 1.1,
+        "Width": 0.6,
+        "Height": 0.4,
+        "rotationZ": 0
+      },
+      {
+        "object_name": "TV_Living",
+        "category": "equipment",
+        "search_prompt": "Flat screen TV on stand, living room display, modern",
+        "room_id": "living_kitchen",
+        "X": 6.12,
+        "Y": 3.8,
+        "Length": 0.2,
+        "Width": 1.4,
+        "Height": 0.9,
+        "rotationZ": 270
+      },
+      {
+        "object_name": "DiningTable",
+        "category": "table",
+        "search_prompt": "Dining table, rectangular for 4 people, simple modern design",
+        "room_id": "living_kitchen",
+        "X": 3.7,
+        "Y": 2.2,
+        "Length": 1.4,
+        "Width": 0.8,
+        "Height": 0.75,
+        "rotationZ": 0
+      },
+      {
+        "object_name": "Sideboard_Living",
+        "category": "cabinet",
+        "search_prompt": "Sideboard cabinet, living/dining storage, modern, waist-height",
+        "room_id": "living_kitchen",
+        "X": 2.3,
+        "Y": 3.6,
+        "Length": 0.45,
+        "Width": 1.6,
+        "Height": 0.85,
+        "rotationZ": 90
+      },
+      {
+        "object_name": "Refrigerator_Kitchen",
+        "category": "appliance",
+        "search_prompt": "Tall refrigerator, two-door, modern kitchen appliance, neutral color",
+        "room_id": "living_kitchen",
+        "X": 0.35,
+        "Y": 4.6,
+        "Length": 0.7,
+        "Width": 0.75,
+        "Height": 1.8,
+        "rotationZ": 90
+      },
+      {
+        "object_name": "KitchenSinkCounter",
+        "category": "cabinet",
+        "search_prompt": "Kitchen base cabinet with sink and countertop, modern compact kitchen",
+        "room_id": "living_kitchen",
+        "X": 0.35,
+        "Y": 3,
+        "Length": 0.6,
+        "Width": 2.4,
+        "Height": 0.9,
+        "rotationZ": 90
+      },
+      {
+        "object_name": "Cooktop_Stove",
+        "category": "appliance",
+        "search_prompt": "Kitchen cooktop stove unit, compact, modern apartment kitchen",
+        "room_id": "living_kitchen",
+        "X": 0.35,
+        "Y": 1.6,
+        "Length": 0.6,
+        "Width": 0.6,
+        "Height": 0.9,
+        "rotationZ": 90
+      },
+      {
+        "object_name": "Toilet_Bowl",
+        "category": "toilet",
+        "search_prompt": "Modern toilet bowl, compact bathroom fixture, white ceramic",
+        "room_id": "toilet",
+        "X": 1.2,
+        "Y": 6,
+        "Length": 0.7,
+        "Width": 0.4,
+        "Height": 0.8,
+        "rotationZ": 180
+      },
+      {
+        "object_name": "WashingMachine",
+        "category": "appliance",
+        "search_prompt": "Front-load or top-load washing machine, compact laundry appliance",
+        "room_id": "washroom",
+        "X": 0.9,
+        "Y": 7.2,
+        "Length": 0.6,
+        "Width": 0.6,
+        "Height": 0.9,
+        "rotationZ": 0
+      },
+      {
+        "object_name": "Bathtub",
+        "category": "bathtub",
+        "search_prompt": "Compact bathtub, modern bathroom fixture, rectangular",
+        "room_id": "bathroom",
+        "X": 1,
+        "Y": 8.75,
+        "Length": 0.8,
+        "Width": 1.6,
+        "Height": 0.6,
+        "rotationZ": 0
+      },
+      {
+        "object_name": "BathroomSink",
+        "category": "sink",
+        "search_prompt": "Bathroom sink vanity, compact basin with cabinet, modern",
+        "room_id": "bathroom",
+        "X": 3.3,
+        "Y": 8.6,
+        "Length": 0.6,
+        "Width": 0.5,
+        "Height": 0.85,
+        "rotationZ": 180
+      },
+      {
+        "object_name": "MeterBox",
+        "category": "equipment",
+        "search_prompt": "Electrical meter box cabinet, building utility enclosure",
+        "room_id": "storage_nw",
+        "X": 2,
+        "Y": 11.6,
+        "Length": 1,
+        "Width": 0.4,
+        "Height": 1,
+        "rotationZ": 0
+      },
+      {
+        "object_name": "Bed_Mikan",
+        "category": "bed",
+        "search_prompt": "Single bed, simple frame, minimal modern bedroom furniture",
+        "room_id": "mikan_room",
+        "X": 7,
+        "Y": 11,
+        "Length": 1,
+        "Width": 2,
+        "Height": 0.55,
+        "rotationZ": 180
+      },
+      {
+        "object_name": "Desk_Mikan",
+        "category": "desk",
+        "search_prompt": "Study desk, compact rectangular tabletop, student bedroom desk",
+        "room_id": "mikan_room",
+        "X": 9.6,
+        "Y": 9.7,
+        "Length": 1,
+        "Width": 0.6,
+        "Height": 0.75,
+        "rotationZ": 90
+      },
+      {
+        "object_name": "Chair_Mikan",
+        "category": "chair",
+        "search_prompt": "Simple desk chair, compact, modern, for studying",
+        "room_id": "mikan_room",
+        "X": 8.9,
+        "Y": 9.7,
+        "Length": 0.5,
+        "Width": 0.5,
+        "Height": 0.9,
+        "rotationZ": 90
+      },
+      {
+        "object_name": "Desk_Yuzuhiko",
+        "category": "desk",
+        "search_prompt": "Study desk, compact rectangular tabletop, student bedroom desk",
+        "room_id": "yuzuhiko_room",
+        "X": 9.3,
+        "Y": 7,
+        "Length": 1.2,
+        "Width": 0.6,
+        "Height": 0.75,
+        "rotationZ": 270
+      },
+      {
+        "object_name": "Chair_Yuzuhiko",
+        "category": "chair",
+        "search_prompt": "Simple desk chair, compact, modern, for studying",
+        "room_id": "yuzuhiko_room",
+        "X": 10,
+        "Y": 7,
+        "Length": 0.5,
+        "Width": 0.5,
+        "Height": 0.9,
+        "rotationZ": 270
+      },
+      {
+        "object_name": "Wardrobe_Parents_1",
+        "category": "wardrobe",
+        "search_prompt": "Tall wardrobe closet, modern bedroom storage, double-door",
+        "room_id": "parents_room",
+        "X": 9.9,
+        "Y": 2.5,
+        "Length": 0.6,
+        "Width": 1.2,
+        "Height": 2,
+        "rotationZ": 270
+      },
+      {
+        "object_name": "Wardrobe_Parents_2",
+        "category": "wardrobe",
+        "search_prompt": "Tall wardrobe closet, modern bedroom storage, double-door",
+        "room_id": "parents_room",
+        "X": 9.9,
+        "Y": 4.1,
+        "Length": 0.6,
+        "Width": 1.2,
+        "Height": 2,
+        "rotationZ": 270
+      }
+    ]
+  }

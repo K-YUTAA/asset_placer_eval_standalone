@@ -1,0 +1,216 @@
+{
+    "area_name": "compact_bedroom_unit",
+    "area_size_X": 4.63,
+    "area_size_Y": 5.19,
+    "size_mode": "local",
+    "outer_polygon": [
+        {
+            "X": 0,
+            "Y": 0
+        },
+        {
+            "X": 4.63,
+            "Y": 0
+        },
+        {
+            "X": 4.63,
+            "Y": 5.19
+        },
+        {
+            "X": 0,
+            "Y": 5.19
+        }
+    ],
+    "rooms": [
+        {
+            "room_id": "room_1",
+            "room_name": "Bedroom",
+            "room_polygon": [
+                {
+                    "X": 1.1,
+                    "Y": 0.0
+                },
+                {
+                    "X": 1.1,
+                    "Y": 1.25
+                },
+                {
+                    "X": 0.0,
+                    "Y": 1.25
+                },
+                {
+                    "X": 0.0,
+                    "Y": 3.55
+                },
+                {
+                    "X": 1.55,
+                    "Y": 3.55
+                },
+                {
+                    "X": 1.55,
+                    "Y": 4.85
+                },
+                {
+                    "X": 0.0,
+                    "Y": 4.85
+                },
+                {
+                    "X": 0.0,
+                    "Y": 5.19
+                },
+                {
+                    "X": 4.63,
+                    "Y": 5.19
+                },
+                {
+                    "X": 4.63,
+                    "Y": 0.0
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 2.6,
+                    "Y": 5.19,
+                    "Width": 1.6,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "door",
+                    "X": 1.55,
+                    "Y": 4.1,
+                    "Width": 0.8,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "window",
+                    "X": 3.0,
+                    "Y": 0.0,
+                    "Width": 2.2,
+                    "Height": 1.2,
+                    "SillHeight": 1.0
+                }
+            ]
+        },
+        {
+            "room_id": "room_2",
+            "room_name": "Toilet",
+            "room_polygon": [
+                {
+                    "X": 0.0,
+                    "Y": 3.55
+                },
+                {
+                    "X": 0.0,
+                    "Y": 4.85
+                },
+                {
+                    "X": 1.55,
+                    "Y": 4.85
+                },
+                {
+                    "X": 1.55,
+                    "Y": 3.55
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 1.55,
+                    "Y": 4.1,
+                    "Width": 0.8,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                }
+            ]
+        }
+    ],
+    "area_objects_list": [
+        {
+            "object_name": "bed_1",
+            "category": "bed",
+            "search_prompt": "low platform bed, light wood, double size — compact Japanese apartment bedroom",
+            "room_id": "room_1",
+            "X": 1.15,
+            "Y": 2.15,
+            "Length": 1.6,
+            "Width": 2.2,
+            "Height": 0.55,
+            "rotationZ": 0
+        },
+        {
+            "object_name": "chair_1",
+            "category": "chair",
+            "search_prompt": "simple desk chair, fabric upholstered, compact — compact Japanese apartment bedroom",
+            "room_id": "room_1",
+            "X": 3.03,
+            "Y": 2.58,
+            "Length": 0.65,
+            "Width": 0.65,
+            "Height": 0.9,
+            "rotationZ": 90
+        },
+        {
+            "object_name": "tv_cabinet_1",
+            "category": "cabinet",
+            "search_prompt": "slim TV cabinet, white laminate, narrow — compact Japanese apartment bedroom",
+            "room_id": "room_1",
+            "X": 4.34,
+            "Y": 2.33,
+            "Length": 0.58,
+            "Width": 1.45,
+            "Height": 0.8,
+            "rotationZ": 270
+        },
+        {
+            "object_name": "sink_1",
+            "category": "sink",
+            "search_prompt": "small wall sink vanity, white ceramic, compact — compact Japanese apartment bedroom",
+            "room_id": "room_1",
+            "X": 4.315,
+            "Y": 4.05,
+            "Length": 0.63,
+            "Width": 0.7,
+            "Height": 0.85,
+            "rotationZ": 270
+        },
+        {
+            "object_name": "toilet_1",
+            "category": "toilet",
+            "search_prompt": "standard toilet, white ceramic, compact — compact Japanese apartment bedroom",
+            "room_id": "room_2",
+            "X": 0.35,
+            "Y": 4.52,
+            "Length": 0.7,
+            "Width": 0.65,
+            "Height": 0.8,
+            "rotationZ": 90
+        },
+        {
+            "object_name": "wardrobe_nw_1",
+            "category": "wardrobe",
+            "search_prompt": "built-in wardrobe closet, light wood, full height — compact Japanese apartment bedroom",
+            "room_id": "room_1",
+            "X": 0.78,
+            "Y": 5.02,
+            "Length": 1.55,
+            "Width": 0.34,
+            "Height": 2.1,
+            "rotationZ": 180
+        },
+        {
+            "object_name": "wardrobe_ne_1",
+            "category": "wardrobe",
+            "search_prompt": "tall storage wardrobe, light wood, compact — compact Japanese apartment bedroom",
+            "room_id": "room_1",
+            "X": 4.24,
+            "Y": 4.82,
+            "Length": 0.78,
+            "Width": 0.74,
+            "Height": 2.1,
+            "rotationZ": 270
+        }
+    ]
+}

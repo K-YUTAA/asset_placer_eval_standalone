@@ -1,0 +1,588 @@
+AI Layout Generation Log
+timestamp: 20260129_220504_674050
+
+[AI Settings]
+step1_model: gpt-5.2
+step2_model: gpt-5.2
+reasoning_effort: medium
+max_output_tokens: 48000
+text_verbosity: high
+image_detail: high
+
+[Step 1 Stats]
+time_sec: 234.88672471046448
+input_tokens: 2388
+output_tokens: 7853
+total_tokens: 10241
+
+[Step 2 Stats]
+time_sec: 519.9250686168671
+input_tokens: 7110
+output_tokens: 16787
+total_tokens: 23897
+
+[Total Stats]
+time_sec: 754.8117933273315
+input_tokens: 9498
+output_tokens: 24640
+total_tokens: 34138
+
+[Analysis Text]
+## Overall
+- Total size: **~16.2m (X) x ~7.8m (Y)**
+- Scale reference: inferred from **typical 1-car garage** (≈6m wide), **car footprint** (≈4.5m x 1.8m), and **double bed** (≈2.0m x 1.6m). Grid spacing appears uniform; assumed ~0.5m per small square for consistency with common room sizes.
+
+---
+
+## Rooms
+(Origin **(0,0)** = bottom-left inner corner of the overall plan; Z-up. Vertices listed clockwise.)
+
+- **Garage**
+  - center: (~3.15, ~3.90)
+  - size: **~6.3 x ~7.8m**
+  - polygon vertices: (0.0,0.0), (6.3,0.0), (6.3,7.8), (0.0,7.8)
+
+- **Living / Dining (open area)**
+  - center: (~9.55, ~1.80)
+  - size: **~6.9 x ~3.6m**
+  - polygon vertices: (6.3,0.0), (13.2,0.0), (13.2,3.6), (6.3,3.6)
+
+- **Kitchen**
+  - center: (~12.05, ~1.80)
+  - size: **~2.6 x ~3.6m**
+  - polygon vertices: (10.9,0.0), (13.5,0.0), (13.5,3.6), (10.9,3.6)
+  - note: overlaps conceptually with open-plan zone; bounded by cabinetry walls shown around kitchen block.
+
+- **Storage (pantry/storage room)**
+  - center: (~13.95, ~2.05)
+  - size: **~1.7 x ~3.1m**
+  - polygon vertices: (13.2,0.5), (14.9,0.5), (14.9,3.6), (13.2,3.6)
+
+- **Desk Nook / Study strip**
+  - center: (~14.95, ~2.05)
+  - size: **~0.9 x ~3.1m**
+  - polygon vertices: (14.9,0.5), (15.8,0.5), (15.8,3.6), (14.9,3.6)
+
+- **Bedroom 3 (bottom-right)**
+  - center: (~15.00, ~1.80)
+  - size: **~3.0 x ~3.6m**
+  - polygon vertices: (13.2,0.0), (16.2,0.0), (16.2,3.6), (13.2,3.6)
+
+- **Entrance (genkan)**
+  - center: (~7.45, ~4.80)
+  - size: **~1.9 x ~1.8m**
+  - polygon vertices: (6.3,3.9), (8.2,3.9), (8.2,5.7), (6.3,5.7)
+
+- **Hallway**
+  - center: (~8.90, ~4.80)
+  - size: **~1.4 x ~1.8m**
+  - polygon vertices: (8.2,3.9), (9.6,3.9), (9.6,5.7), (8.2,5.7)
+
+- **Closet block (near hallway / central)**
+  - center: (~9.95, ~5.05)
+  - size: **~0.7 x ~3.6m** (closet strip shown vertically)
+  - polygon vertices: (9.6,3.9), (10.3,3.9), (10.3,7.5), (9.6,7.5)
+
+- **Bedroom 1 (top-middle)**
+  - center: (~11.55, ~5.70)
+  - size: **~4.3 x ~4.2m**
+  - polygon vertices: (10.3,3.6), (14.6,3.6), (14.6,7.8), (10.3,7.8)
+
+- **Washroom 1 (sink/vanity zone)**
+  - center: (~12.95, ~5.25)
+  - size: **~2.0 x ~2.3m**
+  - polygon vertices: (11.9,4.1), (13.9,4.1), (13.9,6.4), (11.9,6.4)
+
+- **Bathroom (bathtub room)**
+  - center: (~13.10, ~7.05)
+  - size: **~2.0 x ~1.4m**
+  - polygon vertices: (12.1,6.4), (14.1,6.4), (14.1,7.8), (12.1,7.8)
+
+- **Toilet room**
+  - center: (~14.55, ~7.05)
+  - size: **~1.0 x ~1.4m**
+  - polygon vertices: (14.1,6.4), (15.1,6.4), (15.1,7.8), (14.1,7.8)
+
+- **Washroom 2 (washing machine zone)**
+  - center: (~14.50, ~5.25)
+  - size: **~1.2 x ~2.3m**
+  - polygon vertices: (13.9,4.1), (15.1,4.1), (15.1,6.4), (13.9,6.4)
+
+- **Closet block (right-middle, between bedrooms)**
+  - center: (~14.65, ~4.40)
+  - size: **~3.4 x ~1.0m**
+  - polygon vertices: (13.2,3.6), (16.2,3.6), (16.2,4.6), (13.2,4.6)
+
+- **Bedroom 2 (top-right)**
+  - center: (~15.35, ~6.20)
+  - size: **~1.6 x ~3.2m** (compact room as drawn)
+  - polygon vertices: (14.6,4.6), (16.2,4.6), (16.2,7.8), (14.6,7.8)
+
+---
+
+## Objects
+(All sizes are typical/“common sense” furniture dimensions; heights approximate for 3D blocking.)
+
+### Garage
+- **Car** (vehicle)
+  - center: (~3.10, ~5.55)
+  - size: **~4.5 x ~1.8 x ~1.5m**
+  - rotation: **0°** (front facing **+Y**)
+
+### Living area
+- **TV** (electronics)
+  - center: (~6.55, ~2.05)
+  - size: **~0.10 x ~1.20 x ~0.75m** (thin panel, width along Y)
+  - rotation: **90°** (screen faces **+X**, toward living)
+
+- **Low table / coffee table** (table)
+  - center: (~7.90, ~2.05)
+  - size: **~1.10 x ~0.60 x ~0.35m**
+  - rotation: **0°** (aligned to room)
+
+- **Sofa (2–3 seat)** (seating)
+  - center: (~8.75, ~2.05)
+  - size: **~2.00 x ~0.90 x ~0.85m**
+  - rotation: **270°** (seated person faces **-X**, facing TV)
+
+### Dining
+- **Dining table (4-seat)** (table)
+  - center: (~10.55, ~2.05)
+  - size: **~1.40 x ~0.80 x ~0.75m**
+  - rotation: **0°** (long side along X)
+
+- **Dining chair 1** (chair)
+  - center: (~10.05, ~2.75)
+  - size: **~0.50 x ~0.50 x ~0.90m**
+  - rotation: **180°** (faces **-Y**, toward table)
+
+- **Dining chair 2** (chair)
+  - center: (~11.05, ~2.75)
+  - size: **~0.50 x ~0.50 x ~0.90m**
+  - rotation: **180°** (faces **-Y**, toward table)
+
+- **Dining chair 3** (chair)
+  - center: (~10.05, ~1.35)
+  - size: **~0.50 x ~0.50 x ~0.90m**
+  - rotation: **0°** (faces **+Y**, toward table)
+
+- **Dining chair 4** (chair)
+  - center: (~11.05, ~1.35)
+  - size: **~0.50 x ~0.50 x ~0.90m**
+  - rotation: **0°** (faces **+Y**, toward table)
+
+### Kitchen
+- **Kitchen island / main counter (with cooktop + sink)** (cabinet/counter)
+  - center: (~12.00, ~1.80)
+  - size: **~2.40 x ~0.90 x ~0.90m**
+  - rotation: **0°** (long axis along Y)
+  - facing: not strongly implied; treat as centered work surface
+
+- **Refrigerator** (appliance)
+  - center: (~13.25, ~2.55)
+  - size: **~0.75 x ~0.75 x ~1.80m**
+  - rotation: **270°** (doors/opening face **-X**, toward kitchen)
+
+- **Kitchen sink (wall segment sink shown near right of kitchen)** (fixture)
+  - center: (~13.10, ~2.00)
+  - size: **~0.60 x ~0.55 x ~0.95m** (counter + basin)
+  - rotation: **270°** (front faces **-X**, user stands kitchen-side)
+
+### Storage / Desk area / Bedroom 3
+- **Desk** (desk)
+  - center: (~14.55, ~1.80)
+  - size: **~1.20 x ~0.60 x ~0.75m**
+  - rotation: **270°** (user faces **-X**, desk against east-side boundary)
+
+- **Desk chair** (chair)
+  - center: (~14.05, ~1.80)
+  - size: **~0.55 x ~0.55 x ~0.90m**
+  - rotation: **270°** (faces **-X**, toward desk)
+
+- **Bed (Bedroom 3)** (bed)
+  - center: (~15.35, ~2.05)
+  - size: **~2.00 x ~1.60 x ~0.60m**
+  - rotation: **270°** (headboard at **+X/east wall**, bed faces **-X**)
+
+### Bedroom 1 (top-middle)
+- **Bed (Bedroom 1)** (bed)
+  - center: (~11.35, ~5.60)
+  - size: **~2.00 x ~1.60 x ~0.60m**
+  - rotation: **180°** (headboard at **+Y/north wall**, bed faces **-Y**)
+
+### Bedroom 2 (top-right)
+- **Bed (Bedroom 2)** (bed)
+  - center: (~15.55, ~6.55)
+  - size: **~2.00 x ~1.60 x ~0.60m**
+  - rotation: **180°** (headboard at **+Y/north wall**, bed faces **-Y**)
+
+### Washrooms / Bath / Toilet
+- **Bathtub** (fixture)
+  - center: (~12.75, ~7.05)
+  - size: **~1.60 x ~0.80 x ~0.60m**
+  - rotation: **0°** (long axis along Y)
+
+- **Vanity sink (Washroom 1)** (fixture)
+  - center: (~12.95, ~4.35)
+  - size: **~1.20 x ~0.55 x ~0.90m**
+  - rotation: **0°** (front faces **+Y**)
+
+- **Washing machine** (appliance)
+  - center: (~14.55, ~4.35)
+  - size: **~0.60 x ~0.60 x ~0.85m**
+  - rotation: **0°** (front faces **+Y**)
+
+- **Toilet** (fixture)
+  - center: (~14.60, ~7.15)
+  - size: **~0.70 x ~0.40 x ~0.80m**
+  - rotation: **180°** (user faces **-Y**, toward door side)
+
+### Entrance
+- **Shoe cabinet / shoe storage** (cabinet)
+  - center: (~7.25, ~4.05)
+  - size: **~1.00 x ~0.35 x ~0.95m**
+  - rotation: **0°** (opens toward +Y)
+
+---
+
+## Openings
+
+### Doors
+(Widths are typical interior: ~0.75–0.9m; exterior: ~0.9–1.0m. Rotations indicate the direction the door opens *into the room*.)
+
+- **Exterior entry door** at (~6.30, ~4.85)
+  - width: ~1.0m
+  - rotation: **90°** (opens into **Entrance**, swings toward +X)
+  - connects: **Outside → Entrance**
+
+- **Door** at (~8.20, ~4.85)
+  - width: ~0.80m
+  - rotation: **90°** (opens into **Hallway**)
+  - connects: **Entrance ↔ Hallway**
+
+- **Door** at (~9.10, ~3.90)
+  - width: ~0.80m
+  - rotation: **180°** (opens into **Living/Dining** toward -Y)
+  - connects: **Hallway ↔ Living/Dining**
+
+- **Door** at (~10.30, ~5.05)
+  - width: ~0.80m
+  - rotation: **90°** (opens into **Bedroom 1**)
+  - connects: **Hallway/Closet zone ↔ Bedroom 1**
+
+- **Door (to Bathroom)** at (~13.55, ~6.40)
+  - width: ~0.75m
+  - rotation: **0°** (opens into **Bathroom** toward +Y)
+  - connects: **Washroom 1 ↔ Bathroom**
+
+- **Door (to Toilet)** at (~14.10, ~6.40)
+  - width: ~0.70m
+  - rotation: **0°** (opens into **Toilet** toward +Y)
+  - connects: **Washroom corridor ↔ Toilet**
+
+- **Door (to Bedroom 2)** at (~14.60, ~5.60)
+  - width: ~0.80m
+  - rotation: **90°** (opens into **Bedroom 2** toward +X)
+  - connects: **Washroom corridor ↔ Bedroom 2**
+
+- **Door (to Storage)** at (~13.20, ~3.20)
+  - width: ~0.80m
+  - rotation: **90°** (opens into **Storage** toward +X)
+  - connects: **Kitchen/Living zone ↔ Storage**
+
+- **Door (to Bedroom 3)** at (~13.20, ~2.90)
+  - width: ~0.80m
+  - rotation: **90°** (opens into **Bedroom 3** toward +X)
+  - connects: **Living/Kitchen zone ↔ Bedroom 3**
+
+- **Door (Garage → House)** at (~6.30, ~2.60)
+  - width: ~0.90m
+  - rotation: **90°** (opens into **Living** toward +X)
+  - connects: **Garage ↔ Living/Dining**
+  - note: inferred from the opening mark between garage and house block.
+
+### Windows
+(All window vertical placement constraint satisfied: place sill at **z=1.0m**, top at **z=2.0m** → height **~1.0m**.)
+
+- **Window (Living west wall)** at (~6.30, ~2.10)
+  - width: ~1.2m, height: ~1.0m
+  - on **west wall** (wall normal faces -X)
+
+- **Window (Living south wall)** at (~8.30, ~0.00)
+  - width: ~2.0m, height: ~1.0m
+  - on **south wall** (wall normal faces -Y)
+
+- **Window (Dining south wall)** at (~10.90, ~0.00)
+  - width: ~2.0m, height: ~1.0m
+  - on **south wall**
+
+- **Window (Bedroom 3 south wall)** at (~15.10, ~0.00)
+  - width: ~1.8m, height: ~1.0m
+  - on **south wall**
+
+- **Window (Bedroom 1 north wall)** at (~11.40, ~7.80)
+  - width: ~1.6m, height: ~1.0m
+  - on **north wall** (wall normal faces +Y)
+
+- **Window (Bathroom north wall)** at (~13.00, ~7.80)
+  - width: ~1.0m, height: ~1.0m
+  - on **north wall**
+
+- **Window (Toilet north wall)** at (~14.40, ~7.80)
+  - width: ~0.8m, height: ~1.0m
+  - on **north wall**
+
+- **Window (Bedroom 2 north wall)** at (~15.20, ~7.80)
+  - width: ~1.8m, height: ~1.0m
+  - on **north wall**
+
+- **Window (Bedroom 2 east wall)** at (~16.20, ~6.40)
+  - width: ~1.2m, height: ~1.0m
+  - on **east wall** (wall normal faces +X)
+
+- **Window (Bedroom 3 east wall)** at (~16.20, ~1.80)
+  - width: ~1.2m, height: ~1.0m
+  - on **east wall**
+
+---
+
+If you want, I can also provide:
+- a **single consolidated wall outline polygon** for the full building footprint (useful for meshing),
+- suggested **wall thickness** (~0.15–0.20m exterior, ~0.10–0.12m interior),
+- and a **ceiling height** assumption (e.g., 2.4–2.6m) consistent with the openings.
+
+[AABB Collisions]
+- CoffeeTable vs Sofa: overlap_volume=0.1470000000000002
+- CoffeeTable vs ShoeCabinet: overlap_volume=0.048999999999999926
+- CoffeeTable vs Door_EntranceToHallway: overlap_volume=0.010500000000000148
+- Sofa vs DiningTable: overlap_volume=0.15000000000000002
+- Sofa vs DiningChair1: overlap_volume=0.1275000000000003
+- Sofa vs DiningChair3: overlap_volume=0.1275000000000003
+- Sofa vs Door_EntranceToHallway: overlap_volume=0.03400000000000048
+- Sofa vs Door_HallwayToLiving: overlap_volume=0.03400000000000003
+- DiningTable vs DiningChair1: overlap_volume=0.16874999999999973
+- DiningTable vs DiningChair2: overlap_volume=0.16874999999999973
+- DiningTable vs DiningChair3: overlap_volume=0.16874999999999973
+- DiningTable vs DiningChair4: overlap_volume=0.16874999999999973
+- DiningTable vs Bed_Bedroom1: overlap_volume=0.2639999999999995
+- DiningTable vs Door_ToBedroom1: overlap_volume=0.03000000000000043
+- DiningChair1 vs DiningChair3: overlap_volume=0.225
+- DiningChair1 vs Door_HallwayToLiving: overlap_volume=0.0022500000000000324
+- DiningChair2 vs DiningChair4: overlap_volume=0.225
+- DiningChair2 vs Bed_Bedroom1: overlap_volume=0.15
+- DiningChair3 vs Door_HallwayToLiving: overlap_volume=0.0022500000000000324
+- DiningChair4 vs Bed_Bedroom1: overlap_volume=0.15
+- KitchenIsland vs Bed_Bedroom1: overlap_volume=0.7679999999999989
+- Refrigerator vs KitchenSink: overlap_volume=0.3004374999999997
+- Refrigerator vs VanitySink: overlap_volume=0.1361249999999993
+- Refrigerator vs Bathtub: overlap_volume=0.21374999999999983
+- Refrigerator vs Door_ToStorage: overlap_volume=0.06750000000000096
+- Refrigerator vs Door_ToBathroom: overlap_volume=0.004499999999999904
+- KitchenSink vs VanitySink: overlap_volume=0.14850000000000035
+- KitchenSink vs Bathtub: overlap_volume=0.1650000000000006
+- KitchenSink vs Door_ToStorage: overlap_volume=0.026125000000000374
+- KitchenSink vs Door_ToBathroom: overlap_volume=0.0035625000000000504
+- StorageShelf vs VanitySink: overlap_volume=0.2103749999999995
+- StorageShelf vs Bathtub: overlap_volume=0.21599999999999966
+- StorageShelf vs Toilet: overlap_volume=0.008000000000000115
+- StorageShelf vs Door_ToBathroom: overlap_volume=0.017999999999999936
+- StorageShelf vs Door_ToToilet: overlap_volume=0.0022500000000000324
+- Desk vs DeskChair: overlap_volume=0.1546875
+- Desk vs Bed_Bedroom3: overlap_volume=0.4320000000000004
+- Desk vs Bed_Bedroom2: overlap_volume=0.4320000000000004
+- DeskChair vs Bed_Bedroom3: overlap_volume=0.18150000000000024
+- DeskChair vs Bed_Bedroom2: overlap_volume=0.18150000000000024
+- Bed_Bedroom3 vs WashingMachine: overlap_volume=0.12599999999999986
+- Bed_Bedroom3 vs Toilet: overlap_volume=0.09599999999999966
+- Bed_Bedroom3 vs Bed_Bedroom2: overlap_volume=1.8240000000000003
+- Bed_Bedroom3 vs Door_StorageToBedroom3: overlap_volume=0.02400000000000034
+- Bed_Bedroom3 vs Door_ToToilet: overlap_volume=0.011999999999999957
+- Bed_Bedroom3 vs Door_ToBedroom2: overlap_volume=0.02400000000000034
+- VanitySink vs Bathtub: overlap_volume=0.3959999999999998
+- VanitySink vs Door_ToStorage: overlap_volume=0.024750000000000355
+- VanitySink vs Door_ToBathroom: overlap_volume=0.03375
+- WashingMachine vs Bathtub: overlap_volume=0.05400000000000076
+- WashingMachine vs Toilet: overlap_volume=0.19200000000000048
+- WashingMachine vs Bed_Bedroom2: overlap_volume=0.09
+- WashingMachine vs Door_StorageToBedroom3: overlap_volume=0.01275000000000018
+- WashingMachine vs Door_ToToilet: overlap_volume=0.025500000000000064
+- Bathtub vs Toilet: overlap_volume=0.04800000000000026
+- Bathtub vs Door_ToStorage: overlap_volume=0.02400000000000034
+- Bathtub vs Door_ToBathroom: overlap_volume=0.0225
+- Bathtub vs Door_ToToilet: overlap_volume=0.006000000000000032
+- Toilet vs Bed_Bedroom2: overlap_volume=0.07199999999999974
+- Toilet vs Door_StorageToBedroom3: overlap_volume=0.01600000000000023
+- Toilet vs Door_ToToilet: overlap_volume=0.027999999999999976
+- Bed_Bedroom2 vs Door_StorageToBedroom3: overlap_volume=0.02400000000000034
+- Bed_Bedroom2 vs Door_ToToilet: overlap_volume=0.008999999999999968
+- Bed_Bedroom2 vs Door_ToBedroom2: overlap_volume=0.02400000000000034
+- Door_ExteriorEntry vs Door_GarageToHouse: overlap_volume=0.09000000000000129
+- Door_StorageToBedroom3 vs Door_ToToilet: overlap_volume=0.005000000000000071
+
+[Room Size]
+area_size_X: 16.2
+area_size_Y: 7.8
+
+[Inputs]
+image_path: C:/Users/tmaru/isaacsim/inputs_isaac/house_garage.jpeg
+
+[dimensions.txt]
+家具の大きさは一般的に考えて常識的なサイズで推論してください。
+また、部屋のサイズもそれに応じてお願いします。
+窓の高さはzが1m~2mの間に設置してください
+
+[prompt1]
+You are an interior layout analyst. Generate a detailed layout description for 3D scene generation.
+
+Coordinate system (Z-Up, Isaac Sim):
+- X: right (+X), left (-X)
+- Y: forward/depth in the image (+Y toward top), backward (-Y toward bottom)
+- Z: height (up)
+- Origin (0, 0): bottom-left inner corner of the floor plan
+- Units: meters
+
+Your task:
+1. Estimate the overall floor plan size (width X, depth Y) in meters.
+2. Identify all rooms. For each room, estimate its bounding box and approximate polygon vertices.
+3. List ALL visible objects with their estimated center coordinates (X, Y), size (Length x Width x Height), and orientation.
+4. Identify doors and windows with their positions on walls.
+
+## Rotation Definitions (CRITICAL)
+Use the following rule to determine the rotation angle based on which way the object is "facing" (its functional front):
+- 0°: faces +Y (toward top of image)
+- 90°: faces +X (toward right of image)
+- 180°: faces -Y (toward bottom of image)
+- 270°: faces -X (toward left of image)
+
+## Functional Front per Category:
+- Chair/Sofa: The direction a seated person would face.
+- Bed: From headboard toward the foot of the bed.
+- TV/Monitor: The direction the screen is facing.
+- Desk/Table: The side where a person would sit (if obvious), otherwise align with room walls.
+- Refrigerator/Cabinet/Drawer: The direction it opens.
+- Door: The direction the door opens into the room (interior).
+
+## Output format - structured bullet points:
+
+## Overall
+- Total size: [X]m x [Y]m
+- Scale reference: (describe any visible grid, scale bar, or reference object used)
+
+## Rooms
+For each room:
+- [Room Name]: center (~X, ~Y), size ~[L]x[W]m, polygon vertices if non-rectangular
+
+## Objects
+For each visible object:
+- [Object Name] ([category]): center (~X, ~Y), size ~[L]x[W]x[H]m, rotation [0/90/180/270]°, facing [direction/target, e.g., "facing TV" or "facing -Y"]
+
+## Openings
+- Door at (~X, ~Y): width ~[W]m, rotation [0/90/180/270]° (opens into room), connects [Room A] to [Room B]
+- Window at (~X, ~Y): width ~[W]m, height ~[H]m, on [wall direction]
+
+Be thorough but concise. This output will be used by Step 2 to generate precise JSON.
+
+
+
+[prompt2]
+system_input='''You are a 2D layout-to-3D scene expert. Your task is to interpret a top-down 2D floor plan
+and output a JSON scene description. The top-down view of the resulting 3D scene must match the plan.
+
+Coordinate system (Z-Up, Isaac Sim):
+- X: right (+X), left (-X)
+- Y: forward/depth in the image (+Y toward top of image), backward (-Y toward bottom)
+- Z: up (height)
+- Origin (0,0): lower-left inner corner of the overall plan
+
+CRITICAL UNIT RULE:
+- All coordinates and dimensions must be in METERS.
+- If input is in cm, convert to meters (e.g., 250 cm -> 2.5).
+
+Do NOT output any prose. Output MUST be valid JSON only.
+
+MULTI-ROOM JSON SCHEMA (preferred):
+{
+  "area_name": string,
+  "area_size_X": number,  // meters (overall)
+  "area_size_Y": number,  // meters (overall)
+  "room_polygon": [        // optional single-room fallback
+    { "X": number, "Y": number }
+  ],
+  "outer_polygon": [       // preferred building outline (may be concave)
+    { "X": number, "Y": number }
+  ],
+  "rooms": [               // preferred for multi-room plans
+    {
+      "room_id": string,
+      "room_name": string (optional),
+      "room_polygon": [ { "X": number, "Y": number } ],
+      "openings": [        // doors/windows on room boundary
+        { "type": "door"|"window", "X": number, "Y": number,
+          "Width": number, "Height": number, "SillHeight": number }
+      ]
+    }
+  ],
+  "windows": [             // optional global window openings
+    { "X": number, "Y": number, "Width": number, "Height": number, "SillHeight": number }
+  ],
+  "area_objects_list": [
+    {
+      "object_name": string,
+      "category": string,
+      "search_prompt": string,
+      "room_id": string (optional),
+      "X": number,      // meters
+      "Y": number,      // meters
+      "Length": number, // meters (X-axis size)
+      "Width": number,  // meters (Y-axis size)
+      "Height": number, // meters (Z-axis size)
+      "rotationZ": number,  // degrees: 0/90/180/270
+      "Material": string (optional)
+    }
+  ]
+}
+
+Placement rules:
+1) The image is an XY top-down plan. Preserve the layout as drawn.
+2) Right in the image is +X. Up in the image is +Y.
+3) Use Length for the X-axis size, Width for the Y-axis size, Height for Z.
+4) Do NOT output any "wall" objects. Walls are procedural from room polygons.
+5) Doors/windows: include them in room openings when visible. Do NOT invent openings.
+   For every door opening, also add a matching door object to area_objects_list.
+   Use rotationZ to indicate the door opens into the room (interior).
+6) Keep object placement faithful to the drawing. Do not move objects to fix collisions.
+7) Room polygons must not overlap. Adjacent rooms should share the exact same boundary coordinates.
+8) Openings must lie exactly on a room boundary edge (same X or same Y for axis-aligned walls).
+   If a door is between two rooms, place it on the shared edge (can appear in both rooms or once).
+9) If the building outline is not a rectangle, include "outer_polygon" with the true outline (concave allowed).
+   Do NOT approximate the outer boundary as a rectangle.
+
+Functional orientation (rotationZ):
+- 0 degrees: faces +Y (image up)
+- 90 degrees: faces +X (image right)
+- 180 degrees: faces -Y (image down)
+- 270 degrees: faces -X (image left)
+
+Define functional front per category:
+- Bed: direction a person faces from head to foot.
+- Chair/Sofa: direction a seated person faces.
+- TV/Display: direction the screen faces.
+- Door: direction the door opens into the room (interior).
+- Refrigerator/Drawer/Cabinet: direction the front opens.
+
+Categories (use one of these unless absolutely necessary):
+bed, table, desk, chair, sofa, wardrobe, drawer, shelf, cabinet, wheelchair,
+toilet, sink, bathtub, shower, door, window, floor, appliance, equipment, other_furniture
+
+search_prompt guidelines:
+- Write mainly in English.
+- Describe object type, usage context, and key attributes.
+- Do NOT describe relative placement in this specific room.
+
+Remember: Output a single JSON object ONLY.
+'''
+
+user_input='''You have been provided a floor plan image and a list of dimensions.
+Analyze the image to determine precise placement and orientation of each object.
+Then generate the JSON output following the system instructions.'''
+

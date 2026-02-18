@@ -1,0 +1,224 @@
+{
+    "area_name": "Compact_Bedroom_With_Toilet",
+    "area_size_X": 4.63,
+    "area_size_Y": 5.19,
+    "size_mode": "local",
+    "outer_polygon": [
+        {
+            "X": 0.0,
+            "Y": 0.0
+        },
+        {
+            "X": 4.63,
+            "Y": 0.0
+        },
+        {
+            "X": 4.63,
+            "Y": 5.19
+        },
+        {
+            "X": 0.0,
+            "Y": 5.19
+        }
+    ],
+    "rooms": [
+        {
+            "room_id": "room_1",
+            "room_name": "Bedroom",
+            "room_polygon": [
+                {
+                    "X": 0.0,
+                    "Y": 0.0
+                },
+                {
+                    "X": 4.63,
+                    "Y": 0.0
+                },
+                {
+                    "X": 4.63,
+                    "Y": 5.19
+                },
+                {
+                    "X": 1.55,
+                    "Y": 5.19
+                },
+                {
+                    "X": 1.55,
+                    "Y": 3.35
+                },
+                {
+                    "X": 0.0,
+                    "Y": 3.35
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 2.35,
+                    "Y": 5.19,
+                    "Width": 1.6,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "door",
+                    "X": 1.55,
+                    "Y": 4.15,
+                    "Width": 0.8,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "window",
+                    "X": 3.05,
+                    "Y": 0.0,
+                    "Width": 2.5,
+                    "Height": 1.2,
+                    "SillHeight": 1.0
+                }
+            ]
+        },
+        {
+            "room_id": "room_2",
+            "room_name": "Toilet",
+            "room_polygon": [
+                {
+                    "X": 0.0,
+                    "Y": 3.35
+                },
+                {
+                    "X": 1.55,
+                    "Y": 3.35
+                },
+                {
+                    "X": 1.55,
+                    "Y": 5.19
+                },
+                {
+                    "X": 0.0,
+                    "Y": 5.19
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 1.55,
+                    "Y": 4.15,
+                    "Width": 0.8,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                }
+            ]
+        }
+    ],
+    "area_objects_list": [
+        {
+            "object_name": "door_north_sliding_1",
+            "category": "door",
+            "search_prompt": "wide sliding door panel, matte white, large scale — compact modern bedroom, attached toilet",
+            "room_id": "room_1",
+            "X": 2.35,
+            "Y": 5.165,
+            "Length": 1.6,
+            "Width": 0.05,
+            "Height": 2.0,
+            "rotationZ": 180
+        },
+        {
+            "object_name": "door_toilet_sliding_1",
+            "category": "door",
+            "search_prompt": "narrow sliding pocket door, matte white, standard — compact modern bedroom, attached toilet",
+            "room_id": "room_2",
+            "X": 1.525,
+            "Y": 4.15,
+            "Length": 0.05,
+            "Width": 0.8,
+            "Height": 2.0,
+            "rotationZ": 90
+        },
+        {
+            "object_name": "bed_1",
+            "category": "bed",
+            "search_prompt": "simple platform bed, light wood frame, double — compact modern bedroom, attached toilet",
+            "room_id": "room_1",
+            "X": 0.75,
+            "Y": 2.0,
+            "Length": 1.5,
+            "Width": 2.0,
+            "Height": 0.5,
+            "rotationZ": 0
+        },
+        {
+            "object_name": "chair_1",
+            "category": "chair",
+            "search_prompt": "armless accent chair, gray fabric, small — compact modern bedroom, attached toilet",
+            "room_id": "room_1",
+            "X": 3.1,
+            "Y": 2.55,
+            "Length": 0.6,
+            "Width": 0.6,
+            "Height": 0.9,
+            "rotationZ": 90
+        },
+        {
+            "object_name": "tv_cabinet_1",
+            "category": "cabinet",
+            "search_prompt": "low TV cabinet console, dark wood, long — compact modern bedroom, attached toilet",
+            "room_id": "room_1",
+            "X": 4.405,
+            "Y": 2.5,
+            "Length": 0.45,
+            "Width": 1.6,
+            "Height": 0.8,
+            "rotationZ": 270
+        },
+        {
+            "object_name": "sink_1",
+            "category": "sink",
+            "search_prompt": "wall-mounted bathroom sink, white ceramic, compact — compact modern bedroom, attached toilet",
+            "room_id": "room_1",
+            "X": 4.355,
+            "Y": 4.0,
+            "Length": 0.55,
+            "Width": 0.7,
+            "Height": 0.85,
+            "rotationZ": 270
+        },
+        {
+            "object_name": "wardrobe_storage_left_1",
+            "category": "wardrobe",
+            "search_prompt": "tall wardrobe storage unit, light wood, wide — compact modern bedroom, attached toilet",
+            "room_id": "room_2",
+            "X": 0.6,
+            "Y": 4.795,
+            "Length": 1.2,
+            "Width": 0.79,
+            "Height": 2.0,
+            "rotationZ": 180
+        },
+        {
+            "object_name": "wardrobe_storage_right_1",
+            "category": "wardrobe",
+            "search_prompt": "tall wardrobe cabinet, light wood, compact — compact modern bedroom, attached toilet",
+            "room_id": "room_1",
+            "X": 4.24,
+            "Y": 4.77,
+            "Length": 0.78,
+            "Width": 0.84,
+            "Height": 2.0,
+            "rotationZ": 180
+        },
+        {
+            "object_name": "toilet_1",
+            "category": "toilet",
+            "search_prompt": "modern close-coupled toilet, white porcelain, standard — compact modern bedroom, attached toilet",
+            "room_id": "room_2",
+            "X": 0.6,
+            "Y": 4.815,
+            "Length": 0.7,
+            "Width": 0.75,
+            "Height": 0.8,
+            "rotationZ": 180
+        }
+    ]
+}

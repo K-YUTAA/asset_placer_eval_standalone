@@ -1,0 +1,285 @@
+{
+    "area_name": "Bedroom with Walk-in Closet and Toilet",
+    "area_size_X": 5.14,
+    "area_size_Y": 5.84,
+    "size_mode": "local",
+    "outer_polygon": [
+        {
+            "X": 0.0,
+            "Y": 0.0
+        },
+        {
+            "X": 5.14,
+            "Y": 0.0
+        },
+        {
+            "X": 5.14,
+            "Y": 5.84
+        },
+        {
+            "X": 0.0,
+            "Y": 5.84
+        }
+    ],
+    "rooms": [
+        {
+            "room_id": "bedroom_1",
+            "room_name": "Bedroom",
+            "room_polygon": [
+                {
+                    "X": 0.0,
+                    "Y": 0.0
+                },
+                {
+                    "X": 0.0,
+                    "Y": 3.42
+                },
+                {
+                    "X": 2.45,
+                    "Y": 3.42
+                },
+                {
+                    "X": 2.45,
+                    "Y": 5.84
+                },
+                {
+                    "X": 3.6,
+                    "Y": 5.84
+                },
+                {
+                    "X": 3.6,
+                    "Y": 3.42
+                },
+                {
+                    "X": 5.14,
+                    "Y": 3.42
+                },
+                {
+                    "X": 5.14,
+                    "Y": 0.0
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 1.1,
+                    "Y": 3.42,
+                    "Width": 1.2,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "door",
+                    "X": 4.37,
+                    "Y": 3.42,
+                    "Width": 1.2,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "window",
+                    "X": 2.57,
+                    "Y": 0.0,
+                    "Width": 4.5,
+                    "Height": 1.2,
+                    "SillHeight": 1.0
+                }
+            ]
+        },
+        {
+            "room_id": "walkincloset_1",
+            "room_name": "Walk-in Closet",
+            "room_polygon": [
+                {
+                    "X": 0.0,
+                    "Y": 3.42
+                },
+                {
+                    "X": 0.0,
+                    "Y": 5.84
+                },
+                {
+                    "X": 2.45,
+                    "Y": 5.84
+                },
+                {
+                    "X": 2.45,
+                    "Y": 3.42
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 1.1,
+                    "Y": 3.42,
+                    "Width": 1.2,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                }
+            ]
+        },
+        {
+            "room_id": "toilet_1",
+            "room_name": "Toilet",
+            "room_polygon": [
+                {
+                    "X": 3.6,
+                    "Y": 3.42
+                },
+                {
+                    "X": 3.6,
+                    "Y": 5.84
+                },
+                {
+                    "X": 5.14,
+                    "Y": 5.84
+                },
+                {
+                    "X": 5.14,
+                    "Y": 3.42
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 4.37,
+                    "Y": 3.42,
+                    "Width": 1.2,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                }
+            ]
+        }
+    ],
+    "area_objects_list": [
+        {
+            "object_name": "Floor",
+            "category": "floor",
+            "search_prompt": "simple interior floor plane",
+            "X": 2.57,
+            "Y": 2.92,
+            "Length": 5.14,
+            "Width": 5.84,
+            "Height": 0.05,
+            "rotationZ": 0
+        },
+        {
+            "object_name": "Bed",
+            "category": "bed",
+            "search_prompt": "double bed",
+            "room_id": "bedroom_1",
+            "X": 0.95,
+            "Y": 1.3,
+            "Length": 1.65,
+            "Width": 2.05,
+            "Height": 0.55,
+            "rotationZ": 180
+        },
+        {
+            "object_name": "TV_Cabinet",
+            "category": "cabinet",
+            "search_prompt": "tv stand cabinet",
+            "room_id": "bedroom_1",
+            "X": 4.85,
+            "Y": 1.85,
+            "Length": 1.6,
+            "Width": 0.45,
+            "Height": 0.6,
+            "rotationZ": 270
+        },
+        {
+            "object_name": "Round_Table",
+            "category": "table",
+            "search_prompt": "round dining table",
+            "room_id": "bedroom_1",
+            "X": 3.55,
+            "Y": 1.9,
+            "Length": 1.05,
+            "Width": 1.05,
+            "Height": 0.75,
+            "rotationZ": 0
+        },
+        {
+            "object_name": "Chair_LeftOfTable",
+            "category": "chair",
+            "search_prompt": "dining chair",
+            "room_id": "bedroom_1",
+            "X": 2.9,
+            "Y": 1.9,
+            "Length": 0.55,
+            "Width": 0.55,
+            "Height": 0.85,
+            "rotationZ": 90
+        },
+        {
+            "object_name": "Chair_BelowTable",
+            "category": "chair",
+            "search_prompt": "dining chair",
+            "room_id": "bedroom_1",
+            "X": 3.55,
+            "Y": 1.25,
+            "Length": 0.55,
+            "Width": 0.55,
+            "Height": 0.85,
+            "rotationZ": 0
+        },
+        {
+            "object_name": "Sink_Vanity",
+            "category": "sink",
+            "search_prompt": "bathroom sink vanity cabinet",
+            "room_id": "bedroom_1",
+            "X": 2.9,
+            "Y": 4.1,
+            "Length": 0.9,
+            "Width": 0.6,
+            "Height": 0.9,
+            "rotationZ": 180
+        },
+        {
+            "object_name": "Storage_Cabinet",
+            "category": "cabinet",
+            "search_prompt": "storage cabinet",
+            "room_id": "bedroom_1",
+            "X": 2.9,
+            "Y": 5.3,
+            "Length": 0.9,
+            "Width": 0.5,
+            "Height": 0.8,
+            "rotationZ": 180
+        },
+        {
+            "object_name": "Toilet_Fixture",
+            "category": "toilet",
+            "search_prompt": "toilet bowl",
+            "room_id": "toilet_1",
+            "X": 4.45,
+            "Y": 4.8,
+            "Length": 0.45,
+            "Width": 0.75,
+            "Height": 0.8,
+            "rotationZ": 0
+        },
+        {
+            "object_name": "Door_Sliding_Bedroom_Closet",
+            "category": "door",
+            "search_prompt": "sliding interior door",
+            "X": 1.1,
+            "Y": 3.42,
+            "Length": 1.2,
+            "Width": 0.1,
+            "Height": 2.0,
+            "rotationZ": 0
+        },
+        {
+            "object_name": "Door_Sliding_Bedroom_Toilet",
+            "category": "door",
+            "search_prompt": "sliding interior door",
+            "X": 4.37,
+            "Y": 3.42,
+            "Length": 1.2,
+            "Width": 0.1,
+            "Height": 2.0,
+            "rotationZ": 0
+        }
+    ]
+}

@@ -1,0 +1,247 @@
+{
+    "area_name": "bedroom_suite",
+    "area_size_X": 4.63,
+    "area_size_Y": 5.19,
+    "size_mode": "local",
+    "outer_polygon": [
+        {
+            "X": 0.0,
+            "Y": 0.0
+        },
+        {
+            "X": 4.63,
+            "Y": 0.0
+        },
+        {
+            "X": 4.63,
+            "Y": 5.19
+        },
+        {
+            "X": 0.0,
+            "Y": 5.19
+        }
+    ],
+    "rooms": [
+        {
+            "room_id": "bedroom_1",
+            "room_name": "Bedroom",
+            "room_polygon": [
+                {
+                    "X": 0.0,
+                    "Y": 0.0
+                },
+                {
+                    "X": 0.0,
+                    "Y": 3.59
+                },
+                {
+                    "X": 1.55,
+                    "Y": 3.59
+                },
+                {
+                    "X": 1.55,
+                    "Y": 5.19
+                },
+                {
+                    "X": 4.63,
+                    "Y": 5.19
+                },
+                {
+                    "X": 4.63,
+                    "Y": 0.0
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 2.95,
+                    "Y": 5.19,
+                    "Width": 1.8,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "door",
+                    "X": 1.55,
+                    "Y": 4.3,
+                    "Width": 0.8,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "window",
+                    "X": 3.05,
+                    "Y": 0.0,
+                    "Width": 2.7,
+                    "Height": 1.2,
+                    "SillHeight": 1.0
+                }
+            ]
+        },
+        {
+            "room_id": "toilet_1",
+            "room_name": "Toilet",
+            "room_polygon": [
+                {
+                    "X": 0.0,
+                    "Y": 3.59
+                },
+                {
+                    "X": 0.0,
+                    "Y": 5.19
+                },
+                {
+                    "X": 1.55,
+                    "Y": 5.19
+                },
+                {
+                    "X": 1.55,
+                    "Y": 3.59
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 1.55,
+                    "Y": 4.3,
+                    "Width": 0.8,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                }
+            ]
+        }
+    ],
+    "area_objects_list": [
+        {
+            "object_name": "floor_1",
+            "category": "floor",
+            "search_prompt": "plain floor plane",
+            "X": 2.32,
+            "Y": 2.6,
+            "Length": 4.63,
+            "Width": 5.19,
+            "Height": 0.01,
+            "rotationZ": 0
+        },
+        {
+            "object_name": "door_1",
+            "category": "door",
+            "search_prompt": "single door",
+            "room_id": "bedroom_1",
+            "X": 2.95,
+            "Y": 5.19,
+            "Length": 1.8,
+            "Width": 0.1,
+            "Height": 2.0,
+            "rotationZ": 0
+        },
+        {
+            "object_name": "door_2",
+            "category": "door",
+            "search_prompt": "interior door",
+            "room_id": "bedroom_1",
+            "X": 1.55,
+            "Y": 4.3,
+            "Length": 0.8,
+            "Width": 0.1,
+            "Height": 2.0,
+            "rotationZ": 90
+        },
+        {
+            "object_name": "bed_1",
+            "category": "bed",
+            "search_prompt": "double bed",
+            "room_id": "bedroom_1",
+            "X": 0.95,
+            "Y": 1.6,
+            "Length": 1.6,
+            "Width": 2.1,
+            "Height": 0.55,
+            "rotationZ": 180
+        },
+        {
+            "object_name": "chair_1",
+            "category": "chair",
+            "search_prompt": "chair",
+            "room_id": "bedroom_1",
+            "X": 2.9,
+            "Y": 2.7,
+            "Length": 0.6,
+            "Width": 0.6,
+            "Height": 0.9,
+            "rotationZ": 90
+        },
+        {
+            "object_name": "tv_cabinet_1",
+            "category": "cabinet",
+            "search_prompt": "tv stand cabinet",
+            "room_id": "bedroom_1",
+            "X": 4.41,
+            "Y": 2.7,
+            "Length": 1.4,
+            "Width": 0.45,
+            "Height": 0.6,
+            "rotationZ": 270
+        },
+        {
+            "object_name": "tv_1",
+            "category": "equipment",
+            "search_prompt": "flat screen television",
+            "room_id": "bedroom_1",
+            "X": 4.58,
+            "Y": 2.7,
+            "Length": 1.0,
+            "Width": 0.1,
+            "Height": 0.7,
+            "rotationZ": 270
+        },
+        {
+            "object_name": "sink_cabinet_1",
+            "category": "sink",
+            "search_prompt": "bathroom sink vanity",
+            "room_id": "bedroom_1",
+            "X": 4.36,
+            "Y": 3.95,
+            "Length": 0.8,
+            "Width": 0.55,
+            "Height": 0.85,
+            "rotationZ": 270
+        },
+        {
+            "object_name": "storage_closet_1",
+            "category": "wardrobe",
+            "search_prompt": "wardrobe closet",
+            "room_id": "bedroom_1",
+            "X": 4.33,
+            "Y": 4.74,
+            "Length": 0.9,
+            "Width": 0.6,
+            "Height": 2.1,
+            "rotationZ": 270
+        },
+        {
+            "object_name": "storage_cabinet_1",
+            "category": "cabinet",
+            "search_prompt": "storage cabinet",
+            "room_id": "toilet_1",
+            "X": 0.8,
+            "Y": 4.92,
+            "Length": 1.1,
+            "Width": 0.55,
+            "Height": 2.1,
+            "rotationZ": 180
+        },
+        {
+            "object_name": "toilet_fixture_1",
+            "category": "toilet",
+            "search_prompt": "toilet",
+            "room_id": "toilet_1",
+            "X": 0.78,
+            "Y": 4.35,
+            "Length": 0.7,
+            "Width": 0.9,
+            "Height": 0.8,
+            "rotationZ": 180
+        }
+    ]
+}

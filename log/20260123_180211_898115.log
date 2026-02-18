@@ -1,0 +1,215 @@
+AI Layout Generation Log
+timestamp: 20260123_180211_898115
+
+[AI Settings]
+step1_model: gpt-5.2
+step2_model: gpt-5.2
+reasoning_effort: high
+text_verbosity: high
+image_detail: high
+max_output_tokens: 48000
+max_retries: 1
+retry_delay_sec: 1.0
+
+[Step 1 Stats]
+time_sec: 141.9942843914032
+input_tokens: 1201
+output_tokens: 4884
+total_tokens: 6085
+
+[Step 2 Stats]
+time_sec: 399.042822599411
+input_tokens: 2731
+output_tokens: 14712
+total_tokens: 17443
+
+[Total Stats]
+time_sec: 541.0371069908142
+input_tokens: 3932
+output_tokens: 19596
+total_tokens: 23528
+
+[Analysis Text]
+- 全体平面(内法想定): 主要室=LDK+廊下+水回り+3室、中心(4.0,6.3)、約8.0x12.6、外周に窓/掃出し想定(窓高さz=1.0–2.0)  
+- 玄関: 下足/上がり框、中心(4.0,11.8)、約2.0x1.6、北側外壁に玄関扉(外開き)→廊下へ開口  
+- 廊下: 各室への動線、中心(3.8,8.8)、約1.2x7.6、両側に開き戸(トイレ/洗面/浴室/各個室/LDK)  
+- 物置+メーターボックス(北西): 収納/点検、中心(1.6,11.6)、約3.2x2.0、廊下側から開口(扉)  
+- 浴室(北西寄り): ユニットバス(浴槽+洗い場)、中心(1.6,9.7)、約3.2x1.9、廊下から開き戸  
+- 洗面所(洗濯機置場含む): 洗面台+洗濯機パン、中心(1.6,7.7)、約3.2x2.0、廊下から開き戸  
+- トイレ: 便器+手洗い想定、中心(2.7,5.9)、約1.0x1.7、廊下から開き戸  
+- LDK(台所+ダイニング+リビング一体): キッチン(西壁沿い)+冷蔵庫、ダイニングテーブル(中央)、ソファ+TV(東寄り)、中心(2.5,2.5)、約5.0x5.0、南外壁に掃出し/窓(z=1.0–2.0)  
+- 父母の部屋(和室): 畳、押入+床の間(北側帯)、中心(6.5,2.5)、約3.0x5.0、西側(LDK側)に引き戸想定、南/東外壁に窓(z=1.0–2.0)  
+- ユズヒコの部屋(右中): ベッド(東寄り)ほか、中心(6.1,6.9)、約3.8x3.7、西側(廊下)に開き戸、東外壁に窓(z=1.0–2.0)  
+- クローゼット帯(右中上): 収納(連続)、中心(6.1,9.2)、約3.8x0.9、南北両室側に折戸/引戸想定  
+- みかんの部屋(右上): 個室(ベッド/机想定)、中心(6.1,11.1)、約3.8x3.0、西側(廊下)に開き戸、東外壁に窓(z=1.0–2.0)
+
+[AABB Collisions]
+- kitchen_counter vs refrigerator: overlap_volume=0.378
+- kitchen_counter vs wash_vanity: overlap_volume=0.255
+- kitchen_counter vs washing_machine: overlap_volume=0.29700000000000004
+- kitchen_counter vs bathtub: overlap_volume=0.33749999999999997
+- kitchen_counter vs storage_shelf: overlap_volume=0.072
+- kitchen_counter vs meter_box_cabinet: overlap_volume=0.053999999999999986
+- refrigerator vs wash_vanity: overlap_volume=0.2975
+- refrigerator vs washing_machine: overlap_volume=0.32399999999999995
+- refrigerator vs bathtub: overlap_volume=0.19949999999999998
+- refrigerator vs storage_shelf: overlap_volume=0.23999999999999996
+- refrigerator vs meter_box_cabinet: overlap_volume=0.10799999999999997
+- sideboard vs dining_table: overlap_volume=0.10125000000000002
+- sideboard vs dining_chair_west: overlap_volume=0.17212500000000006
+- sideboard vs sofa: overlap_volume=0.24862500000000004
+- sideboard vs toilet: overlap_volume=1.4210854715202006e-16
+- sideboard vs storage_shelf: overlap_volume=0.20400000000000001
+- sideboard vs meter_box_cabinet: overlap_volume=0.051000000000000045
+- dining_table vs dining_chair_north: overlap_volume=0.15187500000000007
+- dining_table vs dining_chair_south: overlap_volume=0.15187500000000007
+- dining_table vs dining_chair_east: overlap_volume=0.02531250000000006
+- dining_table vs dining_chair_west: overlap_volume=0.025312499999999984
+- dining_table vs sofa: overlap_volume=1.08
+- dining_table vs toilet: overlap_volume=0.21000000000000008
+- dining_chair_north vs dining_chair_south: overlap_volume=0.18225000000000008
+- dining_chair_north vs sofa: overlap_volume=0.17212500000000006
+- dining_chair_north vs toilet: overlap_volume=0.13599999999999995
+- dining_chair_south vs sofa: overlap_volume=0.17212500000000006
+- dining_chair_south vs toilet: overlap_volume=0.13599999999999995
+- dining_chair_east vs sofa: overlap_volume=0.08606250000000021
+- dining_chair_west vs sofa: overlap_volume=0.1625625
+- dining_chair_west vs storage_shelf: overlap_volume=0.027000000000000066
+- sofa vs toilet: overlap_volume=0.2240000000000001
+- sofa vs storage_shelf: overlap_volume=0.017000000000000015
+- tv_unit vs closet_wardrobe_yuzuhiko_side: overlap_volume=0.1889999999999998
+- tv_unit vs closet_wardrobe_mikan_side: overlap_volume=0.1889999999999998
+- wash_vanity vs washing_machine: overlap_volume=0.25499999999999995
+- wash_vanity vs bathtub: overlap_volume=0.17250000000000001
+- wash_vanity vs storage_shelf: overlap_volume=0.136
+- wash_vanity vs meter_box_cabinet: overlap_volume=0.10200000000000001
+- washing_machine vs bathtub: overlap_volume=0.15299999999999997
+- washing_machine vs storage_shelf: overlap_volume=0.08999999999999997
+- washing_machine vs meter_box_cabinet: overlap_volume=0.06749999999999996
+- bathtub vs storage_shelf: overlap_volume=0.13799999999999998
+- bathtub vs meter_box_cabinet: overlap_volume=0.1035
+- storage_shelf vs meter_box_cabinet: overlap_volume=0.28800000000000003
+- yuzuhiko_bed vs closet_wardrobe_yuzuhiko_side: overlap_volume=0.2160000000000002
+- yuzuhiko_bed vs closet_wardrobe_mikan_side: overlap_volume=0.2160000000000002
+- yuzuhiko_bed vs parents_tokonoma: overlap_volume=0.2879999999999999
+- closet_wardrobe_yuzuhiko_side vs closet_wardrobe_mikan_side: overlap_volume=3.1680000000000015
+- closet_wardrobe_yuzuhiko_side vs parents_oshiire: overlap_volume=1.782000000000001
+- closet_wardrobe_yuzuhiko_side vs parents_tokonoma: overlap_volume=0.4050000000000002
+- closet_wardrobe_mikan_side vs parents_oshiire: overlap_volume=1.782000000000001
+- closet_wardrobe_mikan_side vs parents_tokonoma: overlap_volume=0.4050000000000002
+- parents_oshiire vs parents_tokonoma: overlap_volume=5.329070518200751e-16
+
+[Room Size]
+area_size_X: 8.0
+area_size_Y: 12.6
+
+[Inputs]
+image_path: C:/Users/tmaru/isaacsim/inputs_isaac/img_home_large-768x1090.png
+
+[dimensions.txt]
+家具の大きさは一般的に考えて常識的なサイズで推論してください。
+また、部屋のサイズもそれに応じてお願いします。
+窓の高さはzが1m~2mの間に設置してください
+
+[prompt1]
+You are an interior layout analyst. Provide a concise summary for layout generation.
+- Coordinate system: X = right, Y = up in the image (depth), Z = up.
+- Origin: lower-left inner corner of the overall plan.
+- Units: meters.
+- If the floor plan has multiple rooms, identify each room and its boundary lines and openings.
+- Output format: 8-14 bullet lines max. Each line: room name (if any), key objects, approx center (x,y),
+  approx size (LxW), and orientation/opening notes if obvious.
+- No long explanations, no headings, no tables.
+
+
+[prompt2]
+system_input='''You are a 2D layout-to-3D scene expert. Your task is to interpret a top-down 2D floor plan
+and output a JSON scene description. The top-down view of the resulting 3D scene must match the plan.
+
+Coordinate system (Z-Up, Isaac Sim):
+- X: right (+X), left (-X)
+- Y: up in the image / depth (+Y)
+- Z: up (height)
+- Origin (0,0): lower-left inner corner of the overall plan
+
+CRITICAL UNIT RULE:
+- All coordinates and dimensions must be in METERS.
+- If input is in cm, convert to meters (e.g., 250 cm -> 2.5).
+
+Do NOT output any prose. Output MUST be valid JSON only.
+
+MULTI-ROOM JSON SCHEMA (preferred):
+{
+  "area_name": string,
+  "area_size_X": number,  // meters (overall)
+  "area_size_Y": number,  // meters (overall)
+  "room_polygon": [        // optional single-room fallback
+    { "X": number, "Y": number }
+  ],
+  "rooms": [               // preferred for multi-room plans
+    {
+      "room_id": string,
+      "room_name": string (optional),
+      "room_polygon": [ { "X": number, "Y": number } ],
+      "openings": [        // doors/windows on room boundary
+        { "type": "door"|"window", "X": number, "Y": number,
+          "Width": number, "Height": number, "SillHeight": number }
+      ]
+    }
+  ],
+  "windows": [             // optional global window openings
+    { "X": number, "Y": number, "Width": number, "Height": number, "SillHeight": number }
+  ],
+  "area_objects_list": [
+    {
+      "object_name": string,
+      "category": string,
+      "search_prompt": string,
+      "room_id": string (optional),
+      "X": number,      // meters
+      "Y": number,      // meters
+      "Length": number, // meters (X-axis size)
+      "Width": number,  // meters (Y-axis size)
+      "Height": number, // meters (Z-axis size)
+      "rotationZ": number,  // degrees: 0/90/180/270
+      "Material": string (optional)
+    }
+  ]
+}
+
+Placement rules:
+1) The image is an XY top-down plan. Preserve the layout as drawn.
+2) Right in the image is +X. Up in the image is +Y.
+3) Use Length for the X-axis size, Width for the Y-axis size, Height for Z.
+4) Do NOT output any "wall" objects. Walls are procedural from room polygons.
+5) Doors/windows: include them in room openings when visible. Do NOT invent openings.
+6) Keep object placement faithful to the drawing. Do not move objects to fix collisions.
+
+Functional orientation (rotationZ):
+- 0 degrees: faces +Y (image up)
+- 90 degrees: faces +X (image right)
+- 180 degrees: faces -Y (image down)
+- 270 degrees: faces -X (image left)
+
+Define functional front per category:
+- Bed: direction a person faces from head to foot.
+- Chair/Sofa: direction a seated person faces.
+- TV/Display: direction the screen faces.
+- Door: direction the door opens into the room (interior).
+- Refrigerator/Drawer/Cabinet: direction the front opens.
+
+Categories (use one of these unless absolutely necessary):
+bed, table, desk, chair, sofa, wardrobe, drawer, shelf, cabinet, wheelchair,
+toilet, sink, bathtub, shower, door, window, floor, appliance, equipment, other_furniture
+
+search_prompt guidelines:
+- Write mainly in English.
+- Describe object type, usage context, and key attributes.
+- Do NOT describe relative placement in this specific room.
+
+Remember: Output a single JSON object ONLY.
+'''
+
+user_input='''You have been provided a floor plan image and a list of dimensions.
+Analyze the image to determine precise placement and orientation of each object.
+Then generate the JSON output following the system instructions.'''

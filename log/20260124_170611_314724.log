@@ -1,0 +1,214 @@
+AI Layout Generation Log
+timestamp: 20260124_170611_314724
+
+[AI Settings]
+step1_model: gpt-5.2
+step2_model: gpt-5.2
+reasoning_effort: high
+text_verbosity: high
+image_detail: high
+max_output_tokens: 48000
+max_retries: 1
+retry_delay_sec: 1.0
+
+[Step 1 Stats]
+time_sec: 164.13982033729553
+input_tokens: 1729
+output_tokens: 6454
+total_tokens: 8183
+
+[Step 2 Stats]
+time_sec: 462.4368095397949
+input_tokens: 3279
+output_tokens: 17948
+total_tokens: 21227
+
+[Total Stats]
+time_sec: 626.5766298770905
+input_tokens: 5008
+output_tokens: 24402
+total_tokens: 29410
+
+[Analysis Text]
+- Kitchen (fridge/sink/stove run, sideboard), center (~1.5,~2.4), size ~3.0x4.8; open edge to Living on east, possible glazing/exit on south wall.
+- Living/Dining (sofa+low table north side, TV on east partition, 4p dining table), center (~4.5,~2.4), size ~3.0x4.8; door to Hallway on north/east-north, south-facing window/glazing (z≈1.0–2.0).
+- Parents’ Room (closet/storage on north side), center (~8.1,~2.4), size ~4.2x4.8; door on north-west to Hallway, windows south + east (z≈1.0–2.0).
+- Toilet (WC), center (~1.5,~5.55), size ~3.0x1.5; door on east side to Hallway.
+- Washroom (sink/vanity + washing machine), center (~1.5,~7.4), size ~3.0x2.2; door on east to Hallway, internal access toward Bathroom.
+- Bathroom (bathtub + wash area), center (~1.5,~9.25), size ~3.0x1.5; door toward Washroom/Hallway (west block).
+- Storage room (general storage), center (~1.5,~11.0), size ~3.0x2.0; door to Entrance/Hallway area, meter box at north edge of this zone.
+- Entrance/Foyer (genkan), center (~4.5,~11.4), size ~3.0x1.2; main entry door on north wall, interior door south into Hallway, door west into Storage/meter area.
+- Hallway (circulation spine), center (~4.5,~7.8), size ~1.8x6.0; connects Entrance↔Living and doors to Toilet/Wash/Bath (west) and bedrooms (east).
+- Mikan’s Room (bed near west/north-west, desk+storage on east), center (~8.1,~10.6), size ~4.2x2.8; door on west/south-west to Hallway, windows north + east (z≈1.0–2.0).
+- Yuzuhiko’s Room (desk+chair on east, closet/storage near north/west), center (~8.1,~7.3), size ~4.2x3.8; door on west to Hallway, east window (z≈1.0–2.0).
+- Exterior balcony/veranda band (along south and east edges), center (~5.1,~-0.6) for south run, depth ~1.2; interfaces via south/east glazing from Living/Parents (and likely Kitchen).
+
+[AABB Collisions]
+- kitchen_refrigerator vs kitchen_sink_cabinet: overlap_volume=0.378
+- kitchen_refrigerator vs kitchen_stove_unit: overlap_volume=0.324
+- kitchen_refrigerator vs toilet_wc: overlap_volume=0.07999999999999997
+- kitchen_refrigerator vs washroom_washing_machine: overlap_volume=0.204
+- kitchen_refrigerator vs bathroom_bathtub: overlap_volume=0.12599999999999997
+- kitchen_sink_cabinet vs kitchen_stove_unit: overlap_volume=0.324
+- kitchen_sink_cabinet vs toilet_wc: overlap_volume=0.04799999999999998
+- kitchen_sink_cabinet vs washroom_washing_machine: overlap_volume=0.153
+- kitchen_sink_cabinet vs bathroom_bathtub: overlap_volume=0.11999999999999997
+- kitchen_stove_unit vs toilet_wc: overlap_volume=0.04799999999999998
+- kitchen_stove_unit vs washroom_washing_machine: overlap_volume=0.153
+- kitchen_stove_unit vs bathroom_bathtub: overlap_volume=0.07199999999999998
+- living_sideboard vs living_sofa: overlap_volume=0.2677500000000004
+- living_sideboard vs dining_table: overlap_volume=0.03000000000000043
+- living_sideboard vs dining_chair_west: overlap_volume=0.11137500000000015
+- living_sofa vs living_low_table: overlap_volume=0.24
+- living_sofa vs living_tv: overlap_volume=0.033749999999999884
+- living_sofa vs dining_table: overlap_volume=0.8400000000000003
+- living_sofa vs dining_chair_north: overlap_volume=0.17212499999999992
+- living_sofa vs dining_chair_south: overlap_volume=0.17212499999999992
+- living_sofa vs dining_chair_west: overlap_volume=0.17212500000000006
+- living_sofa vs dining_chair_east: overlap_volume=0.17212499999999972
+- living_low_table vs dining_table: overlap_volume=0.24
+- living_low_table vs dining_chair_north: overlap_volume=0.08099999999999996
+- living_low_table vs dining_chair_south: overlap_volume=0.08099999999999996
+- living_low_table vs dining_chair_west: overlap_volume=0.004500000000000064
+- living_low_table vs dining_chair_east: overlap_volume=0.004499999999999904
+- dining_table vs dining_chair_north: overlap_volume=0.15187499999999993
+- dining_table vs dining_chair_south: overlap_volume=0.15187499999999993
+- dining_table vs dining_chair_west: overlap_volume=0.07593750000000019
+- dining_table vs dining_chair_east: overlap_volume=0.07593749999999988
+- dining_chair_north vs dining_chair_south: overlap_volume=0.18224999999999988
+- toilet_wc vs washroom_washing_machine: overlap_volume=0.14399999999999996
+- toilet_wc vs bathroom_bathtub: overlap_volume=0.16799999999999995
+- washroom_washing_machine vs bathroom_bathtub: overlap_volume=0.17999999999999997
+- mikan_bed_single vs yuzuhiko_wardrobe: overlap_volume=0.17999999999999935
+- mikan_desk vs mikan_desk_chair: overlap_volume=0.018750000000000266
+- mikan_desk vs yuzuhiko_desk: overlap_volume=0.494999999999999
+- mikan_desk vs yuzuhiko_chair: overlap_volume=0.018750000000000266
+- mikan_desk_chair vs yuzuhiko_chair: overlap_volume=0.225
+- mikan_desk_chair vs parents_wardrobe_lower: overlap_volume=0.1125
+- mikan_desk_chair vs parents_wardrobe_upper: overlap_volume=0.1125
+- yuzuhiko_chair vs parents_wardrobe_lower: overlap_volume=0.1125
+- yuzuhiko_chair vs parents_wardrobe_upper: overlap_volume=0.1125
+- parents_wardrobe_lower vs parents_wardrobe_upper: overlap_volume=1.5840000000000038
+
+[Room Size]
+area_size_X: 10.2
+area_size_Y: 13.2
+
+[Inputs]
+image_path: C:/Users/tmaru/isaacsim/inputs_isaac/IMG_C7B57EF2764E-1.jpeg
+
+[dimensions.txt]
+家具の大きさは一般的に考えて常識的なサイズで推論してください。
+また、部屋のサイズもそれに応じてお願いします。
+窓の高さはzが1m~2mの間に設置してください
+
+[prompt1]
+You are an interior layout analyst. Provide a concise summary for layout generation.
+- Coordinate system: X = right, Y = up in the image (depth), Z = up.
+- Origin: lower-left inner corner of the overall plan.
+- Units: meters.
+- If the floor plan has multiple rooms, identify each room and its boundary lines and openings.
+- Output format: 8-14 bullet lines max. Each line: room name (if any), key objects, approx center (x,y),
+  approx size (LxW), and orientation/opening notes if obvious.
+- No long explanations, no headings, no tables.
+
+
+[prompt2]
+system_input='''You are a 2D layout-to-3D scene expert. Your task is to interpret a top-down 2D floor plan
+and output a JSON scene description. The top-down view of the resulting 3D scene must match the plan.
+
+Coordinate system (Z-Up, Isaac Sim):
+- X: right (+X), left (-X)
+- Y: up in the image / depth (+Y)
+- Z: up (height)
+- Origin (0,0): lower-left inner corner of the overall plan
+
+CRITICAL UNIT RULE:
+- All coordinates and dimensions must be in METERS.
+- If input is in cm, convert to meters (e.g., 250 cm -> 2.5).
+
+Do NOT output any prose. Output MUST be valid JSON only.
+
+MULTI-ROOM JSON SCHEMA (preferred):
+{
+  "area_name": string,
+  "area_size_X": number,  // meters (overall)
+  "area_size_Y": number,  // meters (overall)
+  "room_polygon": [        // optional single-room fallback
+    { "X": number, "Y": number }
+  ],
+  "outer_polygon": [       // preferred building outline (may be concave)
+    { "X": number, "Y": number }
+  ],
+  "rooms": [               // preferred for multi-room plans
+    {
+      "room_id": string,
+      "room_name": string (optional),
+      "room_polygon": [ { "X": number, "Y": number } ],
+      "openings": [        // doors/windows on room boundary
+        { "type": "door"|"window", "X": number, "Y": number,
+          "Width": number, "Height": number, "SillHeight": number }
+      ]
+    }
+  ],
+  "windows": [             // optional global window openings
+    { "X": number, "Y": number, "Width": number, "Height": number, "SillHeight": number }
+  ],
+  "area_objects_list": [
+    {
+      "object_name": string,
+      "category": string,
+      "search_prompt": string,
+      "room_id": string (optional),
+      "X": number,      // meters
+      "Y": number,      // meters
+      "Length": number, // meters (X-axis size)
+      "Width": number,  // meters (Y-axis size)
+      "Height": number, // meters (Z-axis size)
+      "rotationZ": number,  // degrees: 0/90/180/270
+      "Material": string (optional)
+    }
+  ]
+}
+
+Placement rules:
+1) The image is an XY top-down plan. Preserve the layout as drawn.
+2) Right in the image is +X. Up in the image is +Y.
+3) Use Length for the X-axis size, Width for the Y-axis size, Height for Z.
+4) Do NOT output any "wall" objects. Walls are procedural from room polygons.
+5) Doors/windows: include them in room openings when visible. Do NOT invent openings.
+6) Keep object placement faithful to the drawing. Do not move objects to fix collisions.
+7) Room polygons must not overlap. Adjacent rooms should share the exact same boundary coordinates.
+8) Openings must lie exactly on a room boundary edge (same X or same Y for axis-aligned walls).
+   If a door is between two rooms, place it on the shared edge (can appear in both rooms or once).
+9) If the building outline is not a rectangle, include "outer_polygon" with the true outline (concave allowed).
+   Do NOT approximate the outer boundary as a rectangle.
+
+Functional orientation (rotationZ):
+- 0 degrees: faces +Y (image up)
+- 90 degrees: faces +X (image right)
+- 180 degrees: faces -Y (image down)
+- 270 degrees: faces -X (image left)
+
+Define functional front per category:
+- Bed: direction a person faces from head to foot.
+- Chair/Sofa: direction a seated person faces.
+- TV/Display: direction the screen faces.
+- Door: direction the door opens into the room (interior).
+- Refrigerator/Drawer/Cabinet: direction the front opens.
+
+Categories (use one of these unless absolutely necessary):
+bed, table, desk, chair, sofa, wardrobe, drawer, shelf, cabinet, wheelchair,
+toilet, sink, bathtub, shower, door, window, floor, appliance, equipment, other_furniture
+
+search_prompt guidelines:
+- Write mainly in English.
+- Describe object type, usage context, and key attributes.
+- Do NOT describe relative placement in this specific room.
+
+Remember: Output a single JSON object ONLY.
+'''
+
+user_input='''You have been provided a floor plan image and a list of dimensions.
+Analyze the image to determine precise placement and orientation of each object.
+Then generate the JSON output following the system instructions.'''

@@ -1,0 +1,969 @@
+{
+  "area_name": "HousePlan",
+  "area_size_X": 24.0,
+  "area_size_Y": 10.0,
+  "outer_polygon": [
+    {
+      "X": 0.0,
+      "Y": 0.0
+    },
+    {
+      "X": 24.0,
+      "Y": 0.0
+    },
+    {
+      "X": 24.0,
+      "Y": 10.0
+    },
+    {
+      "X": 0.0,
+      "Y": 10.0
+    }
+  ],
+  "rooms": [
+    {
+      "room_id": "garage",
+      "room_name": "Garage",
+      "room_polygon": [
+        {
+          "X": 0.0,
+          "Y": 0.0
+        },
+        {
+          "X": 8.0,
+          "Y": 0.0
+        },
+        {
+          "X": 8.0,
+          "Y": 10.0
+        },
+        {
+          "X": 0.0,
+          "Y": 10.0
+        }
+      ],
+      "openings": []
+    },
+    {
+      "room_id": "entrance",
+      "room_name": "Entrance",
+      "room_polygon": [
+        {
+          "X": 8.0,
+          "Y": 6.0
+        },
+        {
+          "X": 10.8,
+          "Y": 6.0
+        },
+        {
+          "X": 10.8,
+          "Y": 7.8
+        },
+        {
+          "X": 8.0,
+          "Y": 7.8
+        }
+      ],
+      "openings": [
+        {
+          "type": "door",
+          "X": 8.0,
+          "Y": 6.9,
+          "Width": 1.0,
+          "Height": 2.0,
+          "SillHeight": 0.0
+        }
+      ]
+    },
+    {
+      "room_id": "hallway",
+      "room_name": "Hallway",
+      "room_polygon": [
+        {
+          "X": 10.8,
+          "Y": 6.0
+        },
+        {
+          "X": 13.0,
+          "Y": 6.0
+        },
+        {
+          "X": 13.0,
+          "Y": 7.8
+        },
+        {
+          "X": 10.8,
+          "Y": 7.8
+        }
+      ],
+      "openings": [
+        {
+          "type": "door",
+          "X": 10.8,
+          "Y": 6.9,
+          "Width": 0.9,
+          "Height": 2.0,
+          "SillHeight": 0.0
+        }
+      ]
+    },
+    {
+      "room_id": "corridor",
+      "room_name": "Corridor",
+      "room_polygon": [
+        {
+          "X": 8.0,
+          "Y": 4.8
+        },
+        {
+          "X": 20.8,
+          "Y": 4.8
+        },
+        {
+          "X": 20.8,
+          "Y": 6.0
+        },
+        {
+          "X": 8.0,
+          "Y": 6.0
+        }
+      ],
+      "openings": [
+        {
+          "type": "door",
+          "X": 12.0,
+          "Y": 6.0,
+          "Width": 0.9,
+          "Height": 2.0,
+          "SillHeight": 0.0
+        },
+        {
+          "type": "door",
+          "X": 12.0,
+          "Y": 4.8,
+          "Width": 0.9,
+          "Height": 2.0,
+          "SillHeight": 0.0
+        },
+        {
+          "type": "door",
+          "X": 19.9,
+          "Y": 4.8,
+          "Width": 0.8,
+          "Height": 2.0,
+          "SillHeight": 0.0
+        },
+        {
+          "type": "door",
+          "X": 15.0,
+          "Y": 6.0,
+          "Width": 0.9,
+          "Height": 2.0,
+          "SillHeight": 0.0
+        },
+        {
+          "type": "door",
+          "X": 18.3,
+          "Y": 6.0,
+          "Width": 0.8,
+          "Height": 2.0,
+          "SillHeight": 0.0
+        },
+        {
+          "type": "door",
+          "X": 20.2,
+          "Y": 6.0,
+          "Width": 0.7,
+          "Height": 2.0,
+          "SillHeight": 0.0
+        },
+        {
+          "type": "door",
+          "X": 20.8,
+          "Y": 5.4,
+          "Width": 0.8,
+          "Height": 2.0,
+          "SillHeight": 0.0
+        }
+      ]
+    },
+    {
+      "room_id": "living_dining",
+      "room_name": "Living/Dining",
+      "room_polygon": [
+        {
+          "X": 8.0,
+          "Y": 0.0
+        },
+        {
+          "X": 16.0,
+          "Y": 0.0
+        },
+        {
+          "X": 16.0,
+          "Y": 4.8
+        },
+        {
+          "X": 8.0,
+          "Y": 4.8
+        }
+      ],
+      "openings": [
+        {
+          "type": "window",
+          "X": 11.0,
+          "Y": 0.0,
+          "Width": 3.0,
+          "Height": 1.0,
+          "SillHeight": 1.0
+        },
+        {
+          "type": "window",
+          "X": 14.5,
+          "Y": 0.0,
+          "Width": 1.8,
+          "Height": 1.0,
+          "SillHeight": 1.0
+        },
+        {
+          "type": "window",
+          "X": 8.0,
+          "Y": 2.4,
+          "Width": 1.2,
+          "Height": 1.0,
+          "SillHeight": 1.0
+        }
+      ]
+    },
+    {
+      "room_id": "kitchen",
+      "room_name": "Kitchen",
+      "room_polygon": [
+        {
+          "X": 16.0,
+          "Y": 0.0
+        },
+        {
+          "X": 19.0,
+          "Y": 0.0
+        },
+        {
+          "X": 19.0,
+          "Y": 4.8
+        },
+        {
+          "X": 16.0,
+          "Y": 4.8
+        }
+      ],
+      "openings": [
+        {
+          "type": "window",
+          "X": 17.5,
+          "Y": 0.0,
+          "Width": 1.2,
+          "Height": 1.0,
+          "SillHeight": 1.0
+        }
+      ]
+    },
+    {
+      "room_id": "storage",
+      "room_name": "Storage",
+      "room_polygon": [
+        {
+          "X": 19.0,
+          "Y": 0.0
+        },
+        {
+          "X": 20.8,
+          "Y": 0.0
+        },
+        {
+          "X": 20.8,
+          "Y": 4.8
+        },
+        {
+          "X": 19.0,
+          "Y": 4.8
+        }
+      ],
+      "openings": []
+    },
+    {
+      "room_id": "closet_row",
+      "room_name": "Closet",
+      "room_polygon": [
+        {
+          "X": 20.8,
+          "Y": 4.8
+        },
+        {
+          "X": 24.0,
+          "Y": 4.8
+        },
+        {
+          "X": 24.0,
+          "Y": 6.0
+        },
+        {
+          "X": 20.8,
+          "Y": 6.0
+        }
+      ],
+      "openings": [
+        {
+          "type": "door",
+          "X": 22.0,
+          "Y": 4.8,
+          "Width": 0.9,
+          "Height": 2.0,
+          "SillHeight": 0.0
+        },
+        {
+          "type": "door",
+          "X": 22.0,
+          "Y": 6.0,
+          "Width": 0.9,
+          "Height": 2.0,
+          "SillHeight": 0.0
+        }
+      ]
+    },
+    {
+      "room_id": "bedroom_se",
+      "room_name": "Bedroom SE",
+      "room_polygon": [
+        {
+          "X": 20.8,
+          "Y": 0.0
+        },
+        {
+          "X": 24.0,
+          "Y": 0.0
+        },
+        {
+          "X": 24.0,
+          "Y": 4.8
+        },
+        {
+          "X": 20.8,
+          "Y": 4.8
+        }
+      ],
+      "openings": [
+        {
+          "type": "window",
+          "X": 22.0,
+          "Y": 0.0,
+          "Width": 1.8,
+          "Height": 1.0,
+          "SillHeight": 1.0
+        },
+        {
+          "type": "window",
+          "X": 24.0,
+          "Y": 2.4,
+          "Width": 1.2,
+          "Height": 1.0,
+          "SillHeight": 1.0
+        }
+      ]
+    },
+    {
+      "room_id": "bedroom_north",
+      "room_name": "Bedroom",
+      "room_polygon": [
+        {
+          "X": 13.0,
+          "Y": 6.0
+        },
+        {
+          "X": 17.0,
+          "Y": 6.0
+        },
+        {
+          "X": 17.0,
+          "Y": 10.0
+        },
+        {
+          "X": 13.0,
+          "Y": 10.0
+        }
+      ],
+      "openings": [
+        {
+          "type": "window",
+          "X": 15.0,
+          "Y": 10.0,
+          "Width": 1.5,
+          "Height": 1.0,
+          "SillHeight": 1.0
+        }
+      ]
+    },
+    {
+      "room_id": "bathroom",
+      "room_name": "Bathroom/Washroom",
+      "room_polygon": [
+        {
+          "X": 17.0,
+          "Y": 6.0
+        },
+        {
+          "X": 19.6,
+          "Y": 6.0
+        },
+        {
+          "X": 19.6,
+          "Y": 10.0
+        },
+        {
+          "X": 17.0,
+          "Y": 10.0
+        }
+      ],
+      "openings": [
+        {
+          "type": "window",
+          "X": 18.3,
+          "Y": 10.0,
+          "Width": 1.0,
+          "Height": 1.0,
+          "SillHeight": 1.0
+        }
+      ]
+    },
+    {
+      "room_id": "toilet_laundry",
+      "room_name": "Toilet/Laundry",
+      "room_polygon": [
+        {
+          "X": 19.6,
+          "Y": 6.0
+        },
+        {
+          "X": 20.8,
+          "Y": 6.0
+        },
+        {
+          "X": 20.8,
+          "Y": 10.0
+        },
+        {
+          "X": 19.6,
+          "Y": 10.0
+        }
+      ],
+      "openings": [
+        {
+          "type": "window",
+          "X": 20.2,
+          "Y": 10.0,
+          "Width": 0.8,
+          "Height": 1.0,
+          "SillHeight": 1.0
+        }
+      ]
+    },
+    {
+      "room_id": "bedroom_ne",
+      "room_name": "Bedroom NE",
+      "room_polygon": [
+        {
+          "X": 20.8,
+          "Y": 6.0
+        },
+        {
+          "X": 24.0,
+          "Y": 6.0
+        },
+        {
+          "X": 24.0,
+          "Y": 10.0
+        },
+        {
+          "X": 20.8,
+          "Y": 10.0
+        }
+      ],
+      "openings": [
+        {
+          "type": "window",
+          "X": 22.0,
+          "Y": 10.0,
+          "Width": 2.0,
+          "Height": 1.0,
+          "SillHeight": 1.0
+        },
+        {
+          "type": "window",
+          "X": 24.0,
+          "Y": 8.0,
+          "Width": 1.2,
+          "Height": 1.0,
+          "SillHeight": 1.0
+        }
+      ]
+    }
+  ],
+  "area_objects_list": [
+    {
+      "object_name": "car_01",
+      "category": "equipment",
+      "search_prompt": "toyota car",
+      "room_id": "garage",
+      "X": 4.0,
+      "Y": 5.0,
+      "Length": 4.5,
+      "Width": 2.0,
+      "Height": 1.6,
+      "rotationZ": 0
+    },
+    {
+      "object_name": "shoe_cabinet_01",
+      "category": "cabinet",
+      "search_prompt": "entryway shoe cabinet, low storage with doors",
+      "room_id": "entrance",
+      "X": 9.4,
+      "Y": 6.25,
+      "Length": 1.2,
+      "Width": 0.35,
+      "Height": 1.0,
+      "rotationZ": 0
+    },
+    {
+      "object_name": "door_main_entrance",
+      "category": "door",
+      "search_prompt": "residential hinged entrance door, single leaf",
+      "room_id": "entrance",
+      "X": 8.0,
+      "Y": 6.9,
+      "Length": 0.05,
+      "Width": 1.0,
+      "Height": 2.0,
+      "rotationZ": 90
+    },
+    {
+      "object_name": "door_entrance_to_hallway",
+      "category": "door",
+      "search_prompt": "interior hinged door, single leaf",
+      "room_id": "hallway",
+      "X": 10.8,
+      "Y": 6.9,
+      "Length": 0.05,
+      "Width": 0.9,
+      "Height": 2.0,
+      "rotationZ": 90
+    },
+    {
+      "object_name": "door_hallway_to_corridor",
+      "category": "door",
+      "search_prompt": "interior hinged door, single leaf",
+      "room_id": "corridor",
+      "X": 12.0,
+      "Y": 6.0,
+      "Length": 0.9,
+      "Width": 0.05,
+      "Height": 2.0,
+      "rotationZ": 180
+    },
+    {
+      "object_name": "door_corridor_to_living",
+      "category": "door",
+      "search_prompt": "interior hinged door, single leaf",
+      "room_id": "living_dining",
+      "X": 12.0,
+      "Y": 4.8,
+      "Length": 0.9,
+      "Width": 0.05,
+      "Height": 2.0,
+      "rotationZ": 180
+    },
+    {
+      "object_name": "door_corridor_to_storage",
+      "category": "door",
+      "search_prompt": "interior hinged door, single leaf",
+      "room_id": "storage",
+      "X": 19.9,
+      "Y": 4.8,
+      "Length": 0.8,
+      "Width": 0.05,
+      "Height": 2.0,
+      "rotationZ": 180
+    },
+    {
+      "object_name": "door_corridor_to_bedroom_north",
+      "category": "door",
+      "search_prompt": "interior hinged door, single leaf",
+      "room_id": "bedroom_north",
+      "X": 15.0,
+      "Y": 6.0,
+      "Length": 0.9,
+      "Width": 0.05,
+      "Height": 2.0,
+      "rotationZ": 0
+    },
+    {
+      "object_name": "door_corridor_to_bathroom",
+      "category": "door",
+      "search_prompt": "interior hinged door, single leaf",
+      "room_id": "bathroom",
+      "X": 18.3,
+      "Y": 6.0,
+      "Length": 0.8,
+      "Width": 0.05,
+      "Height": 2.0,
+      "rotationZ": 0
+    },
+    {
+      "object_name": "door_corridor_to_toilet",
+      "category": "door",
+      "search_prompt": "interior hinged door, single leaf",
+      "room_id": "toilet_laundry",
+      "X": 20.2,
+      "Y": 6.0,
+      "Length": 0.7,
+      "Width": 0.05,
+      "Height": 2.0,
+      "rotationZ": 0
+    },
+    {
+      "object_name": "door_corridor_to_closet_row",
+      "category": "door",
+      "search_prompt": "interior hinged door, single leaf",
+      "room_id": "closet_row",
+      "X": 20.8,
+      "Y": 5.4,
+      "Length": 0.05,
+      "Width": 0.8,
+      "Height": 2.0,
+      "rotationZ": 90
+    },
+    {
+      "object_name": "door_closet_row_to_bedroom_se",
+      "category": "door",
+      "search_prompt": "interior hinged door, single leaf",
+      "room_id": "bedroom_se",
+      "X": 22.0,
+      "Y": 4.8,
+      "Length": 0.9,
+      "Width": 0.05,
+      "Height": 2.0,
+      "rotationZ": 180
+    },
+    {
+      "object_name": "door_closet_row_to_bedroom_ne",
+      "category": "door",
+      "search_prompt": "interior hinged door, single leaf",
+      "room_id": "bedroom_ne",
+      "X": 22.0,
+      "Y": 6.0,
+      "Length": 0.9,
+      "Width": 0.05,
+      "Height": 2.0,
+      "rotationZ": 0
+    },
+    {
+      "object_name": "tv_stand_01",
+      "category": "cabinet",
+      "search_prompt": "low TV stand cabinet for living room media storage",
+      "room_id": "living_dining",
+      "X": 8.55,
+      "Y": 2.6,
+      "Length": 1.2,
+      "Width": 0.4,
+      "Height": 0.55,
+      "rotationZ": 90
+    },
+    {
+      "object_name": "tv_01",
+      "category": "appliance",
+      "search_prompt": "flat screen television for living room entertainment",
+      "room_id": "living_dining",
+      "X": 8.45,
+      "Y": 2.6,
+      "Length": 1.05,
+      "Width": 0.08,
+      "Height": 0.65,
+      "rotationZ": 90
+    },
+    {
+      "object_name": "sofa_01",
+      "category": "sofa",
+      "search_prompt": "3-seat fabric sofa for living room seating",
+      "room_id": "living_dining",
+      "X": 11.6,
+      "Y": 2.6,
+      "Length": 2.2,
+      "Width": 0.9,
+      "Height": 0.85,
+      "rotationZ": 270
+    },
+    {
+      "object_name": "coffee_table_01",
+      "category": "table",
+      "search_prompt": "low coffee table for living room, rectangular",
+      "room_id": "living_dining",
+      "X": 10.35,
+      "Y": 2.6,
+      "Length": 1.1,
+      "Width": 0.6,
+      "Height": 0.4,
+      "rotationZ": 0
+    },
+    {
+      "object_name": "dining_table_01",
+      "category": "table",
+      "search_prompt": "rectangular dining table for 4 people",
+      "room_id": "living_dining",
+      "X": 13.9,
+      "Y": 2.4,
+      "Length": 1.6,
+      "Width": 0.9,
+      "Height": 0.75,
+      "rotationZ": 0
+    },
+    {
+      "object_name": "dining_chair_01",
+      "category": "chair",
+      "search_prompt": "dining chair with backrest, simple design",
+      "room_id": "living_dining",
+      "X": 13.35,
+      "Y": 3.15,
+      "Length": 0.45,
+      "Width": 0.45,
+      "Height": 0.9,
+      "rotationZ": 180
+    },
+    {
+      "object_name": "dining_chair_02",
+      "category": "chair",
+      "search_prompt": "dining chair with backrest, simple design",
+      "room_id": "living_dining",
+      "X": 14.45,
+      "Y": 3.15,
+      "Length": 0.45,
+      "Width": 0.45,
+      "Height": 0.9,
+      "rotationZ": 180
+    },
+    {
+      "object_name": "dining_chair_03",
+      "category": "chair",
+      "search_prompt": "dining chair with backrest, simple design",
+      "room_id": "living_dining",
+      "X": 13.35,
+      "Y": 1.65,
+      "Length": 0.45,
+      "Width": 0.45,
+      "Height": 0.9,
+      "rotationZ": 0
+    },
+    {
+      "object_name": "dining_chair_04",
+      "category": "chair",
+      "search_prompt": "dining chair with backrest, simple design",
+      "room_id": "living_dining",
+      "X": 14.45,
+      "Y": 1.65,
+      "Length": 0.45,
+      "Width": 0.45,
+      "Height": 0.9,
+      "rotationZ": 0
+    },
+    {
+      "object_name": "kitchen_island_01",
+      "category": "cabinet",
+      "search_prompt": "kitchen island with countertop, integrated sink and cooktop",
+      "room_id": "kitchen",
+      "X": 17.3,
+      "Y": 2.4,
+      "Length": 2.4,
+      "Width": 1.0,
+      "Height": 0.9,
+      "rotationZ": 0
+    },
+    {
+      "object_name": "refrigerator_01",
+      "category": "appliance",
+      "search_prompt": "tall refrigerator freezer combo for kitchen",
+      "room_id": "kitchen",
+      "X": 18.6,
+      "Y": 3.75,
+      "Length": 0.8,
+      "Width": 0.75,
+      "Height": 1.8,
+      "rotationZ": 270
+    },
+    {
+      "object_name": "storage_shelf_01",
+      "category": "shelf",
+      "search_prompt": "metal storage shelving unit for pantry or storage room",
+      "room_id": "storage",
+      "X": 19.6,
+      "Y": 2.4,
+      "Length": 0.5,
+      "Width": 1.6,
+      "Height": 2.0,
+      "rotationZ": 90
+    },
+    {
+      "object_name": "storage_shelf_02",
+      "category": "shelf",
+      "search_prompt": "metal storage shelving unit for pantry or storage room",
+      "room_id": "storage",
+      "X": 20.2,
+      "Y": 2.4,
+      "Length": 0.5,
+      "Width": 1.6,
+      "Height": 2.0,
+      "rotationZ": 90
+    },
+    {
+      "object_name": "bed_north_01",
+      "category": "bed",
+      "search_prompt": "double bed with headboard, modern style",
+      "room_id": "bedroom_north",
+      "X": 15.0,
+      "Y": 8.25,
+      "Length": 2.0,
+      "Width": 1.6,
+      "Height": 0.6,
+      "rotationZ": 180
+    },
+    {
+      "object_name": "wardrobe_north_01",
+      "category": "wardrobe",
+      "search_prompt": "tall wardrobe closet with doors, bedroom storage",
+      "room_id": "bedroom_north",
+      "X": 13.35,
+      "Y": 8.0,
+      "Length": 0.6,
+      "Width": 2.0,
+      "Height": 2.2,
+      "rotationZ": 90
+    },
+    {
+      "object_name": "bathtub_01",
+      "category": "bathtub",
+      "search_prompt": "standard bathtub for residential bathroom",
+      "room_id": "bathroom",
+      "X": 17.8,
+      "Y": 9.05,
+      "Length": 1.6,
+      "Width": 0.75,
+      "Height": 0.6,
+      "rotationZ": 0
+    },
+    {
+      "object_name": "bathroom_sink_01",
+      "category": "sink",
+      "search_prompt": "bathroom vanity sink with cabinet",
+      "room_id": "bathroom",
+      "X": 18.3,
+      "Y": 6.95,
+      "Length": 1.0,
+      "Width": 0.5,
+      "Height": 0.9,
+      "rotationZ": 180
+    },
+    {
+      "object_name": "toilet_01",
+      "category": "toilet",
+      "search_prompt": "modern toilet for residential bathroom",
+      "room_id": "toilet_laundry",
+      "X": 20.1,
+      "Y": 9.05,
+      "Length": 0.7,
+      "Width": 0.7,
+      "Height": 0.8,
+      "rotationZ": 180
+    },
+    {
+      "object_name": "washing_machine_01",
+      "category": "appliance",
+      "search_prompt": "front-load washing machine for laundry area",
+      "room_id": "toilet_laundry",
+      "X": 20.3,
+      "Y": 6.95,
+      "Length": 0.6,
+      "Width": 0.6,
+      "Height": 0.9,
+      "rotationZ": 180
+    },
+    {
+      "object_name": "laundry_sink_01",
+      "category": "sink",
+      "search_prompt": "small utility sink for laundry area",
+      "room_id": "toilet_laundry",
+      "X": 19.8,
+      "Y": 6.95,
+      "Length": 0.45,
+      "Width": 0.35,
+      "Height": 0.9,
+      "rotationZ": 180
+    },
+    {
+      "object_name": "bed_ne_01",
+      "category": "bed",
+      "search_prompt": "double bed with headboard, modern style",
+      "room_id": "bedroom_ne",
+      "X": 22.6,
+      "Y": 8.3,
+      "Length": 2.0,
+      "Width": 1.6,
+      "Height": 0.6,
+      "rotationZ": 180
+    },
+    {
+      "object_name": "wardrobe_ne_01",
+      "category": "wardrobe",
+      "search_prompt": "tall wardrobe closet with doors, bedroom storage",
+      "room_id": "bedroom_ne",
+      "X": 21.3,
+      "Y": 8.0,
+      "Length": 0.6,
+      "Width": 1.8,
+      "Height": 2.2,
+      "rotationZ": 90
+    },
+    {
+      "object_name": "bed_se_01",
+      "category": "bed",
+      "search_prompt": "double bed with headboard, modern style",
+      "room_id": "bedroom_se",
+      "X": 22.65,
+      "Y": 2.65,
+      "Length": 2.0,
+      "Width": 1.6,
+      "Height": 0.6,
+      "rotationZ": 270
+    },
+    {
+      "object_name": "desk_se_01",
+      "category": "desk",
+      "search_prompt": "study desk for bedroom workspace, rectangular",
+      "room_id": "bedroom_se",
+      "X": 21.35,
+      "Y": 1.45,
+      "Length": 1.2,
+      "Width": 0.6,
+      "Height": 0.75,
+      "rotationZ": 90
+    },
+    {
+      "object_name": "chair_se_01",
+      "category": "chair",
+      "search_prompt": "desk chair for study, compact",
+      "room_id": "bedroom_se",
+      "X": 21.95,
+      "Y": 1.45,
+      "Length": 0.5,
+      "Width": 0.5,
+      "Height": 0.9,
+      "rotationZ": 90
+    }
+  ]
+}

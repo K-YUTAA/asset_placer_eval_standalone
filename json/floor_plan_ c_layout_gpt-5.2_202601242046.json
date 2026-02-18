@@ -1,0 +1,429 @@
+{
+    "area_name": "three_rooms_with_corridor",
+    "area_size_X": 15.0,
+    "area_size_Y": 6.0,
+    "outer_polygon": [
+        {
+            "X": 0.0,
+            "Y": 0.0
+        },
+        {
+            "X": 15.0,
+            "Y": 0.0
+        },
+        {
+            "X": 15.0,
+            "Y": 6.0
+        },
+        {
+            "X": 0.0,
+            "Y": 6.0
+        }
+    ],
+    "rooms": [
+        {
+            "room_id": "corridor",
+            "room_name": "Corridor",
+            "room_polygon": [
+                {
+                    "X": 0.0,
+                    "Y": 0.0
+                },
+                {
+                    "X": 15.0,
+                    "Y": 0.0
+                },
+                {
+                    "X": 15.0,
+                    "Y": 2.0
+                },
+                {
+                    "X": 0.0,
+                    "Y": 2.0
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 1.0,
+                    "Y": 2.0,
+                    "Width": 0.9,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "door",
+                    "X": 6.0,
+                    "Y": 2.0,
+                    "Width": 0.9,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "door",
+                    "X": 11.0,
+                    "Y": 2.0,
+                    "Width": 0.9,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                }
+            ]
+        },
+        {
+            "room_id": "room_1",
+            "room_name": "Room 1 (Left)",
+            "room_polygon": [
+                {
+                    "X": 0.0,
+                    "Y": 2.0
+                },
+                {
+                    "X": 5.0,
+                    "Y": 2.0
+                },
+                {
+                    "X": 5.0,
+                    "Y": 6.0
+                },
+                {
+                    "X": 0.0,
+                    "Y": 6.0
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 1.0,
+                    "Y": 2.0,
+                    "Width": 0.9,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "window",
+                    "X": 3.25,
+                    "Y": 6.0,
+                    "Width": 2.4,
+                    "Height": 1.0,
+                    "SillHeight": 1.0
+                }
+            ]
+        },
+        {
+            "room_id": "room_2",
+            "room_name": "Room 2 (Middle)",
+            "room_polygon": [
+                {
+                    "X": 5.0,
+                    "Y": 2.0
+                },
+                {
+                    "X": 10.0,
+                    "Y": 2.0
+                },
+                {
+                    "X": 10.0,
+                    "Y": 6.0
+                },
+                {
+                    "X": 5.0,
+                    "Y": 6.0
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 6.0,
+                    "Y": 2.0,
+                    "Width": 0.9,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "window",
+                    "X": 8.25,
+                    "Y": 6.0,
+                    "Width": 2.4,
+                    "Height": 1.0,
+                    "SillHeight": 1.0
+                }
+            ]
+        },
+        {
+            "room_id": "room_3",
+            "room_name": "Room 3 (Right)",
+            "room_polygon": [
+                {
+                    "X": 10.0,
+                    "Y": 2.0
+                },
+                {
+                    "X": 15.0,
+                    "Y": 2.0
+                },
+                {
+                    "X": 15.0,
+                    "Y": 6.0
+                },
+                {
+                    "X": 10.0,
+                    "Y": 6.0
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 11.0,
+                    "Y": 2.0,
+                    "Width": 0.9,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "window",
+                    "X": 13.25,
+                    "Y": 6.0,
+                    "Width": 2.4,
+                    "Height": 1.0,
+                    "SillHeight": 1.0
+                }
+            ]
+        }
+    ],
+    "area_objects_list": [
+        {
+            "object_name": "door_room1",
+            "category": "door",
+            "search_prompt": "interior single swing door, simple modern design, wooden or painted finish",
+            "room_id": "room_1",
+            "X": 1.0,
+            "Y": 2.0,
+            "Length": 0.9,
+            "Width": 0.1,
+            "Height": 2.0,
+            "rotationZ": 0,
+            "Material": "wood"
+        },
+        {
+            "object_name": "door_room2",
+            "category": "door",
+            "search_prompt": "interior single swing door, simple modern design, wooden or painted finish",
+            "room_id": "room_2",
+            "X": 6.0,
+            "Y": 2.0,
+            "Length": 0.9,
+            "Width": 0.1,
+            "Height": 2.0,
+            "rotationZ": 0,
+            "Material": "wood"
+        },
+        {
+            "object_name": "door_room3",
+            "category": "door",
+            "search_prompt": "interior single swing door, simple modern design, wooden or painted finish",
+            "room_id": "room_3",
+            "X": 11.0,
+            "Y": 2.0,
+            "Length": 0.9,
+            "Width": 0.1,
+            "Height": 2.0,
+            "rotationZ": 0,
+            "Material": "wood"
+        },
+        {
+            "object_name": "bed_room1",
+            "category": "bed",
+            "search_prompt": "single bed with simple frame and mattress, compact bedroom furniture",
+            "room_id": "room_1",
+            "X": 4.2,
+            "Y": 5.0,
+            "Length": 1.0,
+            "Width": 2.0,
+            "Height": 0.55,
+            "rotationZ": 180,
+            "Material": "fabric"
+        },
+        {
+            "object_name": "tv_room1",
+            "category": "equipment",
+            "search_prompt": "flat screen TV on a slim stand or media unit, modern living/bedroom display",
+            "room_id": "room_1",
+            "X": 0.25,
+            "Y": 4.2,
+            "Length": 0.3,
+            "Width": 1.2,
+            "Height": 1.2,
+            "rotationZ": 90,
+            "Material": "plastic_metal"
+        },
+        {
+            "object_name": "refrigerator_room1",
+            "category": "appliance",
+            "search_prompt": "compact single-door refrigerator, small apartment fridge, white finish",
+            "room_id": "room_1",
+            "X": 1.2,
+            "Y": 5.4,
+            "Length": 0.7,
+            "Width": 0.7,
+            "Height": 1.75,
+            "rotationZ": 180,
+            "Material": "metal"
+        },
+        {
+            "object_name": "chair_room1",
+            "category": "chair",
+            "search_prompt": "simple dining chair, minimalist design, wooden or plastic seat",
+            "room_id": "room_1",
+            "X": 2.6,
+            "Y": 5.4,
+            "Length": 0.5,
+            "Width": 0.5,
+            "Height": 0.9,
+            "rotationZ": 180,
+            "Material": "wood"
+        },
+        {
+            "object_name": "cabinet_room1",
+            "category": "cabinet",
+            "search_prompt": "low storage cabinet with doors or drawers, compact bedroom storage unit",
+            "room_id": "room_1",
+            "X": 3.6,
+            "Y": 2.6,
+            "Length": 1.2,
+            "Width": 0.5,
+            "Height": 0.8,
+            "rotationZ": 0,
+            "Material": "wood"
+        },
+        {
+            "object_name": "bed_room2",
+            "category": "bed",
+            "search_prompt": "single bed with simple frame and mattress, compact bedroom furniture",
+            "room_id": "room_2",
+            "X": 9.2,
+            "Y": 5.0,
+            "Length": 1.0,
+            "Width": 2.0,
+            "Height": 0.55,
+            "rotationZ": 180,
+            "Material": "fabric"
+        },
+        {
+            "object_name": "tv_room2",
+            "category": "equipment",
+            "search_prompt": "flat screen TV on a slim stand or media unit, modern living/bedroom display",
+            "room_id": "room_2",
+            "X": 5.25,
+            "Y": 4.2,
+            "Length": 0.3,
+            "Width": 1.2,
+            "Height": 1.2,
+            "rotationZ": 90,
+            "Material": "plastic_metal"
+        },
+        {
+            "object_name": "table_room2",
+            "category": "table",
+            "search_prompt": "small square table for eating or working, compact apartment furniture",
+            "room_id": "room_2",
+            "X": 6.6,
+            "Y": 5.4,
+            "Length": 0.7,
+            "Width": 0.7,
+            "Height": 0.75,
+            "rotationZ": 0,
+            "Material": "wood"
+        },
+        {
+            "object_name": "chair_room2",
+            "category": "chair",
+            "search_prompt": "simple dining chair, minimalist design, wooden or plastic seat",
+            "room_id": "room_2",
+            "X": 7.8,
+            "Y": 5.4,
+            "Length": 0.5,
+            "Width": 0.5,
+            "Height": 0.9,
+            "rotationZ": 180,
+            "Material": "wood"
+        },
+        {
+            "object_name": "cabinet_room2",
+            "category": "cabinet",
+            "search_prompt": "low storage cabinet with doors or drawers, compact bedroom storage unit",
+            "room_id": "room_2",
+            "X": 8.6,
+            "Y": 2.6,
+            "Length": 1.2,
+            "Width": 0.5,
+            "Height": 0.8,
+            "rotationZ": 0,
+            "Material": "wood"
+        },
+        {
+            "object_name": "bed_room3",
+            "category": "bed",
+            "search_prompt": "single bed with simple frame and mattress, compact bedroom furniture",
+            "room_id": "room_3",
+            "X": 14.2,
+            "Y": 5.0,
+            "Length": 1.0,
+            "Width": 2.0,
+            "Height": 0.55,
+            "rotationZ": 180,
+            "Material": "fabric"
+        },
+        {
+            "object_name": "tv_room3",
+            "category": "equipment",
+            "search_prompt": "flat screen TV on a slim stand or media unit, modern living/bedroom display",
+            "room_id": "room_3",
+            "X": 10.25,
+            "Y": 4.2,
+            "Length": 0.3,
+            "Width": 1.2,
+            "Height": 1.2,
+            "rotationZ": 90,
+            "Material": "plastic_metal"
+        },
+        {
+            "object_name": "table_room3",
+            "category": "table",
+            "search_prompt": "small square table for eating or working, compact apartment furniture",
+            "room_id": "room_3",
+            "X": 11.6,
+            "Y": 5.4,
+            "Length": 0.7,
+            "Width": 0.7,
+            "Height": 0.75,
+            "rotationZ": 0,
+            "Material": "wood"
+        },
+        {
+            "object_name": "chair_room3",
+            "category": "chair",
+            "search_prompt": "simple dining chair, minimalist design, wooden or plastic seat",
+            "room_id": "room_3",
+            "X": 12.8,
+            "Y": 5.4,
+            "Length": 0.5,
+            "Width": 0.5,
+            "Height": 0.9,
+            "rotationZ": 180,
+            "Material": "wood"
+        },
+        {
+            "object_name": "cabinet_room3",
+            "category": "cabinet",
+            "search_prompt": "low storage cabinet with doors or drawers, compact bedroom storage unit",
+            "room_id": "room_3",
+            "X": 13.6,
+            "Y": 2.6,
+            "Length": 1.2,
+            "Width": 0.5,
+            "Height": 0.8,
+            "rotationZ": 0,
+            "Material": "wood"
+        }
+    ]
+}

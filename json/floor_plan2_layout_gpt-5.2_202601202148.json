@@ -1,0 +1,101 @@
+{
+    "area_name": "Simple_Bedroom_Area",
+    "X": 0.0,
+    "Y": 0.0,
+    "Z": 0.0,
+    "area_size_X": 4.5,
+    "area_size_Y": 4.5,
+    "area_objects_list": [
+        {
+            "object_name": "Floor",
+            "category": "floor",
+            "X": 0.0,
+            "Y": 0.0,
+            "Z": 0.0,
+            "Length": 4.5,
+            "Width": 4.5,
+            "Height": 0,
+            "rotationZ": 0,
+            "Material": "Concrete_Polished",
+            "search_prompt": "flat floor surface for a simple bedroom, neutral polished concrete look"
+        },
+        {
+            "object_name": "Wall_Mounted_TV",
+            "category": "appliance",
+            "X": -2.025,
+            "Y": 0.3,
+            "Z": 0.0,
+            "Length": 0.25,
+            "Width": 1.4,
+            "Height": 0.9,
+            "rotationZ": 90,
+            "Material": "Plastic_ABS",
+            "search_prompt": "modern flat screen TV display with a thin black frame, wall-mounted style"
+        },
+        {
+            "object_name": "Compact_Refrigerator",
+            "category": "appliance",
+            "X": -0.9,
+            "Y": 1.775,
+            "Z": 0.0,
+            "Length": 0.75,
+            "Width": 0.75,
+            "Height": 1.8,
+            "rotationZ": 180,
+            "Material": "Steel_Stainless",
+            "search_prompt": "compact single-door refrigerator, stainless steel finish, small apartment size"
+        },
+        {
+            "object_name": "Simple_Viewing_Chair",
+            "category": "chair",
+            "X": 0.1,
+            "Y": 1.75,
+            "Z": 0.0,
+            "Length": 0.55,
+            "Width": 0.55,
+            "Height": 0.85,
+            "rotationZ": 270,
+            "Material": "Cloth_Gray",
+            "search_prompt": "simple armless chair for indoor seating, upholstered in gray fabric, minimal modern style"
+        },
+        {
+            "object_name": "Single_Bed",
+            "category": "bed",
+            "X": 1.4,
+            "Y": 1.15,
+            "Z": 0.0,
+            "Length": 1.5,
+            "Width": 2.0,
+            "Height": 0.6,
+            "rotationZ": 180,
+            "Material": "Cloth_Gray",
+            "search_prompt": "single bed with mattress, simple modern bed frame, neutral fabric bedding"
+        },
+        {
+            "object_name": "Low_Drawer_Dresser",
+            "category": "drawer",
+            "X": 1.45,
+            "Y": -1.85,
+            "Z": 0.0,
+            "Length": 1.4,
+            "Width": 0.6,
+            "Height": 0.85,
+            "rotationZ": 0,
+            "Material": "Veneer_UX_Walnut_Cherry",
+            "search_prompt": "low wooden dresser with drawers, modern storage chest, dark walnut veneer finish"
+        },
+        {
+            "object_name": "Entry_Door",
+            "category": "door",
+            "X": -1.75,
+            "Y": -2.2,
+            "Z": 0.0,
+            "Length": 0.9,
+            "Width": 0.1,
+            "Height": 2.0,
+            "rotationZ": 0,
+            "Material": "MDF",
+            "search_prompt": "interior hinged door, simple flat panel design, painted wood appearance"
+        }
+    ]
+}

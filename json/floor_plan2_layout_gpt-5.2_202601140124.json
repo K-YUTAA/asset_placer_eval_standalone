@@ -1,0 +1,101 @@
+{
+    "area_name": "Wheelchair_Accessible_Bedroom",
+    "X": 0.0,
+    "Y": 0.0,
+    "Z": 0.0,
+    "area_size_X": 3.2,
+    "area_size_Y": 3.2,
+    "area_objects_list": [
+        {
+            "object_name": "Floor",
+            "category": "floor",
+            "X": 0.0,
+            "Y": 0.0,
+            "Z": 0.0,
+            "Length": 3.2,
+            "Width": 3.2,
+            "Height": 0,
+            "rotationZ": 0,
+            "Material": "Concrete_Polished",
+            "search_prompt": "flat floor surface of a wheelchair-accessible bedroom, suitable for hospital or nursing environment"
+        },
+        {
+            "object_name": "Care_Single_Bed",
+            "category": "bed",
+            "X": -1.0,
+            "Y": 0.625,
+            "Z": 0.0,
+            "Length": 1.2,
+            "Width": 1.95,
+            "Height": 0.4,
+            "rotationZ": 180,
+            "Material": "Linen_White",
+            "search_prompt": "single care bed for elderly patient, simple rectangular design, light frame, white bedding"
+        },
+        {
+            "object_name": "Compact_Refrigerator",
+            "category": "appliance",
+            "X": 0.925,
+            "Y": 1.35,
+            "Z": 0.0,
+            "Length": 0.55,
+            "Width": 0.5,
+            "Height": 1.2,
+            "rotationZ": 180,
+            "Material": "Steel_Stainless",
+            "search_prompt": "compact freestanding refrigerator, single door, suitable for a small bedroom or care room, stainless finish"
+        },
+        {
+            "object_name": "Simple_Dining_Chair",
+            "category": "chair",
+            "X": 0.0,
+            "Y": 1.35,
+            "Z": 0.0,
+            "Length": 0.5,
+            "Width": 0.5,
+            "Height": 0.8,
+            "rotationZ": 180,
+            "Material": "Cloth_Gray",
+            "search_prompt": "simple armless indoor chair with square seat, lightweight and stable for care environment"
+        },
+        {
+            "object_name": "Wallside_TV_Display",
+            "category": "appliance",
+            "X": 1.425,
+            "Y": 0.1,
+            "Z": 0.0,
+            "Length": 0.35,
+            "Width": 1.2,
+            "Height": 0.7,
+            "rotationZ": 90,
+            "Material": "Plastic_ABS",
+            "search_prompt": "flat screen TV on a slim stand or wallside mount, modern minimalist style, black frame"
+        },
+        {
+            "object_name": "Low_Storage_Drawer",
+            "category": "drawer",
+            "X": -1.15,
+            "Y": -1.375,
+            "Z": 0.0,
+            "Length": 0.9,
+            "Width": 0.45,
+            "Height": 0.96,
+            "rotationZ": 0,
+            "Material": "Veneer_UX_Walnut_Cherry",
+            "search_prompt": "low wooden drawer chest with multiple drawers, compact storage cabinet, dark walnut veneer"
+        },
+        {
+            "object_name": "OutSwing_Entry_Door",
+            "category": "door",
+            "X": 1.2,
+            "Y": -1.575,
+            "Z": 0.0,
+            "Length": 0.8,
+            "Width": 0.05,
+            "Height": 2.2,
+            "rotationZ": 0,
+            "Material": "Oak",
+            "search_prompt": "standard single hinged interior door for a care room, simple flat panel design"
+        }
+    ]
+}

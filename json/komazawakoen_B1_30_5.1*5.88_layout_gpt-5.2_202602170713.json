@@ -1,0 +1,129 @@
+{
+    "area_name": "bedroom_studio_with_toilet",
+    "area_size_X": 5.88,
+    "area_size_Y": 5.1,
+    "size_mode": "local",
+    "area_objects_list": [
+        {
+            "object_name": "toilet_room_enclosure",
+            "category": "room_partition",
+            "search_prompt": "toilet room partition enclosure walls",
+            "X": 0.85,
+            "Y": 4.2,
+            "Length": 1.7,
+            "Width": 1.8,
+            "Height": 2.4,
+            "rotationZ": 0
+        },
+        {
+            "object_name": "toilet_bowl",
+            "category": "plumbing",
+            "search_prompt": "modern toilet bowl with tank",
+            "X": 0.55,
+            "Y": 4.2,
+            "Length": 0.7,
+            "Width": 1.2,
+            "Height": 0.8,
+            "rotationZ": 180
+        },
+        {
+            "object_name": "sink_cabinet",
+            "category": "kitchen",
+            "search_prompt": "kitchen sink base cabinet with countertop",
+            "X": 4.2,
+            "Y": 4.8,
+            "Length": 1.6,
+            "Width": 0.6,
+            "Height": 0.85,
+            "rotationZ": 180
+        },
+        {
+            "object_name": "storage_cabinet",
+            "category": "storage",
+            "search_prompt": "tall storage cabinet pantry",
+            "X": 5.4,
+            "Y": 4.8,
+            "Length": 0.9,
+            "Width": 0.6,
+            "Height": 2,
+            "rotationZ": 180
+        },
+        {
+            "object_name": "bed",
+            "category": "bedroom",
+            "search_prompt": "single bed 150cm x 210cm",
+            "X": 5.05,
+            "Y": 2.4,
+            "Length": 1.5,
+            "Width": 2.1,
+            "Height": 0.6,
+            "rotationZ": 0
+        },
+        {
+            "object_name": "sofa",
+            "category": "living",
+            "search_prompt": "2-seater sofa",
+            "X": 2.85,
+            "Y": 2.55,
+            "Length": 1.9,
+            "Width": 0.9,
+            "Height": 0.85,
+            "rotationZ": 270
+        },
+        {
+            "object_name": "coffee_table",
+            "category": "living",
+            "search_prompt": "coffee table",
+            "X": 1.8,
+            "Y": 2.55,
+            "Length": 1,
+            "Width": 0.7,
+            "Height": 0.45,
+            "rotationZ": 0
+        },
+        {
+            "object_name": "tv_cabinet",
+            "category": "living",
+            "search_prompt": "low TV cabinet stand",
+            "X": 0.25,
+            "Y": 2.15,
+            "Length": 1.7,
+            "Width": 0.5,
+            "Height": 0.6,
+            "rotationZ": 90
+        },
+        {
+            "object_name": "entry_sliding_door",
+            "category": "door",
+            "search_prompt": "interior sliding door opening 1.2m",
+            "X": 2.75,
+            "Y": 5.05,
+            "Length": 1.2,
+            "Width": 0.1,
+            "Height": 2,
+            "rotationZ": 180
+        },
+        {
+            "object_name": "toilet_hinged_door",
+            "category": "door",
+            "search_prompt": "interior hinged door 0.7m wide",
+            "X": 1.7,
+            "Y": 4.55,
+            "Length": 0.7,
+            "Width": 0.1,
+            "Height": 2,
+            "rotationZ": 270
+        },
+        {
+            "object_name": "south_window",
+            "category": "window",
+            "search_prompt": "sliding window (height 1.2m, sill 1.0m)",
+            "X": 1.65,
+            "Y": 0.05,
+            "Length": 2.7,
+            "Width": 0.1,
+            "Height": 1.2,
+            "rotationZ": 0
+        }
+    ]
+}

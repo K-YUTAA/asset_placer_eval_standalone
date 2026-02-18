@@ -1,0 +1,107 @@
+{
+    "area_name": "bedroom_with_kitchenette_and_toilet",
+    "area_size_X": 5.88,
+    "area_size_Y": 5.1,
+    "size_mode": "local",
+    "area_objects_list": [
+        {
+            "object_name": "Toilet Room (enclosure)",
+            "category": "room",
+            "search_prompt": "small enclosed toilet room partition walls",
+            "X": 0.95,
+            "Y": 4.2,
+            "Length": 1.7,
+            "Width": 1.8,
+            "Height": 2.4,
+            "rotationZ": 0
+        },
+        {
+            "object_name": "Kitchen counter with sink and storage",
+            "category": "kitchen",
+            "search_prompt": "straight kitchen counter with integrated sink and upper storage",
+            "X": 4.65,
+            "Y": 4.8,
+            "Length": 2.4,
+            "Width": 0.6,
+            "Height": 0.9,
+            "rotationZ": 180
+        },
+        {
+            "object_name": "Bed",
+            "category": "furniture",
+            "search_prompt": "single bed 140x200 cm",
+            "X": 5,
+            "Y": 2.1,
+            "Length": 1.4,
+            "Width": 2,
+            "Height": 0.55,
+            "rotationZ": 0
+        },
+        {
+            "object_name": "Sofa",
+            "category": "furniture",
+            "search_prompt": "2-seater sofa compact",
+            "X": 2.95,
+            "Y": 2.2,
+            "Length": 0.85,
+            "Width": 1.85,
+            "Height": 0.8,
+            "rotationZ": 270
+        },
+        {
+            "object_name": "Coffee table (oval)",
+            "category": "furniture",
+            "search_prompt": "oval coffee table",
+            "X": 2.1,
+            "Y": 2.2,
+            "Length": 0.7,
+            "Width": 0.9,
+            "Height": 0.4,
+            "rotationZ": 0
+        },
+        {
+            "object_name": "TV cabinet",
+            "category": "furniture",
+            "search_prompt": "low TV cabinet 130 cm wide",
+            "X": 0.35,
+            "Y": 1.75,
+            "Length": 0.4,
+            "Width": 1.3,
+            "Height": 0.5,
+            "rotationZ": 90
+        },
+        {
+            "object_name": "Sliding door (main entrance)",
+            "category": "door",
+            "search_prompt": "sliding door",
+            "X": 2.95,
+            "Y": 5.05,
+            "Length": 1.6,
+            "Width": 0.1,
+            "Height": 2.05,
+            "rotationZ": 180
+        },
+        {
+            "object_name": "Toilet door (swing)",
+            "category": "door",
+            "search_prompt": "interior swing door 75 cm",
+            "X": 1.75,
+            "Y": 4.65,
+            "Length": 0.1,
+            "Width": 0.75,
+            "Height": 2.05,
+            "rotationZ": 270
+        },
+        {
+            "object_name": "Window",
+            "category": "window",
+            "search_prompt": "wide window",
+            "X": 1.7,
+            "Y": 0.05,
+            "Length": 2.7,
+            "Width": 0.1,
+            "Height": 1.2,
+            "rotationZ": 0
+        }
+    ]
+}

@@ -1,0 +1,101 @@
+{
+    "area_name": "Compact_Bedroom_Area",
+    "X": 0.0,
+    "Y": 0.0,
+    "Z": 0.0,
+    "area_size_X": 3.2,
+    "area_size_Y": 3.2,
+    "area_objects_list": [
+        {
+            "object_name": "Floor",
+            "category": "floor",
+            "X": 0.0,
+            "Y": 0.0,
+            "Z": 0.0,
+            "Length": 3.2,
+            "Width": 3.2,
+            "Height": 0,
+            "rotationZ": 0,
+            "Material": "Oak",
+            "search_prompt": "flat floor surface for a small bedroom, clean and simple finish"
+        },
+        {
+            "object_name": "Inward_Swing_Bedroom_Door",
+            "category": "door",
+            "X": 1.0,
+            "Y": -1.575,
+            "Z": 0.0,
+            "Length": 0.9,
+            "Width": 0.05,
+            "Height": 2.1,
+            "rotationZ": 0,
+            "Material": "MDF",
+            "search_prompt": "interior hinged wooden door, simple modern style"
+        },
+        {
+            "object_name": "Slim_TV_Stand",
+            "category": "appliance",
+            "X": 1.35,
+            "Y": 0.3,
+            "Z": 0.0,
+            "Length": 0.3,
+            "Width": 1.2,
+            "Height": 1.05,
+            "rotationZ": 90,
+            "Material": "Plastic_ABS",
+            "search_prompt": "flat screen TV with a slim stand, black frame, suitable for a bedroom"
+        },
+        {
+            "object_name": "Compact_Mini_Refrigerator",
+            "category": "appliance",
+            "X": 1.2,
+            "Y": 1.2,
+            "Z": 0.0,
+            "Length": 0.6,
+            "Width": 0.6,
+            "Height": 0.85,
+            "rotationZ": 180,
+            "Material": "Steel_Stainless",
+            "search_prompt": "compact mini refrigerator for a small room, stainless steel finish"
+        },
+        {
+            "object_name": "Simple_Reading_Chair",
+            "category": "chair",
+            "X": 0.5,
+            "Y": 1.2,
+            "Z": 0.0,
+            "Length": 0.5,
+            "Width": 0.5,
+            "Height": 0.85,
+            "rotationZ": 270,
+            "Material": "Plywood",
+            "search_prompt": "simple wooden chair for reading or occasional seating, minimal design"
+        },
+        {
+            "object_name": "Single_Bed",
+            "category": "bed",
+            "X": -0.65,
+            "Y": 0.5,
+            "Z": 0.0,
+            "Length": 1.7,
+            "Width": 2.0,
+            "Height": 0.55,
+            "rotationZ": 180,
+            "Material": "Cloth_Gray",
+            "search_prompt": "single bed with simple frame and gray bedding, suitable for a compact bedroom"
+        },
+        {
+            "object_name": "Low_Drawer_Cabinet",
+            "category": "drawer",
+            "X": -0.9,
+            "Y": -1.25,
+            "Z": 0.0,
+            "Length": 1.2,
+            "Width": 0.5,
+            "Height": 0.8,
+            "rotationZ": 0,
+            "Material": "Veneer_UX_Walnut_Cherry",
+            "search_prompt": "low wooden storage cabinet with drawers, walnut veneer finish"
+        }
+    ]
+}

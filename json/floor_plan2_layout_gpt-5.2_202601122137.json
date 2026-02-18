@@ -1,0 +1,101 @@
+{
+    "area_name": "Accessible_Bedroom_Area",
+    "X": 0.0,
+    "Y": 0.0,
+    "Z": 0.0,
+    "area_size_X": 3.2,
+    "area_size_Y": 3.2,
+    "area_objects_list": [
+        {
+            "object_name": "Floor",
+            "category": "floor",
+            "X": 0.0,
+            "Y": 0.0,
+            "Z": 0.0,
+            "Length": 3.2,
+            "Width": 3.2,
+            "Height": 0,
+            "rotationZ": 0,
+            "Material": "Concrete_Polished",
+            "search_prompt": "flat floor surface of an accessible bedroom, suitable for hospital or nursing environment"
+        },
+        {
+            "object_name": "Inward_Swing_Door",
+            "category": "door",
+            "X": 1.1,
+            "Y": -1.57,
+            "Z": 0.0,
+            "Length": 0.8,
+            "Width": 0.05,
+            "Height": 2.2,
+            "rotationZ": 0,
+            "Material": "MDF",
+            "search_prompt": "interior hinged door, simple flat panel, accessible width"
+        },
+        {
+            "object_name": "Wall_Mounted_TV",
+            "category": "appliance",
+            "X": 1.42,
+            "Y": 0.2,
+            "Z": 0.0,
+            "Length": 0.35,
+            "Width": 1.2,
+            "Height": 0.7,
+            "rotationZ": 90,
+            "Material": "Plastic_ABS",
+            "search_prompt": "flat screen television, medium size, slim black frame, suitable for bedroom"
+        },
+        {
+            "object_name": "Compact_Refrigerator",
+            "category": "appliance",
+            "X": 0.65,
+            "Y": 1.1,
+            "Z": 0.0,
+            "Length": 0.55,
+            "Width": 0.5,
+            "Height": 1.2,
+            "rotationZ": 180,
+            "Material": "Steel_Stainless",
+            "search_prompt": "compact refrigerator, single door, freestanding, stainless finish"
+        },
+        {
+            "object_name": "Transfer_Friendly_Chair",
+            "category": "chair",
+            "X": 0.0,
+            "Y": 1.1,
+            "Z": 0.0,
+            "Length": 0.5,
+            "Width": 0.5,
+            "Height": 0.8,
+            "rotationZ": 270,
+            "Material": "Cloth_Gray",
+            "search_prompt": "simple compact chair for indoor seating, stable frame, easy transfer support"
+        },
+        {
+            "object_name": "Single_Care_Bed",
+            "category": "bed",
+            "X": -0.475,
+            "Y": 0.775,
+            "Z": 0.0,
+            "Length": 1.2,
+            "Width": 1.95,
+            "Height": 0.4,
+            "rotationZ": 270,
+            "Material": "Linen_White",
+            "search_prompt": "single nursing care bed with side rails, simple modern frame, white bedding"
+        },
+        {
+            "object_name": "Low_Wide_Drawer_Chest",
+            "category": "drawer",
+            "X": -0.7,
+            "Y": -1.175,
+            "Z": 0.0,
+            "Length": 0.9,
+            "Width": 0.45,
+            "Height": 0.96,
+            "rotationZ": 0,
+            "Material": "Veneer_UX_Walnut_Cherry",
+            "search_prompt": "low wide chest of drawers for bedroom storage, smooth fronts, dark walnut finish"
+        }
+    ]
+}

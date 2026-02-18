@@ -1,0 +1,101 @@
+{
+    "area_name": "Wheelchair_Accessible_Bedroom",
+    "X": 0.0,
+    "Y": 0.0,
+    "Z": 0.0,
+    "area_size_X": 3.2,
+    "area_size_Y": 3.2,
+    "area_objects_list": [
+        {
+            "object_name": "Floor",
+            "category": "floor",
+            "X": 0.0,
+            "Y": 0.0,
+            "Z": 0.0,
+            "Length": 3.2,
+            "Width": 3.2,
+            "Height": 0,
+            "rotationZ": 0,
+            "Material": "Concrete_Polished",
+            "search_prompt": "flat floor surface for a wheelchair-accessible bedroom, smooth polished concrete"
+        },
+        {
+            "object_name": "Compact_Refrigerator",
+            "category": "appliance",
+            "X": 1.325,
+            "Y": 1.35,
+            "Z": 0.0,
+            "Length": 0.55,
+            "Width": 0.5,
+            "Height": 1.2,
+            "rotationZ": 180,
+            "Material": "Plastic_ABS",
+            "search_prompt": "compact single-door refrigerator, small apartment size, white finish"
+        },
+        {
+            "object_name": "Transfer_Chair",
+            "category": "chair",
+            "X": 0.2,
+            "Y": 1.35,
+            "Z": 0.0,
+            "Length": 0.5,
+            "Width": 0.5,
+            "Height": 0.8,
+            "rotationZ": 90,
+            "Material": "Cloth_Gray",
+            "search_prompt": "compact armless chair for bedside transfer, stable frame, gray upholstery"
+        },
+        {
+            "object_name": "Single_Care_Bed",
+            "category": "bed",
+            "X": -1.0,
+            "Y": 0.625,
+            "Z": 0.0,
+            "Length": 1.2,
+            "Width": 1.95,
+            "Height": 0.4,
+            "rotationZ": 180,
+            "Material": "Linen_White",
+            "search_prompt": "single nursing care bed, minimal frame, white sheets, suitable for assisted mobility"
+        },
+        {
+            "object_name": "Wall_TV_Display",
+            "category": "appliance",
+            "X": 1.425,
+            "Y": 0.25,
+            "Z": 0.0,
+            "Length": 0.35,
+            "Width": 1.2,
+            "Height": 0.7,
+            "rotationZ": 90,
+            "Material": "Plastic_ABS",
+            "search_prompt": "flat-screen television on a slim stand or wall mount, black frame"
+        },
+        {
+            "object_name": "Low_Dresser_Drawer",
+            "category": "drawer",
+            "X": -1.15,
+            "Y": -1.375,
+            "Z": 0.0,
+            "Length": 0.9,
+            "Width": 0.45,
+            "Height": 0.96,
+            "rotationZ": 0,
+            "Material": "Veneer_UX_Walnut_Cherry",
+            "search_prompt": "low wooden dresser with drawers, simple modern storage cabinet, walnut finish"
+        },
+        {
+            "object_name": "Inward_Swing_Door",
+            "category": "door",
+            "X": 1.2,
+            "Y": -1.575,
+            "Z": 0.0,
+            "Length": 0.8,
+            "Width": 0.05,
+            "Height": 2.2,
+            "rotationZ": 0,
+            "Material": "Oak",
+            "search_prompt": "interior hinged wooden door, 80 cm wide, inward swinging, simple modern style"
+        }
+    ]
+}

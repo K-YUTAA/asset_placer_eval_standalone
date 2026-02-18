@@ -1,0 +1,101 @@
+{
+    "area_name": "Small_Bedroom_With_Appliances",
+    "X": 0.0,
+    "Y": 0.0,
+    "Z": 0.0,
+    "area_size_X": 3.2,
+    "area_size_Y": 3.2,
+    "area_objects_list": [
+        {
+            "object_name": "Floor",
+            "category": "floor",
+            "X": 0.0,
+            "Y": 0.0,
+            "Z": 0.0,
+            "Length": 3.2,
+            "Width": 3.2,
+            "Height": 0,
+            "rotationZ": 0,
+            "Material": "Concrete_Polished",
+            "search_prompt": "flat floor surface for a small bedroom, suitable for hospital or nursing environment"
+        },
+        {
+            "object_name": "Wall_Mounted_TV",
+            "category": "appliance",
+            "X": -1.525,
+            "Y": 0.45,
+            "Z": 0.0,
+            "Length": 0.15,
+            "Width": 1.0,
+            "Height": 0.75,
+            "rotationZ": 90,
+            "Material": "Plastic_ABS",
+            "search_prompt": "flat screen television with thin black bezel, simple modern style"
+        },
+        {
+            "object_name": "Compact_Refrigerator",
+            "category": "appliance",
+            "X": -0.75,
+            "Y": 1.3,
+            "Z": 0.0,
+            "Length": 0.6,
+            "Width": 0.6,
+            "Height": 1.7,
+            "rotationZ": 180,
+            "Material": "Steel_Stainless",
+            "search_prompt": "compact refrigerator with small freezer compartment, stainless steel finish"
+        },
+        {
+            "object_name": "Simple_Armless_Chair",
+            "category": "chair",
+            "X": 0.0,
+            "Y": 1.3,
+            "Z": 0.0,
+            "Length": 0.5,
+            "Width": 0.5,
+            "Height": 0.85,
+            "rotationZ": 270,
+            "Material": "Birch",
+            "search_prompt": "simple armless chair with wooden frame, minimal design"
+        },
+        {
+            "object_name": "Single_Bed",
+            "category": "bed",
+            "X": 0.9,
+            "Y": 0.6,
+            "Z": 0.0,
+            "Length": 1.4,
+            "Width": 2.0,
+            "Height": 0.55,
+            "rotationZ": 180,
+            "Material": "Linen_White",
+            "search_prompt": "single bed with simple frame, white bedding, minimal design"
+        },
+        {
+            "object_name": "Low_Storage_Cabinet",
+            "category": "drawer",
+            "X": 1.0,
+            "Y": -1.375,
+            "Z": 0.0,
+            "Length": 1.2,
+            "Width": 0.45,
+            "Height": 0.8,
+            "rotationZ": 0,
+            "Material": "Oak",
+            "search_prompt": "low wooden storage cabinet with doors, oak finish, simple modern style"
+        },
+        {
+            "object_name": "Inward_Swinging_Door",
+            "category": "door",
+            "X": -1.1,
+            "Y": -1.575,
+            "Z": 0.0,
+            "Length": 0.9,
+            "Width": 0.05,
+            "Height": 2.0,
+            "rotationZ": 0,
+            "Material": "Oak",
+            "search_prompt": "interior hinged door, wooden, inward swinging"
+        }
+    ]
+}

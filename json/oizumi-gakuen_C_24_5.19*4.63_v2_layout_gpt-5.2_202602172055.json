@@ -1,0 +1,243 @@
+{
+    "area_name": "Bedroom_Toilet_Unit",
+    "area_size_X": 4.63,
+    "area_size_Y": 5.19,
+    "size_mode": "local",
+    "outer_polygon": [
+        {
+            "X": 0.0,
+            "Y": 0.0
+        },
+        {
+            "X": 4.63,
+            "Y": 0.0
+        },
+        {
+            "X": 4.63,
+            "Y": 5.19
+        },
+        {
+            "X": 0.0,
+            "Y": 5.19
+        }
+    ],
+    "rooms": [
+        {
+            "room_id": "room_1",
+            "room_name": "Bedroom",
+            "room_polygon": [
+                {
+                    "X": 0.0,
+                    "Y": 0.0
+                },
+                {
+                    "X": 0.0,
+                    "Y": 3.35
+                },
+                {
+                    "X": 1.55,
+                    "Y": 3.35
+                },
+                {
+                    "X": 1.55,
+                    "Y": 4.55
+                },
+                {
+                    "X": 0.0,
+                    "Y": 4.55
+                },
+                {
+                    "X": 0.0,
+                    "Y": 5.19
+                },
+                {
+                    "X": 4.63,
+                    "Y": 5.19
+                },
+                {
+                    "X": 4.63,
+                    "Y": 0.0
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 1.55,
+                    "Y": 4.0,
+                    "Width": 0.8,
+                    "Height": 2.1,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "door",
+                    "X": 2.7,
+                    "Y": 5.19,
+                    "Width": 1.8,
+                    "Height": 2.1,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "window",
+                    "X": 2.85,
+                    "Y": 0.0,
+                    "Width": 2.8,
+                    "Height": 1.2,
+                    "SillHeight": 1.0
+                }
+            ]
+        },
+        {
+            "room_id": "room_2",
+            "room_name": "Toilet",
+            "room_polygon": [
+                {
+                    "X": 0.0,
+                    "Y": 3.35
+                },
+                {
+                    "X": 0.0,
+                    "Y": 4.55
+                },
+                {
+                    "X": 1.55,
+                    "Y": 4.55
+                },
+                {
+                    "X": 1.55,
+                    "Y": 3.35
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 1.55,
+                    "Y": 4.0,
+                    "Width": 0.8,
+                    "Height": 2.1,
+                    "SillHeight": 0.0
+                }
+            ]
+        }
+    ],
+    "area_objects_list": [
+        {
+            "object_name": "floor_main",
+            "category": "floor",
+            "search_prompt": "plain indoor floor slab",
+            "X": 2.32,
+            "Y": 2.6,
+            "Length": 4.63,
+            "Width": 5.19,
+            "Height": 0.05,
+            "rotationZ": 0
+        },
+        {
+            "object_name": "bed_1",
+            "category": "bed",
+            "search_prompt": "single bed",
+            "room_id": "room_1",
+            "X": 0.95,
+            "Y": 1.6,
+            "Length": 1.4,
+            "Width": 2.0,
+            "Height": 0.55,
+            "rotationZ": 0
+        },
+        {
+            "object_name": "chair_1",
+            "category": "chair",
+            "search_prompt": "simple chair",
+            "room_id": "room_1",
+            "X": 3.25,
+            "Y": 2.6,
+            "Length": 0.6,
+            "Width": 0.6,
+            "Height": 0.9,
+            "rotationZ": 90
+        },
+        {
+            "object_name": "tv_cabinet_1",
+            "category": "cabinet",
+            "search_prompt": "tv stand cabinet",
+            "room_id": "room_1",
+            "X": 4.41,
+            "Y": 2.55,
+            "Length": 1.6,
+            "Width": 0.45,
+            "Height": 0.65,
+            "rotationZ": 270
+        },
+        {
+            "object_name": "toilet_1",
+            "category": "toilet",
+            "search_prompt": "toilet bowl with tank",
+            "room_id": "room_2",
+            "X": 0.75,
+            "Y": 4.05,
+            "Length": 0.7,
+            "Width": 0.4,
+            "Height": 0.8,
+            "rotationZ": 180
+        },
+        {
+            "object_name": "sink_vanity_1",
+            "category": "sink",
+            "search_prompt": "bathroom sink vanity cabinet",
+            "room_id": "room_1",
+            "X": 4.36,
+            "Y": 4.15,
+            "Length": 0.6,
+            "Width": 0.55,
+            "Height": 0.9,
+            "rotationZ": 270
+        },
+        {
+            "object_name": "storage_cabinet_top_left",
+            "category": "wardrobe",
+            "search_prompt": "built in storage cabinet",
+            "room_id": "room_1",
+            "X": 0.78,
+            "Y": 4.87,
+            "Length": 1.55,
+            "Width": 0.6,
+            "Height": 2.2,
+            "rotationZ": 180
+        },
+        {
+            "object_name": "storage_cabinet_top_right",
+            "category": "wardrobe",
+            "search_prompt": "tall storage cabinet",
+            "room_id": "room_1",
+            "X": 4.33,
+            "Y": 4.85,
+            "Length": 0.9,
+            "Width": 0.6,
+            "Height": 2.2,
+            "rotationZ": 270
+        },
+        {
+            "object_name": "door_toilet_sliding",
+            "category": "door",
+            "search_prompt": "interior sliding door",
+            "room_id": "room_1",
+            "X": 1.55,
+            "Y": 4.0,
+            "Length": 0.8,
+            "Width": 0.05,
+            "Height": 2.1,
+            "rotationZ": 90
+        },
+        {
+            "object_name": "door_exterior_sliding",
+            "category": "door",
+            "search_prompt": "sliding glass door",
+            "room_id": "room_1",
+            "X": 2.7,
+            "Y": 5.19,
+            "Length": 1.8,
+            "Width": 0.05,
+            "Height": 2.1,
+            "rotationZ": 180
+        }
+    ]
+}

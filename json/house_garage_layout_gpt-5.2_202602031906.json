@@ -1,0 +1,955 @@
+{
+    "schema_version": 2,
+    "units": "m",
+    "world": {
+        "up": "Z",
+        "right": "X",
+        "forward": "Y"
+    },
+    "room": {
+        "area_size": [
+            16.0,
+            8.0
+        ]
+    },
+    "objects": [
+        {
+            "id": "floor_01",
+            "category": "floor",
+            "center": [
+                8.0,
+                4.0,
+                0.05
+            ],
+            "size": {
+                "right": 16.0,
+                "forward": 8.0,
+                "up": 0.1
+            },
+            "front_dir": "+Y",
+            "search": {
+                "text": "Building floor slab for the full plan footprint.",
+                "tags": [
+                    "floor",
+                    "slab"
+                ]
+            }
+        },
+        {
+            "id": "garage_car_01",
+            "category": "equipment",
+            "center": [
+                2.6,
+                4.0,
+                0.75
+            ],
+            "size": {
+                "right": 2.0,
+                "forward": 4.5,
+                "up": 1.5
+            },
+            "front_dir": "+Y",
+            "search": {
+                "text": "Passenger car parked in a residential garage.",
+                "tags": [
+                    "car",
+                    "vehicle",
+                    "garage"
+                ]
+            }
+        },
+        {
+            "id": "ldk_tv_01",
+            "category": "equipment",
+            "center": [
+                5.3,
+                2.2,
+                0.8
+            ],
+            "size": {
+                "right": 0.1,
+                "forward": 1.2,
+                "up": 0.8
+            },
+            "front_dir": "+X",
+            "search": {
+                "text": "Flat-screen TV display for a living room.",
+                "tags": [
+                    "tv",
+                    "display",
+                    "electronics"
+                ]
+            }
+        },
+        {
+            "id": "ldk_sofa_01",
+            "category": "sofa",
+            "center": [
+                7.0,
+                2.2,
+                0.4
+            ],
+            "size": {
+                "right": 0.9,
+                "forward": 2.0,
+                "up": 0.8
+            },
+            "front_dir": "-X",
+            "search": {
+                "text": "Living room sofa for seating several people.",
+                "tags": [
+                    "sofa",
+                    "couch",
+                    "living"
+                ]
+            }
+        },
+        {
+            "id": "ldk_coffee_table_01",
+            "category": "table",
+            "center": [
+                6.2,
+                2.2,
+                0.2
+            ],
+            "size": {
+                "right": 1.0,
+                "forward": 0.6,
+                "up": 0.4
+            },
+            "front_dir": "+Y",
+            "search": {
+                "text": "Low coffee table for a living room seating area.",
+                "tags": [
+                    "coffee_table",
+                    "living",
+                    "table"
+                ]
+            }
+        },
+        {
+            "id": "ldk_dining_table_01",
+            "category": "table",
+            "center": [
+                9.0,
+                2.2,
+                0.375
+            ],
+            "size": {
+                "right": 1.6,
+                "forward": 0.9,
+                "up": 0.75
+            },
+            "front_dir": "+Y",
+            "search": {
+                "text": "Dining table for meals in an open-plan kitchen/dining area.",
+                "tags": [
+                    "dining",
+                    "table"
+                ]
+            }
+        },
+        {
+            "id": "ldk_dining_chair_n_01",
+            "category": "chair",
+            "center": [
+                9.0,
+                3.0,
+                0.45
+            ],
+            "size": {
+                "right": 0.5,
+                "forward": 0.5,
+                "up": 0.9
+            },
+            "front_dir": "-Y",
+            "search": {
+                "text": "Dining chair used with a dining table.",
+                "tags": [
+                    "dining",
+                    "chair"
+                ]
+            }
+        },
+        {
+            "id": "ldk_dining_chair_s_01",
+            "category": "chair",
+            "center": [
+                9.0,
+                1.4,
+                0.45
+            ],
+            "size": {
+                "right": 0.5,
+                "forward": 0.5,
+                "up": 0.9
+            },
+            "front_dir": "+Y",
+            "search": {
+                "text": "Dining chair used with a dining table.",
+                "tags": [
+                    "dining",
+                    "chair"
+                ]
+            }
+        },
+        {
+            "id": "ldk_dining_chair_w_01",
+            "category": "chair",
+            "center": [
+                8.1,
+                2.2,
+                0.45
+            ],
+            "size": {
+                "right": 0.5,
+                "forward": 0.5,
+                "up": 0.9
+            },
+            "front_dir": "+X",
+            "search": {
+                "text": "Dining chair used with a dining table.",
+                "tags": [
+                    "dining",
+                    "chair"
+                ]
+            }
+        },
+        {
+            "id": "ldk_dining_chair_e_01",
+            "category": "chair",
+            "center": [
+                9.9,
+                2.2,
+                0.45
+            ],
+            "size": {
+                "right": 0.5,
+                "forward": 0.5,
+                "up": 0.9
+            },
+            "front_dir": "-X",
+            "search": {
+                "text": "Dining chair used with a dining table.",
+                "tags": [
+                    "dining",
+                    "chair"
+                ]
+            }
+        },
+        {
+            "id": "kitchen_island_01",
+            "category": "cabinet",
+            "center": [
+                11.2,
+                2.0,
+                0.45
+            ],
+            "size": {
+                "right": 2.2,
+                "forward": 0.9,
+                "up": 0.9
+            },
+            "front_dir": "+Y",
+            "search": {
+                "text": "Kitchen island counter with integrated cooktop.",
+                "tags": [
+                    "kitchen",
+                    "island",
+                    "counter"
+                ]
+            }
+        },
+        {
+            "id": "kitchen_sink_counter_01",
+            "category": "cabinet",
+            "center": [
+                12.05,
+                1.7,
+                0.45
+            ],
+            "size": {
+                "right": 0.6,
+                "forward": 1.2,
+                "up": 0.9
+            },
+            "front_dir": "-X",
+            "search": {
+                "text": "Kitchen base cabinet and countertop section with sink.",
+                "tags": [
+                    "kitchen",
+                    "sink",
+                    "counter"
+                ]
+            }
+        },
+        {
+            "id": "kitchen_refrigerator_01",
+            "category": "appliance",
+            "center": [
+                12.2,
+                2.6,
+                1.0
+            ],
+            "size": {
+                "right": 0.8,
+                "forward": 0.8,
+                "up": 2.0
+            },
+            "front_dir": "-X",
+            "search": {
+                "text": "Full-height refrigerator for food storage in a kitchen.",
+                "tags": [
+                    "refrigerator",
+                    "fridge",
+                    "kitchen"
+                ]
+            }
+        },
+        {
+            "id": "entrance_shoe_cabinet_01",
+            "category": "cabinet",
+            "center": [
+                6.2,
+                4.3,
+                0.5
+            ],
+            "size": {
+                "right": 1.2,
+                "forward": 0.4,
+                "up": 1.0
+            },
+            "front_dir": "+Y",
+            "search": {
+                "text": "Shoe storage cabinet for an entryway.",
+                "tags": [
+                    "entry",
+                    "shoe_cabinet",
+                    "storage"
+                ]
+            }
+        },
+        {
+            "id": "washroom_vanity_sink_01",
+            "category": "sink",
+            "center": [
+                12.0,
+                4.25,
+                0.45
+            ],
+            "size": {
+                "right": 1.2,
+                "forward": 0.6,
+                "up": 0.9
+            },
+            "front_dir": "-Y",
+            "search": {
+                "text": "Washroom vanity sink for handwashing and grooming.",
+                "tags": [
+                    "washroom",
+                    "vanity",
+                    "sink"
+                ]
+            }
+        },
+        {
+            "id": "washroom_washing_machine_01",
+            "category": "appliance",
+            "center": [
+                13.2,
+                4.55,
+                0.45
+            ],
+            "size": {
+                "right": 0.6,
+                "forward": 0.6,
+                "up": 0.9
+            },
+            "front_dir": "-Y",
+            "search": {
+                "text": "Front-loading washing machine for laundry.",
+                "tags": [
+                    "laundry",
+                    "washing_machine",
+                    "appliance"
+                ]
+            }
+        },
+        {
+            "id": "bathroom_bathtub_01",
+            "category": "bathtub",
+            "center": [
+                11.6,
+                7.1,
+                0.3
+            ],
+            "size": {
+                "right": 0.75,
+                "forward": 1.7,
+                "up": 0.6
+            },
+            "front_dir": "+Y",
+            "search": {
+                "text": "Bathtub for bathing in a residential bathroom.",
+                "tags": [
+                    "bathroom",
+                    "bathtub"
+                ]
+            }
+        },
+        {
+            "id": "toilet_fixture_01",
+            "category": "toilet",
+            "center": [
+                13.3,
+                7.1,
+                0.4
+            ],
+            "size": {
+                "right": 0.4,
+                "forward": 0.7,
+                "up": 0.8
+            },
+            "front_dir": "-Y",
+            "search": {
+                "text": "Toilet fixture for a small toilet room.",
+                "tags": [
+                    "toilet",
+                    "wc",
+                    "bathroom"
+                ]
+            }
+        },
+        {
+            "id": "bedroom1_bed_01",
+            "category": "bed",
+            "center": [
+                15.3,
+                6.7,
+                0.3
+            ],
+            "size": {
+                "right": 1.6,
+                "forward": 2.0,
+                "up": 0.6
+            },
+            "front_dir": "-X",
+            "search": {
+                "text": "Double bed for a primary bedroom.",
+                "tags": [
+                    "bed",
+                    "bedroom"
+                ]
+            }
+        },
+        {
+            "id": "bedroom3_bed_01",
+            "category": "bed",
+            "center": [
+                15.3,
+                2.3,
+                0.3
+            ],
+            "size": {
+                "right": 1.6,
+                "forward": 2.0,
+                "up": 0.6
+            },
+            "front_dir": "-X",
+            "search": {
+                "text": "Double bed for a bedroom.",
+                "tags": [
+                    "bed",
+                    "bedroom"
+                ]
+            }
+        },
+        {
+            "id": "bedroom3_desk_01",
+            "category": "desk",
+            "center": [
+                14.1,
+                1.5,
+                0.375
+            ],
+            "size": {
+                "right": 0.6,
+                "forward": 1.2,
+                "up": 0.75
+            },
+            "front_dir": "+X",
+            "search": {
+                "text": "Study/work desk for a bedroom workspace.",
+                "tags": [
+                    "desk",
+                    "workspace",
+                    "study"
+                ]
+            }
+        },
+        {
+            "id": "bedroom3_desk_chair_01",
+            "category": "chair",
+            "center": [
+                14.7,
+                1.5,
+                0.45
+            ],
+            "size": {
+                "right": 0.5,
+                "forward": 0.5,
+                "up": 0.9
+            },
+            "front_dir": "-X",
+            "search": {
+                "text": "Chair used at a desk for studying or computer work.",
+                "tags": [
+                    "chair",
+                    "desk_chair",
+                    "office"
+                ]
+            }
+        },
+        {
+            "id": "door_01_main_entry",
+            "category": "door",
+            "center": [
+                5.225,
+                5.1,
+                1.05
+            ],
+            "size": {
+                "right": 0.05,
+                "forward": 0.9,
+                "up": 2.1
+            },
+            "front_dir": "+X",
+            "search": {
+                "text": "Hinged entry door opening into the entrance foyer.",
+                "tags": [
+                    "door",
+                    "entry"
+                ]
+            }
+        },
+        {
+            "id": "door_02_garage_to_ldk",
+            "category": "door",
+            "center": [
+                5.225,
+                2.2,
+                1.05
+            ],
+            "size": {
+                "right": 0.05,
+                "forward": 0.9,
+                "up": 2.1
+            },
+            "front_dir": "+X",
+            "search": {
+                "text": "Interior door connecting a garage to the main living area.",
+                "tags": [
+                    "door",
+                    "garage",
+                    "interior"
+                ]
+            }
+        },
+        {
+            "id": "door_03_entrance_to_ldk",
+            "category": "door",
+            "center": [
+                7.8,
+                3.975,
+                1.05
+            ],
+            "size": {
+                "right": 0.85,
+                "forward": 0.05,
+                "up": 2.1
+            },
+            "front_dir": "-Y",
+            "search": {
+                "text": "Interior door connecting entrance area to open-plan living space.",
+                "tags": [
+                    "door",
+                    "interior"
+                ]
+            }
+        },
+        {
+            "id": "door_04_entrance_to_bedroom2",
+            "category": "door",
+            "center": [
+                8.025,
+                5.6,
+                1.05
+            ],
+            "size": {
+                "right": 0.05,
+                "forward": 0.8,
+                "up": 2.1
+            },
+            "front_dir": "+X",
+            "search": {
+                "text": "Interior door opening into a bedroom.",
+                "tags": [
+                    "door",
+                    "bedroom"
+                ]
+            }
+        },
+        {
+            "id": "door_05_ldk_to_storage",
+            "category": "door",
+            "center": [
+                12.425,
+                2.0,
+                1.05
+            ],
+            "size": {
+                "right": 0.05,
+                "forward": 0.8,
+                "up": 2.1
+            },
+            "front_dir": "+X",
+            "search": {
+                "text": "Interior door opening into a storage room.",
+                "tags": [
+                    "door",
+                    "storage"
+                ]
+            }
+        },
+        {
+            "id": "door_06_storage_to_bedroom3",
+            "category": "door",
+            "center": [
+                13.825,
+                2.0,
+                1.05
+            ],
+            "size": {
+                "right": 0.05,
+                "forward": 0.8,
+                "up": 2.1
+            },
+            "front_dir": "+X",
+            "search": {
+                "text": "Interior door opening into a bedroom.",
+                "tags": [
+                    "door",
+                    "bedroom"
+                ]
+            }
+        },
+        {
+            "id": "door_07_washroom_entry",
+            "category": "door",
+            "center": [
+                13.775,
+                5.0,
+                1.05
+            ],
+            "size": {
+                "right": 0.05,
+                "forward": 0.8,
+                "up": 2.1
+            },
+            "front_dir": "-X",
+            "search": {
+                "text": "Interior door opening into a washroom.",
+                "tags": [
+                    "door",
+                    "washroom"
+                ]
+            }
+        },
+        {
+            "id": "door_08_washroom_to_bathroom",
+            "category": "door",
+            "center": [
+                11.8,
+                6.025,
+                1.05
+            ],
+            "size": {
+                "right": 0.75,
+                "forward": 0.05,
+                "up": 2.1
+            },
+            "front_dir": "+Y",
+            "search": {
+                "text": "Interior door opening into the bathroom.",
+                "tags": [
+                    "door",
+                    "bathroom"
+                ]
+            }
+        },
+        {
+            "id": "door_09_washroom_to_toilet",
+            "category": "door",
+            "center": [
+                12.8,
+                6.025,
+                1.05
+            ],
+            "size": {
+                "right": 0.7,
+                "forward": 0.05,
+                "up": 2.1
+            },
+            "front_dir": "+Y",
+            "search": {
+                "text": "Interior door opening into the toilet room.",
+                "tags": [
+                    "door",
+                    "toilet"
+                ]
+            }
+        },
+        {
+            "id": "door_10_washroom_to_closet",
+            "category": "door",
+            "center": [
+                13.825,
+                5.6,
+                1.05
+            ],
+            "size": {
+                "right": 0.05,
+                "forward": 0.7,
+                "up": 2.1
+            },
+            "front_dir": "+X",
+            "search": {
+                "text": "Interior door opening into a closet.",
+                "tags": [
+                    "door",
+                    "closet"
+                ]
+            }
+        },
+        {
+            "id": "window_01_south_living",
+            "category": "window",
+            "center": [
+                6.6,
+                0.025,
+                1.6
+            ],
+            "size": {
+                "right": 2.0,
+                "forward": 0.05,
+                "up": 1.2
+            },
+            "front_dir": "-Y",
+            "search": {
+                "text": "Exterior window opening for daylight and ventilation.",
+                "tags": [
+                    "window",
+                    "exterior"
+                ]
+            }
+        },
+        {
+            "id": "window_02_south_dining",
+            "category": "window",
+            "center": [
+                9.1,
+                0.025,
+                1.6
+            ],
+            "size": {
+                "right": 2.4,
+                "forward": 0.05,
+                "up": 1.2
+            },
+            "front_dir": "-Y",
+            "search": {
+                "text": "Exterior window opening for daylight and ventilation.",
+                "tags": [
+                    "window",
+                    "exterior"
+                ]
+            }
+        },
+        {
+            "id": "window_03_south_bedroom3",
+            "category": "window",
+            "center": [
+                14.8,
+                0.025,
+                1.6
+            ],
+            "size": {
+                "right": 2.0,
+                "forward": 0.05,
+                "up": 1.2
+            },
+            "front_dir": "-Y",
+            "search": {
+                "text": "Exterior window opening for daylight and ventilation.",
+                "tags": [
+                    "window",
+                    "exterior"
+                ]
+            }
+        },
+        {
+            "id": "window_04_west_ldk",
+            "category": "window",
+            "center": [
+                5.225,
+                2.5,
+                1.6
+            ],
+            "size": {
+                "right": 0.05,
+                "forward": 1.2,
+                "up": 1.2
+            },
+            "front_dir": "-X",
+            "search": {
+                "text": "Window opening on a side wall for daylight.",
+                "tags": [
+                    "window",
+                    "exterior"
+                ]
+            }
+        },
+        {
+            "id": "window_05_north_bedroom2",
+            "category": "window",
+            "center": [
+                9.4,
+                7.975,
+                1.6
+            ],
+            "size": {
+                "right": 1.6,
+                "forward": 0.05,
+                "up": 1.2
+            },
+            "front_dir": "+Y",
+            "search": {
+                "text": "Exterior window opening for a bedroom.",
+                "tags": [
+                    "window",
+                    "bedroom"
+                ]
+            }
+        },
+        {
+            "id": "window_06_north_bathroom",
+            "category": "window",
+            "center": [
+                11.8,
+                7.975,
+                1.6
+            ],
+            "size": {
+                "right": 1.0,
+                "forward": 0.05,
+                "up": 1.2
+            },
+            "front_dir": "+Y",
+            "search": {
+                "text": "Exterior window opening for a bathroom.",
+                "tags": [
+                    "window",
+                    "bathroom"
+                ]
+            }
+        },
+        {
+            "id": "window_07_north_toilet",
+            "category": "window",
+            "center": [
+                13.3,
+                7.975,
+                1.6
+            ],
+            "size": {
+                "right": 0.8,
+                "forward": 0.05,
+                "up": 1.2
+            },
+            "front_dir": "+Y",
+            "search": {
+                "text": "Exterior window opening for a toilet room.",
+                "tags": [
+                    "window",
+                    "toilet"
+                ]
+            }
+        },
+        {
+            "id": "window_08_north_bedroom1",
+            "category": "window",
+            "center": [
+                15.3,
+                7.975,
+                1.6
+            ],
+            "size": {
+                "right": 1.8,
+                "forward": 0.05,
+                "up": 1.2
+            },
+            "front_dir": "+Y",
+            "search": {
+                "text": "Exterior window opening for a bedroom.",
+                "tags": [
+                    "window",
+                    "bedroom"
+                ]
+            }
+        },
+        {
+            "id": "window_09_east_bedroom1",
+            "category": "window",
+            "center": [
+                15.975,
+                6.6,
+                1.6
+            ],
+            "size": {
+                "right": 0.05,
+                "forward": 1.4,
+                "up": 1.2
+            },
+            "front_dir": "+X",
+            "search": {
+                "text": "Exterior window opening on an east wall.",
+                "tags": [
+                    "window",
+                    "exterior"
+                ]
+            }
+        },
+        {
+            "id": "window_10_east_bedroom3",
+            "category": "window",
+            "center": [
+                15.975,
+                2.0,
+                1.6
+            ],
+            "size": {
+                "right": 0.05,
+                "forward": 1.4,
+                "up": 1.2
+            },
+            "front_dir": "+X",
+            "search": {
+                "text": "Exterior window opening on an east wall.",
+                "tags": [
+                    "window",
+                    "exterior"
+                ]
+            }
+        }
+    ]
+}

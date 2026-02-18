@@ -1,0 +1,236 @@
+{
+    "area_name": "Bedroom_Toilet_Layout",
+    "area_size_X": 4.63,
+    "area_size_Y": 5.19,
+    "size_mode": "local",
+    "outer_polygon": [
+        {
+            "X": 0.0,
+            "Y": 0.0
+        },
+        {
+            "X": 4.63,
+            "Y": 0.0
+        },
+        {
+            "X": 4.63,
+            "Y": 5.19
+        },
+        {
+            "X": 0.0,
+            "Y": 5.19
+        }
+    ],
+    "rooms": [
+        {
+            "room_id": "room_1",
+            "room_name": "Bedroom",
+            "room_polygon": [
+                {
+                    "X": 0.0,
+                    "Y": 0.0
+                },
+                {
+                    "X": 0.0,
+                    "Y": 3.45
+                },
+                {
+                    "X": 1.7,
+                    "Y": 3.45
+                },
+                {
+                    "X": 1.7,
+                    "Y": 5.19
+                },
+                {
+                    "X": 4.63,
+                    "Y": 5.19
+                },
+                {
+                    "X": 4.63,
+                    "Y": 0.0
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 1.7,
+                    "Y": 4.3,
+                    "Width": 0.9,
+                    "Height": 2.05,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "door",
+                    "X": 2.6,
+                    "Y": 5.19,
+                    "Width": 1.8,
+                    "Height": 2.05,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "window",
+                    "X": 3.1,
+                    "Y": 0.0,
+                    "Width": 2.4,
+                    "Height": 1.2,
+                    "SillHeight": 1.0
+                }
+            ]
+        },
+        {
+            "room_id": "room_2",
+            "room_name": "Toilet",
+            "room_polygon": [
+                {
+                    "X": 0.0,
+                    "Y": 3.45
+                },
+                {
+                    "X": 0.0,
+                    "Y": 5.19
+                },
+                {
+                    "X": 1.7,
+                    "Y": 5.19
+                },
+                {
+                    "X": 1.7,
+                    "Y": 3.45
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 1.7,
+                    "Y": 4.3,
+                    "Width": 0.9,
+                    "Height": 2.05,
+                    "SillHeight": 0.0
+                }
+            ]
+        }
+    ],
+    "area_objects_list": [
+        {
+            "object_name": "Floor",
+            "category": "floor",
+            "search_prompt": "plain floor surface",
+            "room_id": "room_1",
+            "X": 2.32,
+            "Y": 2.6,
+            "Length": 4.63,
+            "Width": 5.19,
+            "Height": 0.02,
+            "rotationZ": 0
+        },
+        {
+            "object_name": "Bed",
+            "category": "bed",
+            "search_prompt": "standard double bed",
+            "room_id": "room_1",
+            "X": 1.0,
+            "Y": 1.7,
+            "Length": 1.6,
+            "Width": 2.0,
+            "Height": 0.55,
+            "rotationZ": 180
+        },
+        {
+            "object_name": "Chair",
+            "category": "chair",
+            "search_prompt": "simple chair",
+            "room_id": "room_1",
+            "X": 3.2,
+            "Y": 2.55,
+            "Length": 0.6,
+            "Width": 0.6,
+            "Height": 0.9,
+            "rotationZ": 90
+        },
+        {
+            "object_name": "TV_Cabinet",
+            "category": "cabinet",
+            "search_prompt": "tv stand cabinet",
+            "room_id": "room_1",
+            "X": 4.41,
+            "Y": 2.45,
+            "Length": 1.6,
+            "Width": 0.45,
+            "Height": 0.6,
+            "rotationZ": 270
+        },
+        {
+            "object_name": "Television",
+            "category": "appliance",
+            "search_prompt": "flat screen television",
+            "room_id": "room_1",
+            "X": 4.53,
+            "Y": 2.45,
+            "Length": 1.2,
+            "Width": 0.1,
+            "Height": 0.75,
+            "rotationZ": 270
+        },
+        {
+            "object_name": "Sink_Vanity",
+            "category": "sink",
+            "search_prompt": "bathroom vanity sink",
+            "room_id": "room_1",
+            "X": 4.4,
+            "Y": 4.2,
+            "Length": 0.9,
+            "Width": 0.55,
+            "Height": 0.85,
+            "rotationZ": 270
+        },
+        {
+            "object_name": "Wardrobe",
+            "category": "wardrobe",
+            "search_prompt": "wardrobe closet",
+            "room_id": "room_1",
+            "X": 4.18,
+            "Y": 4.89,
+            "Length": 0.9,
+            "Width": 0.6,
+            "Height": 2.0,
+            "rotationZ": 180
+        },
+        {
+            "object_name": "Toilet",
+            "category": "toilet",
+            "search_prompt": "standard toilet bowl",
+            "room_id": "room_2",
+            "X": 0.75,
+            "Y": 4.55,
+            "Length": 0.7,
+            "Width": 0.9,
+            "Height": 0.8,
+            "rotationZ": 180
+        },
+        {
+            "object_name": "Door_Bedroom_Toilet",
+            "category": "door",
+            "search_prompt": "interior sliding door",
+            "room_id": "room_1",
+            "X": 1.7,
+            "Y": 4.3,
+            "Length": 0.9,
+            "Width": 0.05,
+            "Height": 2.05,
+            "rotationZ": 90
+        },
+        {
+            "object_name": "Door_Bedroom_Exterior",
+            "category": "door",
+            "search_prompt": "sliding glass door",
+            "room_id": "room_1",
+            "X": 2.6,
+            "Y": 5.19,
+            "Length": 1.8,
+            "Width": 0.05,
+            "Height": 2.05,
+            "rotationZ": 180
+        }
+    ]
+}

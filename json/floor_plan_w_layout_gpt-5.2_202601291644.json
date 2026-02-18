@@ -1,0 +1,145 @@
+{
+    "area_name": "studio_room",
+    "area_size_X": 3.2,
+    "area_size_Y": 3.2,
+    "outer_polygon": [
+        {
+            "X": 0.0,
+            "Y": 0.0
+        },
+        {
+            "X": 3.2,
+            "Y": 0.0
+        },
+        {
+            "X": 3.2,
+            "Y": 3.2
+        },
+        {
+            "X": 0.0,
+            "Y": 3.2
+        }
+    ],
+    "rooms": [
+        {
+            "room_id": "room_1",
+            "room_name": "Studio",
+            "room_polygon": [
+                {
+                    "X": 0.0,
+                    "Y": 0.0
+                },
+                {
+                    "X": 3.2,
+                    "Y": 0.0
+                },
+                {
+                    "X": 3.2,
+                    "Y": 3.2
+                },
+                {
+                    "X": 0.0,
+                    "Y": 3.2
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 0.85,
+                    "Y": 0.0,
+                    "Width": 0.8,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "window",
+                    "X": 2.2,
+                    "Y": 3.2,
+                    "Width": 1.2,
+                    "Height": 1.0,
+                    "SillHeight": 1.0
+                }
+            ]
+        }
+    ],
+    "area_objects_list": [
+        {
+            "object_name": "EntranceDoor",
+            "category": "door",
+            "search_prompt": "interior hinged swing door, single leaf, simple modern design",
+            "room_id": "room_1",
+            "X": 0.85,
+            "Y": 0.05,
+            "Length": 0.8,
+            "Width": 0.05,
+            "Height": 2.0,
+            "rotationZ": 0,
+            "Material": "wood"
+        },
+        {
+            "object_name": "Bed",
+            "category": "bed",
+            "search_prompt": "single bed with simple frame and mattress, minimal modern style",
+            "room_id": "room_1",
+            "X": 2.55,
+            "Y": 2.35,
+            "Length": 2.0,
+            "Width": 1.4,
+            "Height": 0.55,
+            "rotationZ": 180,
+            "Material": "fabric"
+        },
+        {
+            "object_name": "Refrigerator",
+            "category": "appliance",
+            "search_prompt": "compact refrigerator, single door, small apartment size",
+            "room_id": "room_1",
+            "X": 0.75,
+            "Y": 2.85,
+            "Length": 0.7,
+            "Width": 0.7,
+            "Height": 1.8,
+            "rotationZ": 180,
+            "Material": "metal"
+        },
+        {
+            "object_name": "Chair",
+            "category": "chair",
+            "search_prompt": "simple dining chair, square footprint, no armrests",
+            "room_id": "room_1",
+            "X": 1.55,
+            "Y": 2.85,
+            "Length": 0.5,
+            "Width": 0.5,
+            "Height": 0.9,
+            "rotationZ": 180,
+            "Material": "wood"
+        },
+        {
+            "object_name": "TV_Stand",
+            "category": "equipment",
+            "search_prompt": "slim TV on narrow stand or console, modern minimalist",
+            "room_id": "room_1",
+            "X": 0.2,
+            "Y": 2.0,
+            "Length": 0.3,
+            "Width": 1.1,
+            "Height": 1.2,
+            "rotationZ": 90,
+            "Material": "plastic"
+        },
+        {
+            "object_name": "Cabinet",
+            "category": "cabinet",
+            "search_prompt": "low storage cabinet, modern, front-opening doors or drawers",
+            "room_id": "room_1",
+            "X": 2.45,
+            "Y": 0.55,
+            "Length": 1.2,
+            "Width": 0.45,
+            "Height": 0.85,
+            "rotationZ": 0,
+            "Material": "wood"
+        }
+    ]
+}

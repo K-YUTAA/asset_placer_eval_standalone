@@ -1,0 +1,154 @@
+{
+    "area_name": "Studio",
+    "area_size_X": 3.2,
+    "area_size_Y": 3.2,
+    "outer_polygon": [
+        {
+            "X": 0.0,
+            "Y": 0.0
+        },
+        {
+            "X": 3.2,
+            "Y": 0.0
+        },
+        {
+            "X": 3.2,
+            "Y": 3.2
+        },
+        {
+            "X": 0.0,
+            "Y": 3.2
+        }
+    ],
+    "rooms": [
+        {
+            "room_id": "room_1",
+            "room_name": "Studio/Bedroom",
+            "room_polygon": [
+                {
+                    "X": 0.0,
+                    "Y": 0.0
+                },
+                {
+                    "X": 3.2,
+                    "Y": 0.0
+                },
+                {
+                    "X": 3.2,
+                    "Y": 3.2
+                },
+                {
+                    "X": 0.0,
+                    "Y": 3.2
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 0.7,
+                    "Y": 0.0,
+                    "Width": 0.8,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "window",
+                    "X": 2.1,
+                    "Y": 3.2,
+                    "Width": 1.2,
+                    "Height": 1.0,
+                    "SillHeight": 1.0
+                }
+            ]
+        }
+    ],
+    "windows": [
+        {
+            "X": 2.1,
+            "Y": 3.2,
+            "Width": 1.2,
+            "Height": 1.0,
+            "SillHeight": 1.0
+        }
+    ],
+    "area_objects_list": [
+        {
+            "object_name": "Door_1",
+            "category": "door",
+            "search_prompt": "Interior hinged door, simple modern style, standard residential size",
+            "room_id": "room_1",
+            "X": 0.7,
+            "Y": 0.025,
+            "Length": 0.8,
+            "Width": 0.05,
+            "Height": 2.0,
+            "rotationZ": 0,
+            "Material": "wood"
+        },
+        {
+            "object_name": "Bed_1",
+            "category": "bed",
+            "search_prompt": "Double bed with simple frame and headboard, minimal modern style",
+            "room_id": "room_1",
+            "X": 2.5,
+            "Y": 2.2,
+            "Length": 1.4,
+            "Width": 2.0,
+            "Height": 0.55,
+            "rotationZ": 180,
+            "Material": "fabric"
+        },
+        {
+            "object_name": "Refrigerator_1",
+            "category": "appliance",
+            "search_prompt": "Compact refrigerator, single door, freestanding, modern",
+            "room_id": "room_1",
+            "X": 0.85,
+            "Y": 2.875,
+            "Length": 0.65,
+            "Width": 0.65,
+            "Height": 1.8,
+            "rotationZ": 180,
+            "Material": "metal"
+        },
+        {
+            "object_name": "Chair_1",
+            "category": "chair",
+            "search_prompt": "Simple dining chair, compact, modern",
+            "room_id": "room_1",
+            "X": 1.7,
+            "Y": 2.85,
+            "Length": 0.5,
+            "Width": 0.5,
+            "Height": 0.9,
+            "rotationZ": 180,
+            "Material": "wood"
+        },
+        {
+            "object_name": "TV_Stand_1",
+            "category": "cabinet",
+            "search_prompt": "Slim TV stand or wall-mounted TV console, modern, low profile",
+            "room_id": "room_1",
+            "X": 0.15,
+            "Y": 1.9,
+            "Length": 0.3,
+            "Width": 1.2,
+            "Height": 0.6,
+            "rotationZ": 90,
+            "Material": "wood"
+        },
+        {
+            "object_name": "Cabinet_1",
+            "category": "cabinet",
+            "search_prompt": "Low storage cabinet / sideboard, modern, front-opening doors or drawers",
+            "room_id": "room_1",
+            "X": 2.6,
+            "Y": 0.225,
+            "Length": 1.2,
+            "Width": 0.45,
+            "Height": 0.8,
+            "rotationZ": 0,
+            "Material": "wood"
+        }
+    ]
+}

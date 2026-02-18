@@ -1,0 +1,118 @@
+{
+    "area_name": "bedroom_with_toilet",
+    "area_size_X": 5.88,
+    "area_size_Y": 5.1,
+    "size_mode": "world",
+    "area_objects_list": [
+        {
+            "object_name": "sliding_door_top_wall",
+            "category": "door",
+            "search_prompt": "interior sliding door track, minimal modern",
+            "X": 3.1,
+            "Y": 5.05,
+            "Length": 1.6,
+            "Width": 0.1,
+            "Height": 2.05,
+            "rotationZ": 180
+        },
+        {
+            "object_name": "sliding_door_to_toilet",
+            "category": "door",
+            "search_prompt": "interior pocket sliding door, white",
+            "X": 0.95,
+            "Y": 3.05,
+            "Length": 1.2,
+            "Width": 0.1,
+            "Height": 2.05,
+            "rotationZ": 180
+        },
+        {
+            "object_name": "window_bottom_wall",
+            "category": "window",
+            "search_prompt": "wide horizontal window, simple frame",
+            "X": 2.1,
+            "Y": 0.05,
+            "Length": 2.6,
+            "Width": 0.1,
+            "Height": 1.2,
+            "rotationZ": 0
+        },
+        {
+            "object_name": "toilet_room_enclosure",
+            "category": "room_partition",
+            "search_prompt": "toilet room partition walls",
+            "X": 0.9,
+            "Y": 4.1,
+            "Length": 1.8,
+            "Width": 2.0,
+            "Height": 2.4,
+            "rotationZ": 0
+        },
+        {
+            "object_name": "toilet_fixture",
+            "category": "plumbing_fixture",
+            "search_prompt": "compact toilet bowl modern",
+            "X": 0.85,
+            "Y": 4.25,
+            "Length": 0.7,
+            "Width": 0.7,
+            "Height": 0.8,
+            "rotationZ": 180
+        },
+        {
+            "object_name": "bed_single",
+            "category": "bed",
+            "search_prompt": "single bed 120x200 cm, simple frame",
+            "X": 4.85,
+            "Y": 2.55,
+            "Length": 1.2,
+            "Width": 2.0,
+            "Height": 0.6,
+            "rotationZ": 270
+        },
+        {
+            "object_name": "sofa",
+            "category": "seating",
+            "search_prompt": "2-seat sofa, compact, modern",
+            "X": 2.95,
+            "Y": 2.6,
+            "Length": 0.8,
+            "Width": 1.8,
+            "Height": 0.85,
+            "rotationZ": 270
+        },
+        {
+            "object_name": "coffee_table_oval",
+            "category": "table",
+            "search_prompt": "oval coffee table, small",
+            "X": 2.1,
+            "Y": 2.6,
+            "Length": 0.6,
+            "Width": 1.0,
+            "Height": 0.45,
+            "rotationZ": 0
+        },
+        {
+            "object_name": "tv_cabinet",
+            "category": "storage",
+            "search_prompt": "low tv cabinet, slim depth",
+            "X": 0.35,
+            "Y": 1.75,
+            "Length": 0.4,
+            "Width": 1.2,
+            "Height": 0.6,
+            "rotationZ": 90
+        },
+        {
+            "object_name": "counter_sink_storage",
+            "category": "kitchenette",
+            "search_prompt": "counter with sink and storage cabinets, compact",
+            "X": 4.55,
+            "Y": 4.85,
+            "Length": 2.2,
+            "Width": 0.6,
+            "Height": 0.9,
+            "rotationZ": 180
+        }
+    ]
+}

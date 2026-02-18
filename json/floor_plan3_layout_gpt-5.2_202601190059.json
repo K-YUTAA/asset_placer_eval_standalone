@@ -1,0 +1,101 @@
+{
+    "area_name": "Compact_Bedroom_Area",
+    "X": 0.0,
+    "Y": 0.0,
+    "Z": 0.0,
+    "area_size_X": 3.2,
+    "area_size_Y": 3.2,
+    "area_objects_list": [
+        {
+            "object_name": "Floor",
+            "category": "floor",
+            "X": 0.0,
+            "Y": 0.0,
+            "Z": 0.0,
+            "Length": 3.2,
+            "Width": 3.2,
+            "Height": 0,
+            "rotationZ": 0,
+            "Material": "Oak",
+            "search_prompt": "flat floor surface of a compact bedroom, clean oak finish, suitable for nursing or hospital-like environment"
+        },
+        {
+            "object_name": "Single_Bed",
+            "category": "bed",
+            "X": -0.9,
+            "Y": 0.6,
+            "Z": 0.0,
+            "Length": 1.4,
+            "Width": 2.0,
+            "Height": 0.5,
+            "rotationZ": 180,
+            "Material": "Linen_White",
+            "search_prompt": "single bed with simple modern frame, white linens, minimalist style"
+        },
+        {
+            "object_name": "Compact_Refrigerator",
+            "category": "appliance",
+            "X": 0.9,
+            "Y": 1.2,
+            "Z": 0.0,
+            "Length": 0.65,
+            "Width": 0.65,
+            "Height": 1.7,
+            "rotationZ": 180,
+            "Material": "Steel_Stainless",
+            "search_prompt": "compact freestanding refrigerator, stainless steel finish, small apartment or patient room use"
+        },
+        {
+            "object_name": "Minimalist_Chair",
+            "category": "chair",
+            "X": 0.15,
+            "Y": 1.2,
+            "Z": 0.0,
+            "Length": 0.5,
+            "Width": 0.5,
+            "Height": 0.85,
+            "rotationZ": 270,
+            "Material": "Plywood",
+            "search_prompt": "simple armless chair, minimalist design, plywood seat and backrest"
+        },
+        {
+            "object_name": "WallSide_TV_Stand",
+            "category": "appliance",
+            "X": 1.43,
+            "Y": 0.4,
+            "Z": 0.0,
+            "Length": 0.3,
+            "Width": 1.2,
+            "Height": 1.1,
+            "rotationZ": 90,
+            "Material": "Plastic_ABS",
+            "search_prompt": "flat screen TV on a slim stand, black frame, modern living or bedroom TV"
+        },
+        {
+            "object_name": "Low_Storage_Cabinet",
+            "category": "cabinet",
+            "X": -1.05,
+            "Y": -1.35,
+            "Z": 0.0,
+            "Length": 1.3,
+            "Width": 0.45,
+            "Height": 0.8,
+            "rotationZ": 0,
+            "Material": "Veneer_UX_Walnut_Cherry",
+            "search_prompt": "low storage cabinet with drawers, modern sideboard style, dark walnut veneer"
+        },
+        {
+            "object_name": "Interior_Hinged_Door",
+            "category": "door",
+            "X": 1.0,
+            "Y": -1.575,
+            "Z": 0.0,
+            "Length": 0.9,
+            "Width": 0.05,
+            "Height": 2.05,
+            "rotationZ": 0,
+            "Material": "MDF",
+            "search_prompt": "simple modern interior hinged door, plain white painted finish"
+        }
+    ]
+}

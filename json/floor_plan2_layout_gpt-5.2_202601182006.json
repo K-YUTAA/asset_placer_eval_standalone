@@ -1,0 +1,101 @@
+{
+    "area_name": "Compact_Bedroom_Area",
+    "X": 0.0,
+    "Y": 0.0,
+    "Z": 0.0,
+    "area_size_X": 5.0,
+    "area_size_Y": 4.5,
+    "area_objects_list": [
+        {
+            "object_name": "Floor",
+            "category": "floor",
+            "X": 0.0,
+            "Y": 0.0,
+            "Z": 0.0,
+            "Length": 5.0,
+            "Width": 4.5,
+            "Height": 0,
+            "rotationZ": 0,
+            "Material": "Concrete_Polished",
+            "search_prompt": "flat floor surface of a simple bedroom, suitable for hospital or nursing environment"
+        },
+        {
+            "object_name": "Compact_Refrigerator",
+            "category": "appliance",
+            "X": 1.4,
+            "Y": 1.85,
+            "Z": 0.0,
+            "Length": 0.6,
+            "Width": 0.6,
+            "Height": 1.4,
+            "rotationZ": 180,
+            "Material": "Steel_Stainless",
+            "search_prompt": "compact single-door refrigerator, stainless steel finish, simple modern design"
+        },
+        {
+            "object_name": "Minimal_Waiting_Chair",
+            "category": "chair",
+            "X": 0.4,
+            "Y": 1.85,
+            "Z": 0.0,
+            "Length": 0.5,
+            "Width": 0.5,
+            "Height": 0.85,
+            "rotationZ": 270,
+            "Material": "Linen_Beige",
+            "search_prompt": "simple armless chair, modern minimalist style, fabric upholstery"
+        },
+        {
+            "object_name": "Wall_TV_Display",
+            "category": "appliance",
+            "X": 2.35,
+            "Y": 0.9,
+            "Z": 0.0,
+            "Length": 0.3,
+            "Width": 1.2,
+            "Height": 0.85,
+            "rotationZ": 90,
+            "Material": "Plastic_ABS",
+            "search_prompt": "flat-screen TV on slim stand or wall-mounted, black frame, modern"
+        },
+        {
+            "object_name": "Double_Bed",
+            "category": "bed",
+            "X": -1.7,
+            "Y": 1.2,
+            "Z": 0.0,
+            "Length": 1.6,
+            "Width": 2.1,
+            "Height": 0.55,
+            "rotationZ": 180,
+            "Material": "Cloth_Gray",
+            "search_prompt": "double bed with simple rectangular frame, minimal modern design, neutral bedding"
+        },
+        {
+            "object_name": "Low_Storage_Drawer",
+            "category": "drawer",
+            "X": -1.6,
+            "Y": -2.0,
+            "Z": 0.0,
+            "Length": 1.2,
+            "Width": 0.5,
+            "Height": 0.8,
+            "rotationZ": 0,
+            "Material": "Veneer_UX_Walnut_Cherry",
+            "search_prompt": "low dresser chest of drawers, modern minimalist design, walnut wood finish"
+        },
+        {
+            "object_name": "Interior_Hinged_Door",
+            "category": "door",
+            "X": 1.8,
+            "Y": -2.21,
+            "Z": 0.0,
+            "Length": 0.9,
+            "Width": 0.08,
+            "Height": 2.05,
+            "rotationZ": 0,
+            "Material": "MDF",
+            "search_prompt": "interior hinged door, simple modern flat panel, light painted finish"
+        }
+    ]
+}

@@ -1,0 +1,331 @@
+{
+    "area_name": "Compact_Studio_Bedroom_WIC_Toilet",
+    "area_size_X": 5.14,
+    "area_size_Y": 5.84,
+    "size_mode": "local",
+    "outer_polygon": [
+        {
+            "X": 0.0,
+            "Y": 0.0
+        },
+        {
+            "X": 5.14,
+            "Y": 0.0
+        },
+        {
+            "X": 5.14,
+            "Y": 5.84
+        },
+        {
+            "X": 0.0,
+            "Y": 5.84
+        }
+    ],
+    "rooms": [
+        {
+            "room_id": "room_1",
+            "room_name": "Bedroom",
+            "room_polygon": [
+                {
+                    "X": 0.0,
+                    "Y": 0.0
+                },
+                {
+                    "X": 0.0,
+                    "Y": 3.6
+                },
+                {
+                    "X": 2.4,
+                    "Y": 3.6
+                },
+                {
+                    "X": 2.4,
+                    "Y": 5.84
+                },
+                {
+                    "X": 3.95,
+                    "Y": 5.84
+                },
+                {
+                    "X": 3.95,
+                    "Y": 3.6
+                },
+                {
+                    "X": 5.14,
+                    "Y": 3.6
+                },
+                {
+                    "X": 5.14,
+                    "Y": 0.0
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 1.1,
+                    "Y": 3.6,
+                    "Width": 1.2,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "door",
+                    "X": 4.55,
+                    "Y": 3.6,
+                    "Width": 0.9,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "door",
+                    "X": 3.5,
+                    "Y": 5.84,
+                    "Width": 0.9,
+                    "Height": 2.1,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "window",
+                    "X": 2.57,
+                    "Y": 0.0,
+                    "Width": 4.2,
+                    "Height": 1.2,
+                    "SillHeight": 1.0
+                }
+            ]
+        },
+        {
+            "room_id": "room_2",
+            "room_name": "Walk-in Closet",
+            "room_polygon": [
+                {
+                    "X": 0.0,
+                    "Y": 3.6
+                },
+                {
+                    "X": 0.0,
+                    "Y": 5.84
+                },
+                {
+                    "X": 2.4,
+                    "Y": 5.84
+                },
+                {
+                    "X": 2.4,
+                    "Y": 3.6
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 1.1,
+                    "Y": 3.6,
+                    "Width": 1.2,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                }
+            ]
+        },
+        {
+            "room_id": "room_3",
+            "room_name": "Toilet",
+            "room_polygon": [
+                {
+                    "X": 3.95,
+                    "Y": 3.6
+                },
+                {
+                    "X": 3.95,
+                    "Y": 5.84
+                },
+                {
+                    "X": 5.14,
+                    "Y": 5.84
+                },
+                {
+                    "X": 5.14,
+                    "Y": 3.6
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 4.55,
+                    "Y": 3.6,
+                    "Width": 0.9,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                }
+            ]
+        }
+    ],
+    "area_objects_list": [
+        {
+            "object_name": "Floor",
+            "category": "floor",
+            "search_prompt": "simple interior floor plane - compact studio bedroom with walk-in closet and separate toilet",
+            "X": 2.57,
+            "Y": 2.92,
+            "Length": 5.14,
+            "Width": 5.84,
+            "Height": 0.05,
+            "rotationZ": 0
+        },
+        {
+            "object_name": "Bed",
+            "category": "bed",
+            "search_prompt": "double bed with headboard - compact studio bedroom with walk-in closet and separate toilet",
+            "room_id": "room_1",
+            "X": 0.95,
+            "Y": 1.95,
+            "Length": 1.5,
+            "Width": 2.3,
+            "Height": 0.55,
+            "rotationZ": 180
+        },
+        {
+            "object_name": "Bench",
+            "category": "other_furniture",
+            "search_prompt": "bedroom bench upholstered - compact studio bedroom with walk-in closet and separate toilet",
+            "room_id": "room_1",
+            "X": 0.95,
+            "Y": 0.95,
+            "Length": 1.0,
+            "Width": 0.5,
+            "Height": 0.45,
+            "rotationZ": 180
+        },
+        {
+            "object_name": "Round_Table",
+            "category": "table",
+            "search_prompt": "round dining table small - compact studio bedroom with walk-in closet and separate toilet",
+            "room_id": "room_1",
+            "X": 3.35,
+            "Y": 2.2,
+            "Length": 1.1,
+            "Width": 1.1,
+            "Height": 0.75,
+            "rotationZ": 0
+        },
+        {
+            "object_name": "Chair_Left_of_Table",
+            "category": "chair",
+            "search_prompt": "modern dining chair - compact studio bedroom with walk-in closet and separate toilet",
+            "room_id": "room_1",
+            "X": 2.55,
+            "Y": 2.2,
+            "Length": 0.7,
+            "Width": 0.7,
+            "Height": 0.85,
+            "rotationZ": 90
+        },
+        {
+            "object_name": "Chair_Below_Table",
+            "category": "chair",
+            "search_prompt": "modern dining chair - compact studio bedroom with walk-in closet and separate toilet",
+            "room_id": "room_1",
+            "X": 3.35,
+            "Y": 1.4,
+            "Length": 0.7,
+            "Width": 0.7,
+            "Height": 0.85,
+            "rotationZ": 0
+        },
+        {
+            "object_name": "TV_Cabinet",
+            "category": "cabinet",
+            "search_prompt": "tv cabinet media console - compact studio bedroom with walk-in closet and separate toilet",
+            "room_id": "room_1",
+            "X": 4.89,
+            "Y": 2.2,
+            "Length": 1.6,
+            "Width": 0.5,
+            "Height": 0.6,
+            "rotationZ": 270
+        },
+        {
+            "object_name": "Sink_Vanity",
+            "category": "sink",
+            "search_prompt": "bathroom sink vanity cabinet - compact studio bedroom with walk-in closet and separate toilet",
+            "room_id": "room_1",
+            "X": 2.75,
+            "Y": 4.2,
+            "Length": 1.0,
+            "Width": 0.6,
+            "Height": 0.9,
+            "rotationZ": 90
+        },
+        {
+            "object_name": "Storage_Cabinet",
+            "category": "cabinet",
+            "search_prompt": "tall storage cabinet - compact studio bedroom with walk-in closet and separate toilet",
+            "room_id": "room_1",
+            "X": 2.75,
+            "Y": 5.25,
+            "Length": 0.9,
+            "Width": 0.6,
+            "Height": 2.0,
+            "rotationZ": 90
+        },
+        {
+            "object_name": "Toilet",
+            "category": "toilet",
+            "search_prompt": "toilet bowl modern - compact studio bedroom with walk-in closet and separate toilet",
+            "room_id": "room_3",
+            "X": 4.55,
+            "Y": 4.7,
+            "Length": 0.4,
+            "Width": 0.8,
+            "Height": 0.8,
+            "rotationZ": 180
+        },
+        {
+            "object_name": "Door_WIC_Sliding",
+            "category": "door",
+            "search_prompt": "interior sliding door - compact studio bedroom with walk-in closet and separate toilet",
+            "room_id": "room_1",
+            "X": 1.1,
+            "Y": 3.6,
+            "Length": 1.2,
+            "Width": 0.05,
+            "Height": 2.0,
+            "rotationZ": 0
+        },
+        {
+            "object_name": "Door_Toilet_Sliding",
+            "category": "door",
+            "search_prompt": "interior sliding door - compact studio bedroom with walk-in closet and separate toilet",
+            "room_id": "room_1",
+            "X": 4.55,
+            "Y": 3.6,
+            "Length": 0.9,
+            "Width": 0.05,
+            "Height": 2.0,
+            "rotationZ": 0
+        },
+        {
+            "object_name": "Door_Exterior_Sliding",
+            "category": "door",
+            "search_prompt": "exterior sliding glass door - compact studio bedroom with walk-in closet and separate toilet",
+            "room_id": "room_1",
+            "X": 3.5,
+            "Y": 5.84,
+            "Length": 0.9,
+            "Width": 0.08,
+            "Height": 2.1,
+            "rotationZ": 0
+        },
+        {
+            "object_name": "Window_Bottom_Long",
+            "category": "window",
+            "search_prompt": "large horizontal window - compact studio bedroom with walk-in closet and separate toilet",
+            "room_id": "room_1",
+            "X": 2.57,
+            "Y": 0.0,
+            "Length": 4.2,
+            "Width": 0.1,
+            "Height": 1.2,
+            "rotationZ": 0
+        }
+    ]
+}

@@ -1,0 +1,118 @@
+AI Layout Generation Log
+timestamp: 20260217_065953_342144
+
+[AI Settings]
+step1_model: gpt-5.2
+step2_model: gpt-5.2
+reasoning_effort: high
+max_output_tokens: 48000
+text_verbosity: high
+image_detail: high
+
+[Step 1 Stats]
+time_sec: 27.125471115112305
+input_tokens: 1818
+output_tokens: 1376
+total_tokens: 3194
+
+[Step 2 Stats]
+time_sec: 34.561224699020386
+input_tokens: 2522
+output_tokens: 2049
+total_tokens: 4571
+
+[Total Stats]
+time_sec: 61.68669581413269
+input_tokens: 4340
+output_tokens: 3425
+total_tokens: 7765
+
+[Analysis Text]
+- Room (rect), 1, center (2.94,2.55), size (5.88x5.10), orientation axis-aligned  
+- Sliding door (top wall), 1, center (3.10,5.05), size (1.60x0.10), opens along X  
+- Sliding door (to toilet), 1, center (0.95,3.05), size (1.20x0.10), opens along X  
+- Window (bottom wall), 1, center (2.10,0.05), size (2.60x0.10), along X  
+- Toilet room (enclosed), 1, center (0.90,4.10), size (1.80x2.00), in top-left corner  
+- Toilet fixture, 1, center (0.85,4.25), size (0.70x0.70), facing roughly toward room (south)  
+- Bed (single), 1, center (4.85,2.55), size (2.00x1.20), long side along Y against right wall  
+- Sofa, 1, center (2.95,2.60), size (1.80x0.80), long side along Y  
+- Coffee table (oval), 1, center (2.10,2.60), size (1.00x0.60), oriented along Y  
+- TV cabinet, 1, center (0.35,1.75), size (1.20x0.40), long side along Y against left wall  
+- Counter w/ sink + storage (top-right), 1, center (4.55,4.85), size (2.20x0.60), long side along X against top wall
+
+[AABB Collisions]
+- sliding_door_top_wall vs window_bottom_wall: overlap_volume=0.13200000000000006
+- sliding_door_top_wall vs sofa: overlap_volume=0.06799999999999999
+- sliding_door_top_wall vs coffee_table_oval: overlap_volume=0.004500000000000004
+- sliding_door_top_wall vs counter_sink_storage: overlap_volume=0.040500000000000064
+- sliding_door_to_toilet vs window_bottom_wall: overlap_volume=0.08999999999999997
+- sliding_door_to_toilet vs toilet_room_enclosure: overlap_volume=0.2459999999999999
+- sliding_door_to_toilet vs toilet_fixture: overlap_volume=0.055999999999999994
+- sliding_door_to_toilet vs tv_cabinet: overlap_volume=0.012000000000000004
+- window_bottom_wall vs toilet_room_enclosure: overlap_volume=0.12
+- window_bottom_wall vs toilet_fixture: overlap_volume=0.031999999999999994
+- window_bottom_wall vs sofa: overlap_volume=0.06799999999999999
+- window_bottom_wall vs coffee_table_oval: overlap_volume=0.026999999999999996
+- toilet_room_enclosure vs toilet_fixture: overlap_volume=0.39199999999999996
+- toilet_room_enclosure vs tv_cabinet: overlap_volume=0.28800000000000003
+- toilet_fixture vs tv_cabinet: overlap_volume=0.02100000000000002
+- bed_single vs counter_sink_storage: overlap_volume=0.4319999999999997
+
+[Room Size]
+area_size_X: 5.88
+area_size_Y: 5.1
+
+[Inputs]
+image_path: C:/Users/tmaru/isaacsim/source/extensions/my.research.asset_placer_isaac/inputs_isaac/komazawakoen_B1_30_5.15.88.png
+
+[dimensions.txt]
+﻿# LAYOUT_HINTS
+OUTLINE=RECT
+SCALE_WIDTH_M=5.88
+SCALE_HEIGHT_M=5.10
+ROOMS=ldk:0,living:0,dining:0,kitchen:0,bedroom:1,kids_room:0,study:0,bathroom:0,toilet:1,washroom:0,closet:0,storage:0,hallway:0,entrance:0,garage:0,balcony:0,laundry:0,pantry:0,utility:0,office:0,guest_room:0
+DOOR_COUNT=2
+WINDOW_COUNT=1
+WINDOW_HEIGHT_M=1.2
+WINDOW_SILL_M=1.0
+
+
+[prompt1]
+You are an interior layout analyst. Provide a concise summary for layout generation.
+- Coordinate system: X = right, Y = depth (up in the image), Z = up.
+- Origin: lower-left inner corner of the room.
+- Units: meters.
+- Output format: 6-12 bullet lines max. Each line: object name, count, approx center (x,y), approx size (LxW), and orientation note if obvious.
+- No long explanations, no headings, no tables.
+
+[prompt2]
+Create a JSON layout description for the room based on the analysis, dimensions text, and floor plan image. Output MUST be valid JSON only (no prose).
+Schema:
+{
+  "area_name": string,
+  "area_size_X": number,  # meters
+  "area_size_Y": number,  # meters
+  "size_mode": "local",
+  "area_objects_list": [
+    {
+      "object_name": string,
+      "category": string (optional),
+      "search_prompt": string (optional),
+      "X": number,  # meters
+      "Y": number,  # meters
+      "Length": number,  # meters (local +X / right)
+      "Width": number,   # meters (local +Y / forward / functional front)
+      "Height": number,  # meters (local +Z / up)
+      "rotationZ": number  # degrees: 0:+Y, 90:+X, 180:-Y, 270:-X (object +Y direction)
+    }
+  ]
+}
+Notes: Z is up; positions are X/Y only. Use meters everywhere. Local size semantics: Length=local +X (right), Width=local +Y (forward/functional front), Height=local +Z. rotationZ defines the world direction of local +Y (0:+Y, 90:+X, 180:-Y, 270:-X). Do NOT swap Length/Width based on rotationZ.
+
+[SIZE_MODE OVERRIDE]
+This override has highest priority over any previous size definition.
+Use top-level `size_mode` = "world".
+Length = world X size, Width = world Y size, Height = world Z size.
+rotationZ still follows functional front direction (0:+Y, 90:+X, 180:-Y, 270:-X).
+In world mode, Length/Width values must represent final world-axis footprint.
+

@@ -1,0 +1,231 @@
+{
+    "area_name": "studio_apartment",
+    "area_size_X": 5.6,
+    "area_size_Y": 8.8,
+    "outer_polygon": [
+        {
+            "X": 0.0,
+            "Y": 0.0
+        },
+        {
+            "X": 5.6,
+            "Y": 0.0
+        },
+        {
+            "X": 5.6,
+            "Y": 8.8
+        },
+        {
+            "X": 0.0,
+            "Y": 8.8
+        }
+    ],
+    "rooms": [
+        {
+            "room_id": "room_studio",
+            "room_name": "Studio / Living-Dining-Kitchen",
+            "room_polygon": [
+                {
+                    "X": 0.0,
+                    "Y": 0.0
+                },
+                {
+                    "X": 5.6,
+                    "Y": 0.0
+                },
+                {
+                    "X": 5.6,
+                    "Y": 8.8
+                },
+                {
+                    "X": 0.0,
+                    "Y": 8.8
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 5.6,
+                    "Y": 7.35,
+                    "Width": 0.9,
+                    "Height": 2.1,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "window",
+                    "X": 4.05,
+                    "Y": 8.8,
+                    "Width": 1.4,
+                    "Height": 1.0,
+                    "SillHeight": 1.0
+                },
+                {
+                    "type": "window",
+                    "X": 0.0,
+                    "Y": 3.05,
+                    "Width": 1.6,
+                    "Height": 1.0,
+                    "SillHeight": 1.0
+                }
+            ]
+        }
+    ],
+    "area_objects_list": [
+        {
+            "object_name": "entry_door",
+            "category": "door",
+            "search_prompt": "interior single swing hinged door, modern apartment entry door, 0.9m wide",
+            "room_id": "room_studio",
+            "X": 5.575,
+            "Y": 7.35,
+            "Length": 0.05,
+            "Width": 0.9,
+            "Height": 2.1,
+            "rotationZ": 270,
+            "Material": "wood"
+        },
+        {
+            "object_name": "cupboard_upper_run",
+            "category": "cabinet",
+            "search_prompt": "wall mounted kitchen upper cabinets, long run, modern simple doors",
+            "room_id": "room_studio",
+            "X": 1.6,
+            "Y": 8.45,
+            "Length": 3.2,
+            "Width": 0.6,
+            "Height": 2.2,
+            "rotationZ": 180,
+            "Material": "painted_wood"
+        },
+        {
+            "object_name": "kitchen_base_unit_counter",
+            "category": "cabinet",
+            "search_prompt": "kitchen base cabinets with countertop, straight run, modern finish",
+            "room_id": "room_studio",
+            "X": 1.55,
+            "Y": 7.15,
+            "Length": 3.1,
+            "Width": 0.65,
+            "Height": 0.9,
+            "rotationZ": 180,
+            "Material": "laminate"
+        },
+        {
+            "object_name": "dining_table",
+            "category": "table",
+            "search_prompt": "rectangular dining table for 4 people, simple modern design",
+            "room_id": "room_studio",
+            "X": 2.6,
+            "Y": 5.35,
+            "Length": 0.9,
+            "Width": 1.8,
+            "Height": 0.75,
+            "rotationZ": 0,
+            "Material": "wood"
+        },
+        {
+            "object_name": "dining_chair_1_left_upper",
+            "category": "chair",
+            "search_prompt": "dining chair, modern, armless, standard height",
+            "room_id": "room_studio",
+            "X": 1.35,
+            "Y": 5.9,
+            "Length": 0.5,
+            "Width": 0.5,
+            "Height": 0.85,
+            "rotationZ": 90,
+            "Material": "wood"
+        },
+        {
+            "object_name": "dining_chair_2_left_lower",
+            "category": "chair",
+            "search_prompt": "dining chair, modern, armless, standard height",
+            "room_id": "room_studio",
+            "X": 1.35,
+            "Y": 4.9,
+            "Length": 0.5,
+            "Width": 0.5,
+            "Height": 0.85,
+            "rotationZ": 90,
+            "Material": "wood"
+        },
+        {
+            "object_name": "dining_chair_3_right_upper",
+            "category": "chair",
+            "search_prompt": "dining chair, modern, armless, standard height",
+            "room_id": "room_studio",
+            "X": 3.85,
+            "Y": 5.9,
+            "Length": 0.5,
+            "Width": 0.5,
+            "Height": 0.85,
+            "rotationZ": 270,
+            "Material": "wood"
+        },
+        {
+            "object_name": "dining_chair_4_right_lower",
+            "category": "chair",
+            "search_prompt": "dining chair, modern, armless, standard height",
+            "room_id": "room_studio",
+            "X": 3.85,
+            "Y": 4.9,
+            "Length": 0.5,
+            "Width": 0.5,
+            "Height": 0.85,
+            "rotationZ": 270,
+            "Material": "wood"
+        },
+        {
+            "object_name": "tv_stand_panel",
+            "category": "equipment",
+            "search_prompt": "flat screen TV on slim stand, living room display, modern",
+            "room_id": "room_studio",
+            "X": 0.45,
+            "Y": 2.9,
+            "Length": 0.2,
+            "Width": 1.3,
+            "Height": 1.2,
+            "rotationZ": 90,
+            "Material": "plastic_metal"
+        },
+        {
+            "object_name": "coffee_table_low",
+            "category": "table",
+            "search_prompt": "low coffee table, rectangular, modern minimal living room table",
+            "room_id": "room_studio",
+            "X": 2.85,
+            "Y": 2.75,
+            "Length": 0.6,
+            "Width": 1.0,
+            "Height": 0.4,
+            "rotationZ": 0,
+            "Material": "wood"
+        },
+        {
+            "object_name": "sofa_3seater",
+            "category": "sofa",
+            "search_prompt": "modern 2 to 3 seater sofa, fabric upholstery, straight design",
+            "room_id": "room_studio",
+            "X": 4.55,
+            "Y": 2.75,
+            "Length": 0.9,
+            "Width": 2.2,
+            "Height": 0.85,
+            "rotationZ": 270,
+            "Material": "fabric"
+        },
+        {
+            "object_name": "house_plant_potted",
+            "category": "other_furniture",
+            "search_prompt": "potted indoor house plant, medium size, decorative",
+            "room_id": "room_studio",
+            "X": 1.05,
+            "Y": 0.85,
+            "Length": 0.6,
+            "Width": 0.6,
+            "Height": 1.3,
+            "rotationZ": 0,
+            "Material": "ceramic"
+        }
+    ]
+}

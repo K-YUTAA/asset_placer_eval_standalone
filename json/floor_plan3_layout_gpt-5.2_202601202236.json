@@ -1,0 +1,101 @@
+{
+    "area_name": "Compact_Single_Bedroom",
+    "X": 0.0,
+    "Y": 0.0,
+    "Z": 0.0,
+    "area_size_X": 3.2,
+    "area_size_Y": 3.2,
+    "area_objects_list": [
+        {
+            "object_name": "Floor",
+            "category": "floor",
+            "X": 0.0,
+            "Y": 0.0,
+            "Z": 0.0,
+            "Length": 3.2,
+            "Width": 3.2,
+            "Height": 0,
+            "rotationZ": 0,
+            "Material": "Concrete_Polished",
+            "search_prompt": "flat floor surface for a compact bedroom, clean and simple, suitable for hospital or nursing environment"
+        },
+        {
+            "object_name": "Single_Bed",
+            "category": "bed",
+            "X": 0.85,
+            "Y": 0.55,
+            "Z": 0.0,
+            "Length": 1.4,
+            "Width": 2.0,
+            "Height": 0.55,
+            "rotationZ": 180,
+            "Material": "Cloth_Gray",
+            "search_prompt": "single bed with simple frame and mattress, neutral bedding, suitable for a small room"
+        },
+        {
+            "object_name": "Wall_TV_Display",
+            "category": "appliance",
+            "X": -1.425,
+            "Y": 0.25,
+            "Z": 0.0,
+            "Length": 0.25,
+            "Width": 1.2,
+            "Height": 0.8,
+            "rotationZ": 90,
+            "Material": "Plastic_ABS",
+            "search_prompt": "flat-screen television with slim black frame, simple modern style"
+        },
+        {
+            "object_name": "Compact_Refrigerator",
+            "category": "appliance",
+            "X": -0.65,
+            "Y": 1.1,
+            "Z": 0.0,
+            "Length": 0.6,
+            "Width": 0.6,
+            "Height": 1.7,
+            "rotationZ": 180,
+            "Material": "Steel_Stainless",
+            "search_prompt": "compact refrigerator with front-opening door, stainless finish, small apartment size"
+        },
+        {
+            "object_name": "Simple_Side_Chair",
+            "category": "chair",
+            "X": 0.1,
+            "Y": 1.1,
+            "Z": 0.0,
+            "Length": 0.5,
+            "Width": 0.5,
+            "Height": 0.85,
+            "rotationZ": 180,
+            "Material": "Plastic_ABS",
+            "search_prompt": "simple armless chair for dining or desk use, durable plastic shell"
+        },
+        {
+            "object_name": "Low_Storage_Cabinet",
+            "category": "cabinet",
+            "X": 0.95,
+            "Y": -1.325,
+            "Z": 0.0,
+            "Length": 1.2,
+            "Width": 0.45,
+            "Height": 0.75,
+            "rotationZ": 0,
+            "Material": "Oak",
+            "search_prompt": "low wooden storage cabinet with doors, light oak finish, minimal design"
+        },
+        {
+            "object_name": "South_Wall_Entry_Door",
+            "category": "door",
+            "X": -1.15,
+            "Y": -1.55,
+            "Z": 0.0,
+            "Length": 0.9,
+            "Width": 0.1,
+            "Height": 2.05,
+            "rotationZ": 0,
+            "Material": "MDF",
+            "search_prompt": "interior hinged door, simple flat panel, painted finish"
+        }
+    ]
+}

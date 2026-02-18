@@ -1,0 +1,241 @@
+AI Layout Generation Log
+timestamp: 20260125_223442_168451
+
+[AI Settings]
+step1_model: gpt-5.2
+step2_model: gpt-5.2
+reasoning_effort: high
+text_verbosity: high
+image_detail: high
+max_output_tokens: 36000
+max_retries: 1
+retry_delay_sec: 1.0
+
+[Step 1 Stats]
+time_sec: 87.81119894981384
+input_tokens: 2017
+output_tokens: 3126
+total_tokens: 5143
+
+[Step 2 Stats]
+time_sec: 584.5023968219757
+input_tokens: 3915
+output_tokens: 22332
+total_tokens: 26247
+
+[Total Stats]
+time_sec: 672.3135957717896
+input_tokens: 5932
+output_tokens: 25458
+total_tokens: 31390
+
+[Analysis Text]
+- Entrance/Genkan: entry step + shoe area, center ≈(1.6,1.6), size ≈3.2×3.2, bounds x[0.0–3.2] y[0.0–3.2], main door on south; narrow west window (glazing z≈1–2).
+- Hall: small corridor node, center ≈(4.2,2.2), size ≈2.6×2.8, bounds x[3.2–5.8] y[0.8–3.6], doors to Entrance (W), Stairs (N/W), Tatami (E).
+- Tatami Room: open tatami floor, center ≈(7.8,1.8), size ≈4.6×3.6, bounds x[5.8–10.4] y[0.0–3.6], window on south + vertical window on east (to deck side), opening/door to Living (N).
+- Living: sofa (~2.0×0.9) + coffee table (~1.1×0.6) + TV on east wall, center ≈(13.0,5.6), size ≈7.6×4.8, bounds x[9.4–17.0] y[3.6–8.4], large opening/slider to Deck (S); east window (z≈1–2); closets at NE/SE corners.
+- Deck (outdoor): open terrace, center ≈(13.6,2.1), size ≈6.6×4.2, bounds x[10.4–17.0] y[0.0–4.2], accessed from Living (N edge) and near Tatami side (W edge).
+- Kitchen/Dining: island counter w/ sink+stove (~3.0×0.9) + dining table (~1.6×0.9, 4 chairs), center ≈(8.6,7.1), size ≈6.4×3.6, bounds x[5.6–12.0] y[5.4–9.0], open to Living (E/S), cabinetry along north edge.
+- Utility/Laundry: desk + dual sinks + washing machine + shelves/cabinets, center ≈(10.6,10.4), size ≈8.4×3.0, bounds x[5.6–14.0] y[9.0–12.0], doors to Kitchen (S) and to Bath zone (E); multiple north windows (z≈1–2).
+- Bathroom zone: shower room + bathtub, center ≈(15.5,10.5), size ≈3.0×3.0, bounds x[14.0–17.0] y[9.0–12.0], door on west to Utility; east exterior window (z≈1–2).
+- Toilet: WC room, center ≈(3.6,10.7), size ≈2.0×2.0, bounds x[2.6–4.6] y[9.7–11.7], door from corridor (S/W), north window (z≈1–2).
+- Stairs: L-shaped stair core, center ≈(2.8,5.2), size ≈5.6×3.4 (approx L-footprint), bounds x[0.0–5.6] y[3.6–7.0], access door from Hall (S/E), west exterior window (z≈1–2).
+- Storage (left group): multiple closets (general storage), center ≈(1.8,8.4), combined size ≈3.6×5.0, bounds x[0.0–3.6] y[7.0–12.0], doors from service/corridor; small north/west windows where shown (z≈1–2).
+- Storage/Closets (right group): large storage + small storage + 2 living closets, center ≈(14.8,7.2), combined size ≈3.8×5.4, bounds x[13.2–17.0] y[3.6–9.0], doors from Living/Utility corridor; no obvious exterior window except nearby living east window.
+
+[AABB Collisions]
+- door_hall_to_stairs vs toilet_fixture: overlap_volume=0.010000000000000002
+- door_hall_to_stairs vs toilet_small_sink: overlap_volume=0.015999999999999997
+- door_hall_to_tatami vs door_corridor_to_ldk: overlap_volume=0.08000000000000114
+- door_hall_to_tatami vs door_corridor_to_utility: overlap_volume=0.08000000000000114
+- door_corridor_to_storage_west vs door_corridor_to_toilet: overlap_volume=0.07000000000000099
+- door_corridor_to_ldk vs door_corridor_to_utility: overlap_volume=0.08000000000000114
+- door_ldk_to_utility vs door_tatami_to_ldk_slider: overlap_volume=0.020000000000000108
+- door_ldk_to_utility vs dining_chair_east: overlap_volume=0.01462500000000005
+- door_ldk_to_utility vs kitchen_island_counter: overlap_volume=0.03600000000000003
+- door_ldk_to_utility vs kitchen_north_counter: overlap_volume=0.03600000000000003
+- door_ldk_to_utility vs utility_desk_counter: overlap_volume=0.0075000000000000405
+- door_ldk_to_utility vs utility_shelf: overlap_volume=0.03600000000000003
+- door_utility_to_bathroom vs door_ldk_to_deck_slider: overlap_volume=0.005000000000000071
+- door_utility_to_bathroom vs living_coffee_table: overlap_volume=0.01200000000000017
+- door_tatami_to_ldk_slider vs dining_table: overlap_volume=0.05999999999999999
+- door_tatami_to_ldk_slider vs dining_chair_east: overlap_volume=0.01462499999999997
+- door_tatami_to_ldk_slider vs dining_chair_north: overlap_volume=0.02025000000000001
+- door_tatami_to_ldk_slider vs dining_chair_south: overlap_volume=0.02025000000000001
+- door_tatami_to_ldk_slider vs kitchen_island_counter: overlap_volume=0.031499999999999966
+- door_tatami_to_ldk_slider vs kitchen_north_counter: overlap_volume=0.09000000000000001
+- door_tatami_to_ldk_slider vs utility_desk_counter: overlap_volume=0.07500000000000001
+- door_tatami_to_ldk_slider vs utility_desk_chair: overlap_volume=0.022500000000000003
+- door_tatami_to_ldk_slider vs utility_shelf: overlap_volume=0.18000000000000002
+- door_ldk_to_deck_slider vs living_sofa: overlap_volume=0.038249999999999944
+- door_ldk_to_deck_slider vs living_coffee_table: overlap_volume=0.022000000000000033
+- door_ldk_to_deck_slider vs utility_sink_cabinet: overlap_volume=0.04050000000000002
+- door_ldk_to_deck_slider vs washing_machine: overlap_volume=0.025500000000000064
+- door_ldk_to_deck_slider vs bathroom_shower: overlap_volume=0.10500000000000001
+- dining_table vs dining_chair_north: overlap_volume=0.15187500000000007
+- dining_table vs dining_chair_south: overlap_volume=0.15187500000000007
+- dining_table vs kitchen_island_counter: overlap_volume=0.2024999999999993
+- dining_table vs kitchen_north_counter: overlap_volume=0.7199999999999999
+- dining_table vs utility_desk_counter: overlap_volume=0.7199999999999999
+- dining_table vs utility_desk_chair: overlap_volume=0.1875
+- dining_table vs utility_shelf: overlap_volume=0.4799999999999999
+- dining_chair_west vs kitchen_north_counter: overlap_volume=0.18224999999999972
+- dining_chair_west vs utility_shelf: overlap_volume=0.045000000000000005
+- dining_chair_east vs kitchen_island_counter: overlap_volume=0.18224999999999972
+- dining_chair_east vs kitchen_north_counter: overlap_volume=0.18224999999999972
+- dining_chair_east vs utility_desk_counter: overlap_volume=0.10968749999999976
+- dining_chair_east vs utility_shelf: overlap_volume=0.16199999999999976
+- dining_chair_north vs dining_chair_south: overlap_volume=0.18225000000000008
+- dining_chair_north vs kitchen_north_counter: overlap_volume=0.18225000000000008
+- dining_chair_north vs utility_desk_counter: overlap_volume=0.15187500000000007
+- dining_chair_north vs utility_desk_chair: overlap_volume=0.11137500000000015
+- dining_chair_north vs utility_shelf: overlap_volume=0.1620000000000001
+- dining_chair_south vs kitchen_north_counter: overlap_volume=0.18225000000000008
+- dining_chair_south vs utility_desk_counter: overlap_volume=0.15187500000000007
+- dining_chair_south vs utility_desk_chair: overlap_volume=0.11137500000000015
+- dining_chair_south vs utility_shelf: overlap_volume=0.1620000000000001
+- kitchen_island_counter vs kitchen_north_counter: overlap_volume=1.4579999999999995
+- kitchen_island_counter vs kitchen_tall_cabinet: overlap_volume=0.21600000000000052
+- kitchen_island_counter vs utility_desk_counter: overlap_volume=0.31499999999999967
+- kitchen_island_counter vs utility_sink_cabinet: overlap_volume=0.16200000000000037
+- kitchen_island_counter vs utility_shelf: overlap_volume=0.3239999999999995
+- kitchen_north_counter vs utility_desk_counter: overlap_volume=0.8999999999999999
+- kitchen_north_counter vs utility_desk_chair: overlap_volume=0.225
+- kitchen_north_counter vs utility_shelf: overlap_volume=0.8639999999999999
+- kitchen_tall_cabinet vs utility_sink_cabinet: overlap_volume=0.4320000000000004
+- living_sofa vs utility_sink_cabinet: overlap_volume=0.33149999999999924
+- living_sofa vs washing_machine: overlap_volume=0.1275
+- living_coffee_table vs washing_machine: overlap_volume=0.012000000000000597
+- living_coffee_table vs bathroom_shower: overlap_volume=0.10800000000000026
+- closet_unit_upper vs closet_unit_lower: overlap_volume=1.5840000000000038
+- closet_unit_upper vs bathtub: overlap_volume=0.36
+- closet_unit_lower vs bathtub: overlap_volume=0.36
+- utility_desk_counter vs utility_desk_chair: overlap_volume=0.1875
+- utility_desk_counter vs utility_shelf: overlap_volume=0.6000000000000001
+- utility_desk_chair vs utility_shelf: overlap_volume=0.18000000000000002
+- toilet_fixture vs toilet_small_sink: overlap_volume=0.012000000000000064
+
+[Room Size]
+area_size_X: 17.0
+area_size_Y: 12.0
+
+[Inputs]
+image_path: C:/Users/tmaru/isaacsim/inputs_isaac/Big_house.jpeg
+
+[dimensions.txt]
+家具の大きさは一般的に考えて常識的なサイズで推論してください。
+また、部屋のサイズもそれに応じてお願いします。
+窓の高さはzが1m~2mの間に設置してください
+
+[prompt1]
+You are an interior layout analyst. Provide a concise summary for layout generation.
+- Coordinate system: X = right, Y = up in the image (depth), Z = up.
+- Origin: lower-left inner corner of the overall plan.
+- Units: meters.
+- If the floor plan has multiple rooms, identify each room and its boundary lines and openings.
+- Output format: 8-14 bullet lines max. Each line: room name (if any), key objects, approx center (x,y),
+  approx size (LxW), and orientation/opening notes if obvious.
+- No long explanations, no headings, no tables.
+
+
+[prompt2]
+system_input='''You are a 2D layout-to-3D scene expert. Your task is to interpret a top-down 2D floor plan
+and output a JSON scene description. The top-down view of the resulting 3D scene must match the plan.
+
+Coordinate system (Z-Up, Isaac Sim):
+- X: right (+X), left (-X)
+- Y: up in the image / depth (+Y)
+- Z: up (height)
+- Origin (0,0): lower-left inner corner of the overall plan
+
+CRITICAL UNIT RULE:
+- All coordinates and dimensions must be in METERS.
+- If input is in cm, convert to meters (e.g., 250 cm -> 2.5).
+
+Do NOT output any prose. Output MUST be valid JSON only.
+
+MULTI-ROOM JSON SCHEMA (preferred):
+{
+  "area_name": string,
+  "area_size_X": number,  // meters (overall)
+  "area_size_Y": number,  // meters (overall)
+  "room_polygon": [        // optional single-room fallback
+    { "X": number, "Y": number }
+  ],
+  "outer_polygon": [       // preferred building outline (may be concave)
+    { "X": number, "Y": number }
+  ],
+  "rooms": [               // preferred for multi-room plans
+    {
+      "room_id": string,
+      "room_name": string (optional),
+      "room_polygon": [ { "X": number, "Y": number } ],
+      "openings": [        // doors/windows on room boundary
+        { "type": "door"|"window", "X": number, "Y": number,
+          "Width": number, "Height": number, "SillHeight": number }
+      ]
+    }
+  ],
+  "windows": [             // optional global window openings
+    { "X": number, "Y": number, "Width": number, "Height": number, "SillHeight": number }
+  ],
+  "area_objects_list": [
+    {
+      "object_name": string,
+      "category": string,
+      "search_prompt": string,
+      "room_id": string (optional),
+      "X": number,      // meters
+      "Y": number,      // meters
+      "Length": number, // meters (X-axis size)
+      "Width": number,  // meters (Y-axis size)
+      "Height": number, // meters (Z-axis size)
+      "rotationZ": number,  // degrees: 0/90/180/270
+      "Material": string (optional)
+    }
+  ]
+}
+
+Placement rules:
+1) The image is an XY top-down plan. Preserve the layout as drawn.
+2) Right in the image is +X. Up in the image is +Y.
+3) Use Length for the X-axis size, Width for the Y-axis size, Height for Z.
+4) Do NOT output any "wall" objects. Walls are procedural from room polygons.
+5) Doors/windows: include them in room openings when visible. Do NOT invent openings.
+   For every door opening, also add a matching door object to area_objects_list.
+   Use rotationZ to indicate the door opens into the room (interior).
+6) Keep object placement faithful to the drawing. Do not move objects to fix collisions.
+7) Room polygons must not overlap. Adjacent rooms should share the exact same boundary coordinates.
+8) Openings must lie exactly on a room boundary edge (same X or same Y for axis-aligned walls).
+   If a door is between two rooms, place it on the shared edge (can appear in both rooms or once).
+9) If the building outline is not a rectangle, include "outer_polygon" with the true outline (concave allowed).
+   Do NOT approximate the outer boundary as a rectangle.
+
+Functional orientation (rotationZ):
+- 0 degrees: faces +Y (image up)
+- 90 degrees: faces +X (image right)
+- 180 degrees: faces -Y (image down)
+- 270 degrees: faces -X (image left)
+
+Define functional front per category:
+- Bed: direction a person faces from head to foot.
+- Chair/Sofa: direction a seated person faces.
+- TV/Display: direction the screen faces.
+- Door: direction the door opens into the room (interior).
+- Refrigerator/Drawer/Cabinet: direction the front opens.
+
+Categories (use one of these unless absolutely necessary):
+bed, table, desk, chair, sofa, wardrobe, drawer, shelf, cabinet, wheelchair,
+toilet, sink, bathtub, shower, door, window, floor, appliance, equipment, other_furniture
+
+search_prompt guidelines:
+- Write mainly in English.
+- Describe object type, usage context, and key attributes.
+- Do NOT describe relative placement in this specific room.
+
+Remember: Output a single JSON object ONLY.
+'''
+
+user_input='''You have been provided a floor plan image and a list of dimensions.
+Analyze the image to determine precise placement and orientation of each object.
+Then generate the JSON output following the system instructions.'''

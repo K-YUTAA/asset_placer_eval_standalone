@@ -1,0 +1,107 @@
+{
+    "area_name": "studio_bedroom_with_kitchen_and_toilet",
+    "area_size_X": 5.1,
+    "area_size_Y": 5.88,
+    "size_mode": "local",
+    "area_objects_list": [
+        {
+            "object_name": "Bed",
+            "category": "furniture",
+            "search_prompt": "single bed with headboard",
+            "X": 4.25,
+            "Y": 2.5,
+            "Length": 1.3,
+            "Width": 2.0,
+            "Height": 0.55,
+            "rotationZ": 0
+        },
+        {
+            "object_name": "Sofa",
+            "category": "furniture",
+            "search_prompt": "2-seater sofa",
+            "X": 2.75,
+            "Y": 2.95,
+            "Length": 0.9,
+            "Width": 1.8,
+            "Height": 0.85,
+            "rotationZ": 0
+        },
+        {
+            "object_name": "CoffeeTable",
+            "category": "furniture",
+            "search_prompt": "oval coffee table",
+            "X": 1.85,
+            "Y": 2.95,
+            "Length": 0.9,
+            "Width": 0.7,
+            "Height": 0.4,
+            "rotationZ": 0
+        },
+        {
+            "object_name": "TVCabinet",
+            "category": "furniture",
+            "search_prompt": "tv stand cabinet lowboard",
+            "X": 0.4,
+            "Y": 2.2,
+            "Length": 1.6,
+            "Width": 0.5,
+            "Height": 0.55,
+            "rotationZ": 90
+        },
+        {
+            "object_name": "KitchenCounter_Run",
+            "category": "kitchen",
+            "search_prompt": "straight kitchen counter with sink and storage",
+            "X": 4.0,
+            "Y": 5.55,
+            "Length": 2.2,
+            "Width": 0.6,
+            "Height": 0.9,
+            "rotationZ": 180
+        },
+        {
+            "object_name": "ToiletRoom_Enclosure",
+            "category": "architecture",
+            "search_prompt": "toilet room enclosure walls",
+            "X": 0.85,
+            "Y": 5.05,
+            "Length": 1.7,
+            "Width": 1.7,
+            "Height": 2.4,
+            "rotationZ": 0
+        },
+        {
+            "object_name": "SlidingDoor_TopWall",
+            "category": "door",
+            "search_prompt": "sliding door opening",
+            "X": 2.55,
+            "Y": 5.83,
+            "Length": 1.6,
+            "Width": 0.1,
+            "Height": 2.1,
+            "rotationZ": 180
+        },
+        {
+            "object_name": "SlidingDoor_Internal_Left",
+            "category": "door",
+            "search_prompt": "internal sliding door opening",
+            "X": 0.95,
+            "Y": 3.55,
+            "Length": 1.2,
+            "Width": 0.1,
+            "Height": 2.05,
+            "rotationZ": 180
+        },
+        {
+            "object_name": "Window_BottomWall",
+            "category": "window",
+            "search_prompt": "wide window",
+            "X": 1.6,
+            "Y": 0.05,
+            "Length": 2.6,
+            "Width": 0.1,
+            "Height": 1.2,
+            "rotationZ": 0
+        }
+    ]
+}

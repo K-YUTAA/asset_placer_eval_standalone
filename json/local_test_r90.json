@@ -1,0 +1,19 @@
+{
+  "area_name": "test_local_r90",
+  "area_size_X": 6,
+  "area_size_Y": 6,
+  "area_objects_list": [
+    {
+      "object_name": "TestChair",
+      "category": "chair",
+      "search_prompt": "chair",
+      "X": 2,
+      "Y": 3,
+      "Length": 2,
+      "Width": 1,
+      "Height": 1,
+      "rotationZ": 90
+    }
+  ],
+  "size_mode": "local"
+}

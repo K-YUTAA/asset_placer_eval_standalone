@@ -1,0 +1,650 @@
+AI Layout Generation Log
+timestamp: 20260123_010536_327361
+
+[AI Settings]
+step1_model: gpt-5.2
+step2_model: gpt-5.2
+reasoning_effort: high
+text_verbosity: high
+image_detail: high
+max_output_tokens: 48000
+max_retries: 1
+retry_delay_sec: 1.0
+
+[Step 1 Stats]
+time_sec: 235.63142204284668
+input_tokens: 1407
+output_tokens: 7699
+total_tokens: 9106
+
+[Step 2 Stats]
+time_sec: 334.67209124565125
+input_tokens: 8380
+output_tokens: 10905
+total_tokens: 19285
+
+[Total Stats]
+time_sec: 570.3035132884979
+input_tokens: 9787
+output_tokens: 18604
+total_tokens: 28391
+
+[Analysis Text]
+以下では、画像の間取りを **xy平面（上=+Y、下=-Y、右=+X、左=-X）** として読み取り、家具・設備の「位置関係」「向き（配置の向き）」「機能的な正面（人が使う向き／視線の向き）」をできるだけ具体的に整理します。  
+※図面に寸法が無いため、**一般的な日本の集合住宅（3DK程度）で無理なく全家具が収まる**ことを最優先に、常識的なサイズ感で補っています。  
+※窓の高さ（z）は **床から1.0〜2.0mの範囲**（例：腰高〜掃き出し窓）で想定します。
+
+---
+
+## 1) 部屋（ゾーン）構成の理解（相対位置）
+- **中央**：縦に長い **廊下**（上側が玄関、下側がリビング・ダイニングへ）
+- **左側（-X側）**：水回り＋キッチン＋リビングダイニング  
+  - 上：物置、浴室、洗面所、トイレ  
+  - 下：台所（キッチン）＋リビング＋ダイニング
+- **右側（+X側）**：個室3つ  
+  - 右上：みかんの部屋  
+  - 右中：ユズヒコの部屋  
+  - 右下：父母の部屋（和室系。押入・床の間あり）
+- **下側（-Y側）**：外部に面する開口（バルコニー／掃き出し窓系）が連続している想定（リビング・父母の部屋から出られる）
+
+---
+
+## 2) 家具・設備ごとの詳細（カテゴリ / search_prompt / 位置 / 向き / 機能的正面）
+形式：
+- **カテゴリ**：bed / chair / table / drawer / door / window / appliance など
+- **search_prompt（英語・簡潔）**：部屋固有の位置関係を入れず、物の種類・用途・特徴だけ
+- **配置**：部屋内の相対位置（+X/-X/+Y/-Y）で記述
+- **機能的な正面**：この画像方位（上/下/左/右）＝（+Y/-Y/-X/+X）で明記
+
+---
+
+### A. リビング・ダイニング周り
+
+#### 1) ソファ
+- **カテゴリ**：chair（= seating/sofa）
+- **search_prompt**：`2-seater fabric sofa, modern simple design`
+- **配置**：リビングの **上寄り（+Y側）**、かつリビング中央より **やや左（-X側）**。廊下からリビングに入った付近の近く。
+- **配置の向き（形状）**：長辺が概ね **X方向（左右方向）**に伸びる置き方。
+- **機能的な正面**：**右（+X）**  
+  - 理由：リビング右側にTVがあり、視聴姿勢としてソファはTV方向（右）を向くのが自然。
+
+#### 2) テレビ（TV）
+- **カテゴリ**：appliance（= electronics）
+- **search_prompt**：`flat-screen TV, minimalist television set`
+- **配置**：リビングの **右寄り（+X側）**、廊下との境界付近の壁際（リビング右側の内壁沿い）。
+- **機能的な正面（画面が向く向き）**：**左（-X）**  
+  - 理由：対面するソファ（左側）へ画面を向ける。
+
+#### 3) ダイニングテーブル
+- **カテゴリ**：table
+- **search_prompt**：`square dining table, simple wood table for four`
+- **配置**：ダイニングの **中央付近**（リビングより下側＝-Y側寄り、部屋中央）。
+- **配置の向き**：天板が正方形に近く、辺が概ね **X/Y軸に平行**。
+- **機能的な正面**：**上（+Y）**（※対称家具のため基準を設定）  
+  - 注：テーブルは本来「正面」が弱い対称形状なので、以後の処理用に便宜上「上側を正面」と定義。
+
+#### 4) ダイニングチェア（4脚相当が描かれている想定）
+図ではテーブルの四辺に椅子が配置された表現があるため、**4脚**として整理します。
+- **カテゴリ**：chair
+- **search_prompt**：`dining chair, simple modern chair`
+- **配置**：ダイニングテーブルの **上/下/左/右**に各1脚
+- **機能的な正面**（座った人の視線＝テーブル中心方向）：
+  - **北側（テーブル上側）の椅子**：正面は **下（-Y）**
+  - **南側（テーブル下側）の椅子**：正面は **上（+Y）**
+  - **西側（テーブル左側）の椅子**：正面は **右（+X）**
+  - **東側（テーブル右側）の椅子**：正面は **左（-X）**
+
+#### 5) サイドボード
+- **カテゴリ**：drawer（= cabinet）
+- **search_prompt**：`sideboard cabinet, low storage cabinet with doors`
+- **配置**：リビング〜ダイニングの **左側（-X側）**、キッチン寄りの壁際（図の「サイドボード」表記位置）。
+- **機能的な正面**：**右（+X）**  
+  - 理由：壁付け収納は室内側に扉面が向く。
+
+---
+
+### B. キッチン（台所）周り
+
+#### 6) キッチンカウンター（流し台・調理台の一体）
+- **カテゴリ**：appliance（= kitchen fixture）
+- **search_prompt**：`compact kitchen counter unit with sink and countertop`
+- **配置**：住戸の **最左（-X端）**の壁沿いに縦方向（Y方向）に連続。
+- **機能的な正面**：**右（+X）**  
+  - 理由：作業者は室内側（右側）に立つ。
+
+#### 7) コンロ（クックトップ）
+- **カテゴリ**：appliance
+- **search_prompt**：`built-in gas cooktop, compact stovetop`
+- **配置**：キッチンカウンターの **下側（-Y側）**寄り（図の加熱機器アイコン位置）。
+- **機能的な正面**：**右（+X）**（調理者が立つ側）
+
+#### 8) キッチンシンク
+- **カテゴリ**：appliance
+- **search_prompt**：`kitchen sink, single bowl sink with faucet`
+- **配置**：キッチンカウンターの **中〜上寄り**（図のシンク位置）。
+- **機能的な正面**：**右（+X）**
+
+#### 9) 冷蔵庫
+- **カテゴリ**：appliance
+- **search_prompt**：`refrigerator, tall fridge freezer, white`
+- **配置**：キッチンの **左上（-X, +Y寄り）**の壁際（図の「冷蔵庫」表記）。
+- **機能的な正面**：**右（+X）**  
+  - 理由：扉面がキッチン側（室内側）へ向く配置。
+
+---
+
+### C. 水回り（洗面所・浴室・トイレ）
+
+#### 10) 洗濯機
+- **カテゴリ**：appliance
+- **search_prompt**：`front-loading washing machine, compact laundry washer`
+- **配置**：洗面所エリアの **左側（-X側）**（図の洗濯機表記の位置）。
+- **機能的な正面**：**右（+X）**（操作パネル・扉が室内側）
+
+#### 11) 洗面台（化粧台・洗面ボウル）
+- **カテゴリ**：appliance（= bathroom fixture）
+- **search_prompt**：`bathroom vanity sink, compact washbasin cabinet`
+- **配置**：洗面所の **下側（-Y側）**寄り（図の洗面ボウル位置）。
+- **機能的な正面**：**右（+X）**（立って使う側が室内側）
+
+#### 12) 浴槽（バスタブ）
+- **カテゴリ**：appliance（= bath fixture）
+- **search_prompt**：`bathtub, compact rectangular soaking tub`
+- **配置**：浴室の **左側（-X側）**に浴槽が収まっている（図の浴槽形状）。
+- **機能的な正面**：**右（+X）**  
+  - 理由：出入口・洗い場が右側に来る一般的な配置として解釈（浴槽への出入り・視認方向が右）。
+
+#### 13) トイレ（便器）
+- **カテゴリ**：appliance
+- **search_prompt**：`toilet, standard western toilet bowl with tank`
+- **配置**：トイレ室の室内（廊下左側のトイレ区画）。
+- **機能的な正面**：**上（+Y）**  
+  - 理由：図の便器は一般的な表現でタンク側が上（+Y）に見えるため、座った人の向き（視線）は上（+Y）と解釈。
+
+---
+
+### D. 収納（クローゼット・押入・床の間・物置）
+
+#### 14) 物置（収納室の収納：扉で区切られた納戸扱い）
+- **カテゴリ**：drawer（= storage）
+- **search_prompt**：`storage closet, utility storage room`
+- **配置**：住戸の **左上（-X, +Y）**、玄関の左側に隣接する区画（「物置」）。
+- **機能的な正面**：**右（+X）**または**下（-Y）**になり得るが、図の出入口が廊下側にあるため  
+  → **機能的な正面＝右（+X）**（廊下側からアクセスする面）として整理。
+
+#### 15) クローゼット（右側中央の2つ）
+図では「クローゼット」と書かれた収納が横並びで2区画あります（みかんの部屋／ユズヒコの部屋の境界付近）。
+- **カテゴリ**：drawer（= closet）
+- **search_prompt**：`built-in wardrobe closet, sliding closet doors`
+- **配置**：右側エリア中央、**みかんの部屋（上）とユズヒコの部屋（中）の間**付近に並列。
+- **機能的な正面**：図から両側アクセスか片側かが厳密には確定しにくいですが、一般的には各部屋側に開くため、以下のように解釈します。
+  - **上側のクローゼット（みかんの部屋側）**：正面 **上（+Y）**（みかんの部屋方向）
+  - **下側のクローゼット（ユズヒコの部屋側）**：正面 **下（-Y）**（ユズヒコの部屋方向）
+
+#### 16) 押入（父母の部屋）
+- **カテゴリ**：drawer（= built-in storage）
+- **search_prompt**：`oshiire closet, Japanese built-in futon storage`
+- **配置**：父母の部屋の **上側（+Y側）**、部屋中央寄り（図の「押入」）。
+- **機能的な正面**：**下（-Y）**（部屋側へ開く）
+
+#### 17) 床の間（父母の部屋）
+- **カテゴリ**：drawer（= alcove / built-in）
+- **search_prompt**：`tokonoma alcove, Japanese traditional display alcove`
+- **配置**：父母の部屋の **右上（+X, +Y）**寄り（図の「床の間」）。
+- **機能的な正面**：**下（-Y）**（部屋側から鑑賞・利用）
+
+---
+
+### E. ドア（出入口）※主要なものを抽出
+ドアは「家具」というより建具ですが、指定カテゴリにあるため、主要箇所のみ整理します。  
+（細かい開き勝手の弧は簡略化し、**機能的正面＝通行の主方向**で統一します）
+
+#### 18) 玄関ドア
+- **カテゴリ**：door
+- **search_prompt**：`apartment entrance door, hinged door`
+- **配置**：住戸の **最上部（+Y端）中央**（「玄関」）。
+- **機能的な正面**：**上（+Y）**（室内→室外へ出る向き、または来訪者の進行方向）
+
+#### 19) 洗面所ドア（廊下→洗面所）
+- **カテゴリ**：door
+- **search_prompt**：`interior hinged door, white simple door`
+- **配置**：廊下左側、洗面所入口。
+- **機能的な正面**：**左（-X）**（廊下から洗面所へ進む向き）
+
+#### 20) 浴室ドア（洗面所→浴室）
+- **カテゴリ**：door
+- **search_prompt**：`bathroom door, moisture-resistant interior door`
+- **配置**：洗面所上側に隣接する浴室入口。
+- **機能的な正面**：**上（+Y）**または**左（-X）**の可能性があるが、図の接続は洗面所→浴室の横移動に見えるため  
+  → **左（-X）**（洗面所から浴室へ入る向き）として整理。
+
+#### 21) トイレドア（廊下→トイレ）
+- **カテゴリ**：door
+- **search_prompt**：`toilet room door, interior hinged door`
+- **配置**：廊下左側、トイレ入口。
+- **機能的な正面**：**左（-X）**
+
+#### 22) 各個室の引き戸（廊下→各部屋）
+- **カテゴリ**：door
+- **search_prompt**：`sliding room door, Japanese interior sliding door`
+- **配置**：廊下右側に、みかんの部屋／ユズヒコの部屋／父母の部屋への出入口が並ぶ。
+- **機能的な正面**：**右（+X）**（廊下から部屋へ進む向き）
+
+---
+
+### F. 窓（想定：バルコニー側・外壁側の開口）
+図面は窓の細部記号が強くないものの、外周（特に下側・右側）に開口がある典型配置として読み取れます。
+
+#### 23) 掃き出し窓（リビング・ダイニング南側）
+- **カテゴリ**：window
+- **search_prompt**：`sliding glass patio door, large balcony window`
+- **配置**：リビング・ダイニングの **最下部（-Y端）**の外壁側。
+- **機能的な正面**：**下（-Y）**（室内から外を見る向き）
+- **高さ（z）想定**：床付近から上端2.0m程度まで（掃き出し窓）
+
+#### 24) 掃き出し窓（父母の部屋南側）
+- **カテゴリ**：window
+- **search_prompt**：`sliding glass door, balcony access window`
+- **配置**：父母の部屋の **最下部（-Y端）**の外壁側。
+- **機能的な正面**：**下（-Y）**
+- **高さ（z）想定**：床付近〜2.0m程度
+
+#### 25) 外壁側の窓（みかんの部屋／ユズヒコの部屋の右側）
+- **カテゴリ**：window
+- **search_prompt**：`room window, rectangular casement or sliding window`
+- **配置**：右側2部屋（みかん／ユズヒコ）の **最右（+X端）**の外壁側に開口がある想定。
+- **機能的な正面**：**右（+X）**（室内から外を見る向き）
+- **高さ（z）想定**：腰高窓なら **z=1.0〜2.0m**付近（条件に合わせる）
+
+---
+
+## 3) 主要な「向き」と「対向関係」まとめ（機能的配置の核）
+- **ソファ（正面=右） ↔ TV（正面=左）**：リビング内で視聴軸が **X方向**に成立
+- **ダイニングセット**：テーブル中心に対して椅子が四方から向き合う（椅子の正面はテーブル中心向き）
+- **キッチン列**：左壁沿いに並び、使用者は右側（部屋側）に立つため、主要設備の正面は一貫して **右（+X）**
+- **押入・床の間**：父母の部屋の上側に集約し、部屋側（下=-Y）を正面として使う
+
+---
+
+必要なら、次のステップとして：
+1) 上記の各家具・建具に **IDを振ったJSON（search_prompt付き）**  
+2) 各オブジェクトの **(x, y)の代表点（中心座標）** と **回転（0/90/180/270°）** まで落とし込む  
+…も作れます。
+
+JSON化に進める場合、座標の原点をどこに置きたいですか？（例：住戸全体の中心= (0,0)、または玄関中心、または左下角 など）
+
+[AABB Collisions]
+- Entrance_Main_Door vs Genkan_To_Hall_Door: overlap_volume=0.13
+- Entrance_Main_Door vs Livingroom_TV: overlap_volume=0.022499999999999996
+- Entrance_Main_Door vs Dining_Chair_East: overlap_volume=0.011250000000000003
+- Entrance_Main_Door vs Hall_To_Living_Door: overlap_volume=0.1
+- Entrance_Main_Door vs Living_Dining_Patio_Window: overlap_volume=0.06000000000000001
+- Genkan_To_Hall_Door vs Livingroom_TV: overlap_volume=0.022499999999999996
+- Genkan_To_Hall_Door vs Hall_To_Living_Door: overlap_volume=0.05
+- Genkan_To_Hall_Door vs Hall_To_Mikan_Room_Sliding_Door: overlap_volume=2.2204460492503132e-17
+- Genkan_To_Hall_Door vs Hall_To_Yuzuhiko_Room_Sliding_Door: overlap_volume=2.2204460492503132e-17
+- Genkan_To_Hall_Door vs Hall_To_Parents_Room_Sliding_Door: overlap_volume=2.2204460492503132e-17
+- Genkan_To_Hall_Door vs Living_Dining_Patio_Window: overlap_volume=0.010000000000000009
+- Utility_Meter_Box vs Utility_Storage_Closet: overlap_volume=0.16799999999999995
+- Utility_Meter_Box vs Compact_Bathtub: overlap_volume=0.1049999999999999
+- Utility_Meter_Box vs Washing_Machine: overlap_volume=0.15172499999999994
+- Utility_Meter_Box vs Toilet_Bowl: overlap_volume=0.0979999999999999
+- Utility_Meter_Box vs Kitchen_Counter_Unit: overlap_volume=0.14962500000000004
+- Utility_Meter_Box vs Kitchen_Sink_Unit: overlap_volume=0.16379999999999986
+- Utility_Meter_Box vs Cooktop_Stove: overlap_volume=0.16379999999999986
+- Utility_Meter_Box vs Tall_Refrigerator: overlap_volume=0.25199999999999984
+- Utility_Meter_Box vs Livingroom_Sideboard_Cabinet: overlap_volume=0.01399999999999995
+- Utility_Meter_Box vs Living_Dining_Patio_Window: overlap_volume=0.03
+- Utility_Storage_Closet vs Washroom_To_Bathroom_Door: overlap_volume=0.07999999999999999
+- Utility_Storage_Closet vs Compact_Bathtub: overlap_volume=0.2730000000000001
+- Utility_Storage_Closet vs Washing_Machine: overlap_volume=0.2687700000000001
+- Utility_Storage_Closet vs Washroom_Vanity_Sink: overlap_volume=0.20187500000000003
+- Utility_Storage_Closet vs Toilet_Bowl: overlap_volume=0.2240000000000001
+- Utility_Storage_Closet vs Kitchen_Counter_Unit: overlap_volume=0.1608750000000002
+- Utility_Storage_Closet vs Kitchen_Sink_Unit: overlap_volume=0.2376
+- Utility_Storage_Closet vs Cooktop_Stove: overlap_volume=0.2376
+- Utility_Storage_Closet vs Tall_Refrigerator: overlap_volume=0.5791500000000002
+- Utility_Storage_Closet vs Livingroom_Sideboard_Cabinet: overlap_volume=0.3060000000000001
+- Utility_Storage_Closet vs Livingroom_Fabric_Sofa: overlap_volume=0.025999999999999912
+- Utility_Storage_Closet vs Living_Dining_Patio_Window: overlap_volume=0.21000000000000008
+- Hall_To_Washroom_Door vs Hall_To_Toilet_Door: overlap_volume=0.15000000000000013
+- Hall_To_Washroom_Door vs Livingroom_Fabric_Sofa: overlap_volume=0.06000000000000005
+- Hall_To_Washroom_Door vs Dining_Table: overlap_volume=0.05625000000000005
+- Hall_To_Washroom_Door vs Hall_To_Living_Door: overlap_volume=0.010000000000000009
+- Hall_To_Washroom_Door vs Living_Dining_Patio_Window: overlap_volume=0.020000000000000018
+- Washroom_To_Bathroom_Door vs Washroom_Vanity_Sink: overlap_volume=0.048875
+- Washroom_To_Bathroom_Door vs Livingroom_Sideboard_Cabinet: overlap_volume=0.05600000000000002
+- Washroom_To_Bathroom_Door vs Livingroom_Fabric_Sofa: overlap_volume=0.02800000000000001
+- Washroom_To_Bathroom_Door vs Dining_Chair_West: overlap_volume=0.024750000000000036
+- Washroom_To_Bathroom_Door vs Living_Dining_Patio_Window: overlap_volume=0.14000000000000004
+- Hall_To_Toilet_Door vs Livingroom_Fabric_Sofa: overlap_volume=0.06000000000000005
+- Hall_To_Toilet_Door vs Dining_Table: overlap_volume=0.05625000000000005
+- Hall_To_Toilet_Door vs Hall_To_Living_Door: overlap_volume=0.010000000000000009
+- Hall_To_Toilet_Door vs Living_Dining_Patio_Window: overlap_volume=0.020000000000000018
+- Compact_Bathtub vs Washing_Machine: overlap_volume=0.22691999999999996
+- Compact_Bathtub vs Toilet_Bowl: overlap_volume=0.156
+- Compact_Bathtub vs Kitchen_Counter_Unit: overlap_volume=0.31499999999999995
+- Compact_Bathtub vs Kitchen_Sink_Unit: overlap_volume=0.19139999999999988
+- Compact_Bathtub vs Cooktop_Stove: overlap_volume=0.19139999999999988
+- Compact_Bathtub vs Tall_Refrigerator: overlap_volume=0.2677499999999999
+- Compact_Bathtub vs Livingroom_Sideboard_Cabinet: overlap_volume=0.09450000000000003
+- Compact_Bathtub vs Living_Dining_Patio_Window: overlap_volume=0.033000000000000015
+- Washing_Machine vs Toilet_Bowl: overlap_volume=0.1472
+- Washing_Machine vs Kitchen_Counter_Unit: overlap_volume=0.20289500000000013
+- Washing_Machine vs Kitchen_Sink_Unit: overlap_volume=0.27582499999999993
+- Washing_Machine vs Cooktop_Stove: overlap_volume=0.27582499999999993
+- Washing_Machine vs Tall_Refrigerator: overlap_volume=0.318835
+- Washing_Machine vs Livingroom_Sideboard_Cabinet: overlap_volume=0.057600000000000054
+- Washing_Machine vs Living_Dining_Patio_Window: overlap_volume=0.03060000000000003
+- Washroom_Vanity_Sink vs Toilet_Bowl: overlap_volume=0.008000000000000115
+- Washroom_Vanity_Sink vs Livingroom_Sideboard_Cabinet: overlap_volume=0.23400000000000007
+- Washroom_Vanity_Sink vs Livingroom_Fabric_Sofa: overlap_volume=0.08999999999999996
+- Washroom_Vanity_Sink vs Dining_Chair_West: overlap_volume=0.05737500000000005
+- Washroom_Vanity_Sink vs Living_Dining_Patio_Window: overlap_volume=0.055250000000000014
+- Toilet_Bowl vs Kitchen_Counter_Unit: overlap_volume=0.07200000000000004
+- Toilet_Bowl vs Kitchen_Sink_Unit: overlap_volume=0.13759999999999992
+- Toilet_Bowl vs Cooktop_Stove: overlap_volume=0.13759999999999992
+- Toilet_Bowl vs Tall_Refrigerator: overlap_volume=0.14239999999999994
+- Toilet_Bowl vs Livingroom_Sideboard_Cabinet: overlap_volume=0.1280000000000001
+- Toilet_Bowl vs Living_Dining_Patio_Window: overlap_volume=0.04800000000000004
+- Kitchen_Counter_Unit vs Kitchen_Sink_Unit: overlap_volume=0.19552500000000003
+- Kitchen_Counter_Unit vs Cooktop_Stove: overlap_volume=0.19552500000000003
+- Kitchen_Counter_Unit vs Tall_Refrigerator: overlap_volume=0.3577500000000002
+- Kitchen_Counter_Unit vs Living_Dining_Patio_Window: overlap_volume=0.011250000000000041
+- Kitchen_Sink_Unit vs Cooktop_Stove: overlap_volume=0.2969999999999999
+- Kitchen_Sink_Unit vs Tall_Refrigerator: overlap_volume=0.2969999999999999
+- Kitchen_Sink_Unit vs Livingroom_Sideboard_Cabinet: overlap_volume=0.04679999999999997
+- Kitchen_Sink_Unit vs Living_Dining_Patio_Window: overlap_volume=0.02970000000000001
+- Cooktop_Stove vs Tall_Refrigerator: overlap_volume=0.2969999999999999
+- Cooktop_Stove vs Livingroom_Sideboard_Cabinet: overlap_volume=0.04679999999999997
+- Cooktop_Stove vs Living_Dining_Patio_Window: overlap_volume=0.02970000000000001
+- Tall_Refrigerator vs Livingroom_Sideboard_Cabinet: overlap_volume=0.05220000000000001
+- Tall_Refrigerator vs Living_Dining_Patio_Window: overlap_volume=0.06210000000000004
+- Livingroom_Sideboard_Cabinet vs Livingroom_Fabric_Sofa: overlap_volume=0.144
+- Livingroom_Sideboard_Cabinet vs Dining_Chair_West: overlap_volume=0.11700000000000008
+- Livingroom_Sideboard_Cabinet vs Living_Dining_Patio_Window: overlap_volume=0.09600000000000003
+- Livingroom_Fabric_Sofa vs Dining_Table: overlap_volume=0.7650000000000001
+- Livingroom_Fabric_Sofa vs Dining_Chair_North: overlap_volume=0.16200000000000006
+- Livingroom_Fabric_Sofa vs Dining_Chair_South: overlap_volume=0.16200000000000006
+- Livingroom_Fabric_Sofa vs Dining_Chair_West: overlap_volume=0.16200000000000006
+- Livingroom_Fabric_Sofa vs Dining_Chair_East: overlap_volume=0.081
+- Livingroom_Fabric_Sofa vs Hall_To_Living_Door: overlap_volume=0.03200000000000001
+- Livingroom_Fabric_Sofa vs Living_Dining_Patio_Window: overlap_volume=0.144
+- Dining_Table vs Dining_Chair_North: overlap_volume=0.151875
+- Dining_Table vs Dining_Chair_South: overlap_volume=0.151875
+- Dining_Table vs Dining_Chair_West: overlap_volume=0.02531250000000006
+- Dining_Table vs Dining_Chair_East: overlap_volume=0.02531249999999995
+- Dining_Table vs Hall_To_Living_Door: overlap_volume=0.018749999999999992
+- Dining_Table vs Living_Dining_Patio_Window: overlap_volume=0.09000000000000002
+- Dining_Chair_North vs Dining_Chair_South: overlap_volume=0.18225000000000005
+- Dining_Chair_North vs Living_Dining_Patio_Window: overlap_volume=0.04050000000000001
+- Dining_Chair_South vs Living_Dining_Patio_Window: overlap_volume=0.04050000000000001
+- Dining_Chair_West vs Living_Dining_Patio_Window: overlap_volume=0.04050000000000002
+- Dining_Chair_East vs Hall_To_Living_Door: overlap_volume=0.0405
+- Dining_Chair_East vs Living_Dining_Patio_Window: overlap_volume=0.0405
+- Hall_To_Living_Door vs Living_Dining_Patio_Window: overlap_volume=0.16000000000000003
+- Hall_To_Mikan_Room_Sliding_Door vs Hall_To_Yuzuhiko_Room_Sliding_Door: overlap_volume=0.17000000000000015
+- Hall_To_Mikan_Room_Sliding_Door vs Hall_To_Parents_Room_Sliding_Door: overlap_volume=0.17000000000000015
+- Hall_To_Yuzuhiko_Room_Sliding_Door vs Hall_To_Parents_Room_Sliding_Door: overlap_volume=0.17000000000000015
+- BuiltIn_Closet_Left vs Parents_Oshiire_Closet: overlap_volume=1.2000000000000002
+- BuiltIn_Closet_Left vs Parents_Room_Patio_Window: overlap_volume=0.20000000000000007
+- BuiltIn_Closet_Right vs Parents_Oshiire_Closet: overlap_volume=0.47999999999999987
+- BuiltIn_Closet_Right vs Parents_Tokonoma_Alcove: overlap_volume=0.9720000000000004
+- BuiltIn_Closet_Right vs Parents_Room_Patio_Window: overlap_volume=0.2
+- Parents_Oshiire_Closet vs Parents_Tokonoma_Alcove: overlap_volume=0.3240000000000003
+- Parents_Oshiire_Closet vs Parents_Room_Patio_Window: overlap_volume=0.32
+- Parents_Tokonoma_Alcove vs Parents_Room_Patio_Window: overlap_volume=0.19800000000000004
+- Mikan_Room_Side_Window vs Yuzuhiko_Room_Side_Window: overlap_volume=0.23999999999999916
+
+[Room Size]
+area_size_X: 7.5
+area_size_Y: 10.6
+
+[Inputs]
+image_path: C:/Users/tmaru/isaacsim/inputs_isaac/img_home_large-768x1090.png
+
+[dimensions.txt]
+家具の大きさは一般的に考えて常識的なサイズで推論してください。
+また、部屋のサイズもそれに応じてお願いします。
+窓の高さはzが1m~2mの間に設置してください
+
+[prompt1]
+この画像から家具の位置関係と家具の向きを詳細に理解してください。部屋のレイアウトはxy平面で考えてください（上=+Y、下=-Y、右=+X、左=-X）。特に、各家具の「機能的な向き」（例：テレビは部屋の中央を向く、椅子は机を向くなど）を推論し、その向きを分析に含めてください。ただし、家具の寸法と部屋のサイズが図面と矛盾する場合は、すべての家具が部屋に収まることを最優先してください。
+さらに、各家具について
+- bed / chair / table / drawer / door / window / appliance などのカテゴリ
+- 後続のJSONで search_prompt として利用できる、簡潔な英語の説明（家具の種類・用途・主要な特徴のみを含め、「ベッドの正面のテレビ」のような、この部屋固有の位置関係は含めない）を整理してください。分析結果をテキストで出力してください。
+このとき、各家具について「機能的な正面」が画像のどの向き（上・下・左・右）に対応するかを必ず言語化してください。
+機能的な正面とは、ベッドでは人が寝たときに顔が向く方向、椅子では座った人の視線の方向、テレビでは画面が向いている方向を指します。
+
+[prompt2]
+# SPDX-FileCopyrightText: Copyright (c) 2023 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+system_input='''You are a 2D layout-to-3D scene expert. Your primary task is to accurately interpret a top-down 2D floor plan and convert it into a 3D scene description in JSON format. The ultimate goal is to ensure that a top-down view of the resulting 3D scene perfectly matches the provided floor plan.
+
+You operate in a Z-Up 3D coordinate system (standard for Robotics/Isaac Sim):
+- X-axis: Represents left and right (right is +X, left is -X).
+- Y-axis: Represents forward and backward (depth).
+- Z-axis: Represents height (vertical direction).
+- Origin (0.0, 0.0, 0.0): The center of the area's floor.
+
+CRITICAL UNIT RULE:
+- All output dimensions and coordinates must be in METERS.
+- If the input is provided in cm, you MUST convert it to meters (e.g., 250 cm -> 2.5).
+
+For the area origin and all objects:
+- The area origin X, Y, Z must be 0.0.
+- For every object (including the floor), the Z coordinate must ALWAYS be 0.0.
+- Do NOT encode any semantic height or vertical offset in the Z coordinate. Real vertical placement will be handled later using the Height field and 3D asset bounding boxes.
+
+Your interpretation must follow these critical spatial rules:
+1.  Image Interpretation: The provided 2D image is a top-down view of the XY plane. You must place all items exactly as shown. Pay close attention to all labels, even for small objects like doors.
+2.  Coordinate Mapping: The image's horizontal direction corresponds to the X-axis, where right is positive (+X) and left is negative (-X). The image's vertical direction corresponds to the Y-axis (up, or away from the viewer, is positive).
+3.  Dimension and Orientation:
+    - You will receive object dimensions as a tuple (L, W, H), where L is the long side, W is the short side, and H is the height.
+    - If dimension information is not provided in the user's input, you must estimate reasonable dimensions for the room and each object based on the floor plan.
+    - You must analyze the orientation of each object in the floor plan image.
+    - In the JSON, 'Length' always corresponds to the object's X-axis dimension (meters), and 'Width' always corresponds to its Y-axis dimension (meters).
+    - 'Height' (JSON) always corresponds to the Z-axis dimension (meters).
+    - You MUST use the 'rotationZ' field (see rule 7) to specify the object's orientation.
+4.  Floor Generation: You must always generate an object named "Floor" that covers the entire area.
+    - The object_name must always be exactly "Floor" (not "Room_Floor", "Accessible_Floor" etc.).
+    - It must be included in area_objects_list.
+    - Its category must be "floor".
+    - Its X, Y, Z must all be 0.0.
+    - Set its Length and Width to match the full area_size_X and area_size_Y.
+    - Set its Height to 0 (zero-thickness plane).
+    - rotationZ must be 0.
+    - Use a reasonable material, e.g., "Concrete_Polished" or "Oak".
+    - Provide a simple search_prompt such as "flat floor surface of the room, suitable for hospital or nursing environment".
+
+5.  Object Naming: Make the object_name for each piece of furniture more specific and appropriate by envisioning the room's user. For instance, instead of just "Bed," name it "Master_Bed" or "Child's_Bed," inferring from the room's context.
+6.  Overlaps and Layout Fidelity: Your primary goal is to preserve the layout exactly as shown in the floor plan.
+    - DO NOT move or resize objects just to avoid overlaps or narrow passages.
+    - DO NOT attempt to "fix" collisions or overlaps.
+    - Even if objects slightly overlap in your interpretation, keep their relative positions faithful to the drawing.
+
+7.  Windows: Do NOT invent windows. Only include windows if they are explicitly drawn/labeled in the floor plan image or specified in the user's input.
+
+8. Functional Orientation: You must infer the correct functional orientation for each object and set the `rotationZ` field.
+
+Here, `rotationZ` represents the functional front direction of the object in the room layout, NOT the local front axis of a specific 3D asset model. You must decide `rotationZ` only from the floor-plan layout and the intended use of the furniture. Any per-asset offset between the model's local front and this functional front will be handled by another system.
+
+Use 0, 90, 180, or 270 degrees, with the following definition:
+- 0 degrees: faces +Y (image "Up")
+- 90 degrees: faces +X (image "Right")
+- 180 degrees: faces -Y (image "Down")
+- 270 degrees: faces -X (image "Left")
+
+For each category, define the functional front as follows:
+- Bed: the direction a person’s face looks when lying on the bed (from head side toward foot side, usually toward the open space or TV).
+- Chair / Sofa: the direction a seated person looks.
+- TV / Display: the direction the screen faces (toward the main viewing position such as the bed or chairs).
+- Door: the direction from the hinge side toward the opening into the room (i.e., the direction the door opens toward the interior space).
+- Refrigerator / Drawer / Cabinet: the direction in which the front doors or drawers open (the front facade of the furniture).
+
+Whenever the floor plan suggests a functional relation, align the fronts accordingly, e.g.:
+- A bed that is watching a TV: the front of the bed should face the TV, and the front of the TV should face the bed (their `rotationZ` values should differ by 180 degrees).
+- A chair used to watch a TV or to face a desk: the front of the chair should face the TV or desk.
+
+You must output a single JSON object with:
+- area_name: name of the area
+- X, Y, Z: Coordinates of the area's origin (always 0.0).
+- area_size_X: dimension in meters of the area on the X axis.
+- area_size_Y: dimension in meters of the area on the Y axis.
+- area_objects_list: list of all the objects in the area.
+Important: If an item is on the right side in the image, its X must be positive. If it is on the left side, its X must be negative.
+If no window is explicitly shown in the image, the "windows" list should be omitted or left empty.
+
+For each object, you must store:
+- object_name: name of the object with an adjective.
+- category: an object category used later for 3D asset retrieval.
+- X, Y, Z: The coordinates of the object's center point (in meters). Z must always be 0.0.
+- Length: The object's final dimension along the X-axis (meters), determined by its orientation.
+- Width: The object's final dimension along the Y-axis (meters), determined by its orientation.
+- Height: The object's final dimension along the Z-axis (meters).
+- rotationZ: orientation in degrees as defined above.
+- Material: a reasonable material from the provided list.
+- search_prompt: a short natural-language description (mainly in English) used later for 3D asset retrieval.
+
+You must assign a "category" to each object from the following list (extend only if absolutely necessary):
+- bed
+- table
+- desk
+- chair
+- sofa
+- wardrobe
+- drawer
+- shelf
+- cabinet
+- wheelchair
+- toilet
+- sink
+- bathtub
+- shower
+- door
+- window
+- floor
+- appliance
+- equipment
+- other_furniture
+
+Guidelines for category:
+- Use "bed" for all beds (including nursing/care beds).
+- Use "door" for all doors and sliding doors.
+- Use "wheelchair" for wheelchairs and similar mobility devices.
+- Use "other_furniture" only if no other category is appropriate.
+- Do not use "wall" as a category. Structural walls are handled by another system and must not be output.
+
+Guidelines for search_prompt:
+- Write search_prompt mainly in English.
+- Be specific about:
+  - object type (e.g., "electric nursing bed", "manual wheelchair"),
+  - usage context (e.g., "for elderly patient", "for hospital room"),
+  - key attributes (e.g., "with side rails", "black frame", "wooden top").
+- Do NOT describe relations that depend on this particular room layout
+  (e.g., do NOT say "TV in front of the bed" or "chair on the left side of the desk").
+- Keep it within one or two short sentences.
+
+The material list is: Plywood, Leather_Brown, Leather_Pumpkin, Leather_Black, Aluminum_Cast, Birch, Beadboard, Cardboard, Cloth_Black, Cloth_Gray, Concrete_Polished, Glazed_Glass, CorrugatedMetal, Cork, Linen_Beige, Linen_Blue, Linen_White, Mahogany, MDF, Oak, Plastic_ABS, Steel_Carbon, Steel_Stainless, Veneer_OU_Walnut, Veneer_UX_Walnut_Cherry, Veneer_Z5_Maple.
+
+Remember, you only generate JSON code, nothing else. It is very important that:
+- You output a single JSON object.
+- You include all required keys (including "category" and "search_prompt") for every object.
+- All numeric fields are numbers (not strings).
+What follows is an example to guide you. The user_input contains an example request, and the assistant_input contains the ideal JSON output for that request.
+'''
+
+user_input='''
+You have been provided with a floor plan image and a list of area/object dimensions. Your task is to apply the rules defined in the system input to this data.
+
+Analyze the image to determine the precise placement and orientation of each object. Then, generate the single, corresponding JSON output.
+'''
+
+assistant_input='''{
+    "area_name": "Rectangular_Bedroom_Area",
+    "X": 0.0,
+    "Y": 0.0,
+    "Z": 0.0,
+    "area_size_X": 4.0,
+    "area_size_Y": 3.0,
+    "area_objects_list": [
+        {
+            "object_name": "Floor",
+            "category": "floor",
+            "X": 0.0,
+            "Y": 0.0,
+            "Z": 0.0,
+            "Length": 4.0,
+            "Width": 3.0,
+            "Height": 0,
+            "rotationZ": 0,
+            "Material": "Concrete_Polished",
+            "search_prompt": "flat floor surface of a simple bedroom, suitable for hospital or nursing environment"
+        },
+        {
+            "object_name": "Large_Bed",
+            "category": "bed",
+            "X": 1.0,
+            "Y": 0.8,
+            "Z": 0.0,
+            "Length": 2.0,
+            "Width": 1.4,
+            "Height": 0.45,
+            "rotationZ": 0,
+            "Material": "Cloth_Gray",
+            "search_prompt": "electric nursing bed with side rails for elderly patient, single size, wooden frame, white sheets"
+        },
+        {
+            "object_name": "Wide_Drawer",
+            "category": "drawer",
+            "X": -1.4,
+            "Y": 1.25,
+            "Z": 0.0,
+            "Length": 1.2,
+            "Width": 0.5,
+            "Height": 0.8,
+            "rotationZ": 180,
+            "Material": "Veneer_UX_Walnut_Cherry",
+            "search_prompt": "wide wooden drawer cabinet for bedroom storage, dark walnut finish"
+        },
+        {
+            "object_name": "Leather_Chair",
+            "category": "chair",
+            "X": -0.4,
+            "Y": 1.225,
+            "Z": 0.0,
+            "Length": 0.6,
+            "Width": 0.55,
+            "Height": 0.75,
+            "rotationZ": 0,
+            "Material": "Leather_Brown",
+            "search_prompt": "comfortable leather chair for bedroom or reading corner, brown leather upholstery"
+        },
+        {
+            "object_name": "Widescreen_TV",
+            "category": "appliance",
+            "X": -1.8,
+            "Y": 0.1,
+            "Z": 0.0,
+            "Length": 0.4,
+            "Width": 1.4,
+            "Height": 0.85,
+            "rotationZ": 90,
+            "Material": "Plastic_ABS",
+            "search_prompt": "wall-mounted widescreen TV, black frame"
+        }
+    ]
+}'''

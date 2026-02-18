@@ -1,0 +1,1124 @@
+{
+    "area_name": "Apartment Floor Plan",
+    "area_size_X": 11.6,
+    "area_size_Y": 11.6,
+    "outer_polygon": [
+        {
+            "X": 0.0,
+            "Y": 0.0
+        },
+        {
+            "X": 10.4,
+            "Y": 0.0
+        },
+        {
+            "X": 10.4,
+            "Y": 1.2
+        },
+        {
+            "X": 11.6,
+            "Y": 1.2
+        },
+        {
+            "X": 11.6,
+            "Y": 11.6
+        },
+        {
+            "X": 0.0,
+            "Y": 11.6
+        }
+    ],
+    "rooms": [
+        {
+            "room_id": "veranda_bottom",
+            "room_name": "Bottom Veranda",
+            "room_polygon": [
+                {
+                    "X": 0.0,
+                    "Y": 0.0
+                },
+                {
+                    "X": 10.4,
+                    "Y": 0.0
+                },
+                {
+                    "X": 10.4,
+                    "Y": 1.2
+                },
+                {
+                    "X": 0.0,
+                    "Y": 1.2
+                }
+            ],
+            "openings": []
+        },
+        {
+            "room_id": "veranda_right",
+            "room_name": "Right Veranda",
+            "room_polygon": [
+                {
+                    "X": 10.4,
+                    "Y": 1.2
+                },
+                {
+                    "X": 11.6,
+                    "Y": 1.2
+                },
+                {
+                    "X": 11.6,
+                    "Y": 11.6
+                },
+                {
+                    "X": 10.4,
+                    "Y": 11.6
+                }
+            ],
+            "openings": []
+        },
+        {
+            "room_id": "kitchen",
+            "room_name": "Kitchen",
+            "room_polygon": [
+                {
+                    "X": 0.0,
+                    "Y": 1.2
+                },
+                {
+                    "X": 3.0,
+                    "Y": 1.2
+                },
+                {
+                    "X": 3.0,
+                    "Y": 5.4
+                },
+                {
+                    "X": 0.0,
+                    "Y": 5.4
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 1.0,
+                    "Y": 1.2,
+                    "Width": 0.9,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                }
+            ]
+        },
+        {
+            "room_id": "living_dining",
+            "room_name": "Living/Dining",
+            "room_polygon": [
+                {
+                    "X": 3.0,
+                    "Y": 1.2
+                },
+                {
+                    "X": 6.8,
+                    "Y": 1.2
+                },
+                {
+                    "X": 6.8,
+                    "Y": 5.4
+                },
+                {
+                    "X": 3.0,
+                    "Y": 5.4
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 5.8,
+                    "Y": 5.4,
+                    "Width": 0.9,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "window",
+                    "X": 4.9,
+                    "Y": 1.2,
+                    "Width": 2.4,
+                    "Height": 1.0,
+                    "SillHeight": 1.0
+                }
+            ]
+        },
+        {
+            "room_id": "parents_room",
+            "room_name": "Parents' Room",
+            "room_polygon": [
+                {
+                    "X": 6.8,
+                    "Y": 1.2
+                },
+                {
+                    "X": 10.4,
+                    "Y": 1.2
+                },
+                {
+                    "X": 10.4,
+                    "Y": 5.4
+                },
+                {
+                    "X": 6.8,
+                    "Y": 5.4
+                }
+            ],
+            "openings": [
+                {
+                    "type": "window",
+                    "X": 8.6,
+                    "Y": 1.2,
+                    "Width": 2.4,
+                    "Height": 1.0,
+                    "SillHeight": 1.0
+                },
+                {
+                    "type": "window",
+                    "X": 10.4,
+                    "Y": 3.2,
+                    "Width": 2.4,
+                    "Height": 1.0,
+                    "SillHeight": 1.0
+                }
+            ]
+        },
+        {
+            "room_id": "toilet",
+            "room_name": "Toilet",
+            "room_polygon": [
+                {
+                    "X": 0.0,
+                    "Y": 5.4
+                },
+                {
+                    "X": 3.0,
+                    "Y": 5.4
+                },
+                {
+                    "X": 3.0,
+                    "Y": 6.5
+                },
+                {
+                    "X": 0.0,
+                    "Y": 6.5
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 3.0,
+                    "Y": 6.0,
+                    "Width": 0.8,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                }
+            ]
+        },
+        {
+            "room_id": "washroom",
+            "room_name": "Washroom/Laundry",
+            "room_polygon": [
+                {
+                    "X": 0.0,
+                    "Y": 6.5
+                },
+                {
+                    "X": 3.0,
+                    "Y": 6.5
+                },
+                {
+                    "X": 3.0,
+                    "Y": 7.6
+                },
+                {
+                    "X": 0.0,
+                    "Y": 7.6
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 3.0,
+                    "Y": 7.05,
+                    "Width": 0.8,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                }
+            ]
+        },
+        {
+            "room_id": "bathroom",
+            "room_name": "Bathroom",
+            "room_polygon": [
+                {
+                    "X": 0.0,
+                    "Y": 7.6
+                },
+                {
+                    "X": 3.0,
+                    "Y": 7.6
+                },
+                {
+                    "X": 3.0,
+                    "Y": 8.8
+                },
+                {
+                    "X": 0.0,
+                    "Y": 8.8
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 3.0,
+                    "Y": 8.2,
+                    "Width": 0.8,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                }
+            ]
+        },
+        {
+            "room_id": "storage_room",
+            "room_name": "Storage Room",
+            "room_polygon": [
+                {
+                    "X": 0.0,
+                    "Y": 8.8
+                },
+                {
+                    "X": 3.0,
+                    "Y": 8.8
+                },
+                {
+                    "X": 3.0,
+                    "Y": 10.8
+                },
+                {
+                    "X": 0.0,
+                    "Y": 10.8
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 3.0,
+                    "Y": 9.6,
+                    "Width": 0.8,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                }
+            ]
+        },
+        {
+            "room_id": "meter_box_room",
+            "room_name": "Meter Box",
+            "room_polygon": [
+                {
+                    "X": 0.0,
+                    "Y": 10.8
+                },
+                {
+                    "X": 3.0,
+                    "Y": 10.8
+                },
+                {
+                    "X": 3.0,
+                    "Y": 11.6
+                },
+                {
+                    "X": 0.0,
+                    "Y": 11.6
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 1.5,
+                    "Y": 11.6,
+                    "Width": 0.8,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                }
+            ]
+        },
+        {
+            "room_id": "hallway",
+            "room_name": "Hallway",
+            "room_polygon": [
+                {
+                    "X": 3.0,
+                    "Y": 5.4
+                },
+                {
+                    "X": 6.8,
+                    "Y": 5.4
+                },
+                {
+                    "X": 6.8,
+                    "Y": 10.4
+                },
+                {
+                    "X": 3.0,
+                    "Y": 10.4
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 5.8,
+                    "Y": 5.4,
+                    "Width": 0.9,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "door",
+                    "X": 3.0,
+                    "Y": 6.0,
+                    "Width": 0.8,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "door",
+                    "X": 3.0,
+                    "Y": 7.05,
+                    "Width": 0.8,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "door",
+                    "X": 3.0,
+                    "Y": 8.2,
+                    "Width": 0.8,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "door",
+                    "X": 3.0,
+                    "Y": 9.6,
+                    "Width": 0.8,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "door",
+                    "X": 6.8,
+                    "Y": 5.8,
+                    "Width": 0.8,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "door",
+                    "X": 6.8,
+                    "Y": 7.3,
+                    "Width": 0.8,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "door",
+                    "X": 6.8,
+                    "Y": 10.2,
+                    "Width": 0.8,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "door",
+                    "X": 4.6,
+                    "Y": 10.4,
+                    "Width": 0.9,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                }
+            ]
+        },
+        {
+            "room_id": "closet_zone",
+            "room_name": "Closet Zone / Corridor",
+            "room_polygon": [
+                {
+                    "X": 6.8,
+                    "Y": 5.4
+                },
+                {
+                    "X": 10.4,
+                    "Y": 5.4
+                },
+                {
+                    "X": 10.4,
+                    "Y": 6.2
+                },
+                {
+                    "X": 6.8,
+                    "Y": 6.2
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 6.8,
+                    "Y": 5.8,
+                    "Width": 0.8,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "door",
+                    "X": 8.6,
+                    "Y": 5.4,
+                    "Width": 0.8,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                }
+            ]
+        },
+        {
+            "room_id": "yuzuhiko_room",
+            "room_name": "Yuzuhiko's Room",
+            "room_polygon": [
+                {
+                    "X": 6.8,
+                    "Y": 6.2
+                },
+                {
+                    "X": 10.4,
+                    "Y": 6.2
+                },
+                {
+                    "X": 10.4,
+                    "Y": 8.8
+                },
+                {
+                    "X": 6.8,
+                    "Y": 8.8
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 6.8,
+                    "Y": 7.3,
+                    "Width": 0.8,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "window",
+                    "X": 10.4,
+                    "Y": 7.5,
+                    "Width": 1.8,
+                    "Height": 1.0,
+                    "SillHeight": 1.0
+                }
+            ]
+        },
+        {
+            "room_id": "mikan_room",
+            "room_name": "Mikan's Room",
+            "room_polygon": [
+                {
+                    "X": 6.8,
+                    "Y": 8.8
+                },
+                {
+                    "X": 10.4,
+                    "Y": 8.8
+                },
+                {
+                    "X": 10.4,
+                    "Y": 11.6
+                },
+                {
+                    "X": 6.8,
+                    "Y": 11.6
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 6.8,
+                    "Y": 10.2,
+                    "Width": 0.8,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "window",
+                    "X": 10.4,
+                    "Y": 10.2,
+                    "Width": 1.8,
+                    "Height": 1.0,
+                    "SillHeight": 1.0
+                },
+                {
+                    "type": "window",
+                    "X": 8.6,
+                    "Y": 11.6,
+                    "Width": 1.6,
+                    "Height": 1.0,
+                    "SillHeight": 1.0
+                }
+            ]
+        },
+        {
+            "room_id": "entrance",
+            "room_name": "Entrance",
+            "room_polygon": [
+                {
+                    "X": 3.0,
+                    "Y": 10.4
+                },
+                {
+                    "X": 6.2,
+                    "Y": 10.4
+                },
+                {
+                    "X": 6.2,
+                    "Y": 11.6
+                },
+                {
+                    "X": 3.0,
+                    "Y": 11.6
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 4.6,
+                    "Y": 11.6,
+                    "Width": 0.9,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "door",
+                    "X": 4.6,
+                    "Y": 10.4,
+                    "Width": 0.9,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                }
+            ]
+        }
+    ],
+    "area_objects_list": [
+        {
+            "object_name": "door_kitchen_to_bottom_veranda",
+            "category": "door",
+            "search_prompt": "interior hinged door, simple modern design, residential",
+            "room_id": "kitchen",
+            "X": 1.0,
+            "Y": 1.2,
+            "Length": 0.9,
+            "Width": 0.05,
+            "Height": 2.0,
+            "rotationZ": 0,
+            "Material": "wood"
+        },
+        {
+            "object_name": "door_living_to_hallway",
+            "category": "door",
+            "search_prompt": "interior hinged door, simple modern design, residential",
+            "room_id": "hallway",
+            "X": 5.8,
+            "Y": 5.4,
+            "Length": 0.9,
+            "Width": 0.05,
+            "Height": 2.0,
+            "rotationZ": 0,
+            "Material": "wood"
+        },
+        {
+            "object_name": "door_toilet_to_hallway",
+            "category": "door",
+            "search_prompt": "interior hinged door, compact residential bathroom door",
+            "room_id": "toilet",
+            "X": 3.0,
+            "Y": 6.0,
+            "Length": 0.05,
+            "Width": 0.8,
+            "Height": 2.0,
+            "rotationZ": 270,
+            "Material": "wood"
+        },
+        {
+            "object_name": "door_washroom_to_hallway",
+            "category": "door",
+            "search_prompt": "interior hinged door, compact residential utility room door",
+            "room_id": "washroom",
+            "X": 3.0,
+            "Y": 7.05,
+            "Length": 0.05,
+            "Width": 0.8,
+            "Height": 2.0,
+            "rotationZ": 270,
+            "Material": "wood"
+        },
+        {
+            "object_name": "door_bathroom_to_hallway",
+            "category": "door",
+            "search_prompt": "interior hinged door, compact residential bathroom door",
+            "room_id": "bathroom",
+            "X": 3.0,
+            "Y": 8.2,
+            "Length": 0.05,
+            "Width": 0.8,
+            "Height": 2.0,
+            "rotationZ": 270,
+            "Material": "wood"
+        },
+        {
+            "object_name": "door_storage_to_hallway",
+            "category": "door",
+            "search_prompt": "interior hinged door, residential closet/storage door",
+            "room_id": "storage_room",
+            "X": 3.0,
+            "Y": 9.6,
+            "Length": 0.05,
+            "Width": 0.8,
+            "Height": 2.0,
+            "rotationZ": 270,
+            "Material": "wood"
+        },
+        {
+            "object_name": "door_hallway_to_closet_zone",
+            "category": "door",
+            "search_prompt": "interior hinged door, residential corridor door",
+            "room_id": "closet_zone",
+            "X": 6.8,
+            "Y": 5.8,
+            "Length": 0.05,
+            "Width": 0.8,
+            "Height": 2.0,
+            "rotationZ": 90,
+            "Material": "wood"
+        },
+        {
+            "object_name": "door_closet_zone_to_parents",
+            "category": "door",
+            "search_prompt": "interior hinged door, residential bedroom door",
+            "room_id": "parents_room",
+            "X": 8.6,
+            "Y": 5.4,
+            "Length": 0.8,
+            "Width": 0.05,
+            "Height": 2.0,
+            "rotationZ": 180,
+            "Material": "wood"
+        },
+        {
+            "object_name": "door_hallway_to_yuzuhiko",
+            "category": "door",
+            "search_prompt": "interior hinged door, residential bedroom door",
+            "room_id": "yuzuhiko_room",
+            "X": 6.8,
+            "Y": 7.3,
+            "Length": 0.05,
+            "Width": 0.8,
+            "Height": 2.0,
+            "rotationZ": 90,
+            "Material": "wood"
+        },
+        {
+            "object_name": "door_hallway_to_mikan",
+            "category": "door",
+            "search_prompt": "interior hinged door, residential bedroom door",
+            "room_id": "mikan_room",
+            "X": 6.8,
+            "Y": 10.2,
+            "Length": 0.05,
+            "Width": 0.8,
+            "Height": 2.0,
+            "rotationZ": 90,
+            "Material": "wood"
+        },
+        {
+            "object_name": "door_entrance_to_hallway",
+            "category": "door",
+            "search_prompt": "interior hinged door, residential entry-to-hallway door",
+            "room_id": "entrance",
+            "X": 4.6,
+            "Y": 10.4,
+            "Length": 0.9,
+            "Width": 0.05,
+            "Height": 2.0,
+            "rotationZ": 180,
+            "Material": "wood"
+        },
+        {
+            "object_name": "door_main_entrance_exterior",
+            "category": "door",
+            "search_prompt": "exterior front door, modern residential entry door",
+            "room_id": "entrance",
+            "X": 4.6,
+            "Y": 11.6,
+            "Length": 0.9,
+            "Width": 0.05,
+            "Height": 2.1,
+            "rotationZ": 180,
+            "Material": "metal"
+        },
+        {
+            "object_name": "door_meter_box_exterior",
+            "category": "door",
+            "search_prompt": "small exterior service door for electrical meter box",
+            "room_id": "meter_box_room",
+            "X": 1.5,
+            "Y": 11.6,
+            "Length": 0.8,
+            "Width": 0.05,
+            "Height": 2.0,
+            "rotationZ": 180,
+            "Material": "metal"
+        },
+        {
+            "object_name": "kitchen_linear_unit",
+            "category": "cabinet",
+            "search_prompt": "linear kitchen cabinet with countertop and sink, modern apartment kitchen",
+            "room_id": "kitchen",
+            "X": 0.3,
+            "Y": 3.3,
+            "Length": 0.6,
+            "Width": 3.6,
+            "Height": 0.9,
+            "rotationZ": 90,
+            "Material": "laminate"
+        },
+        {
+            "object_name": "refrigerator",
+            "category": "appliance",
+            "search_prompt": "medium size refrigerator, modern apartment, single or top-freezer style",
+            "room_id": "kitchen",
+            "X": 0.55,
+            "Y": 4.95,
+            "Length": 0.75,
+            "Width": 0.75,
+            "Height": 1.8,
+            "rotationZ": 90,
+            "Material": "metal"
+        },
+        {
+            "object_name": "kitchen_sideboard",
+            "category": "cabinet",
+            "search_prompt": "slim sideboard cabinet for kitchen storage, modern design",
+            "room_id": "kitchen",
+            "X": 2.8,
+            "Y": 3.2,
+            "Length": 0.4,
+            "Width": 1.2,
+            "Height": 0.9,
+            "rotationZ": 270,
+            "Material": "wood"
+        },
+        {
+            "object_name": "sofa",
+            "category": "sofa",
+            "search_prompt": "3-seat fabric sofa, modern living room",
+            "room_id": "living_dining",
+            "X": 4.9,
+            "Y": 4.95,
+            "Length": 2.2,
+            "Width": 0.9,
+            "Height": 0.85,
+            "rotationZ": 180,
+            "Material": "fabric"
+        },
+        {
+            "object_name": "low_table",
+            "category": "table",
+            "search_prompt": "low coffee table, rectangular, modern living room",
+            "room_id": "living_dining",
+            "X": 4.9,
+            "Y": 3.9,
+            "Length": 1.0,
+            "Width": 0.6,
+            "Height": 0.4,
+            "rotationZ": 0,
+            "Material": "wood"
+        },
+        {
+            "object_name": "tv",
+            "category": "equipment",
+            "search_prompt": "flat screen TV on low stand or wall-mounted, modern home",
+            "room_id": "living_dining",
+            "X": 6.725,
+            "Y": 3.6,
+            "Length": 0.15,
+            "Width": 1.2,
+            "Height": 0.8,
+            "rotationZ": 270,
+            "Material": "plastic"
+        },
+        {
+            "object_name": "dining_table",
+            "category": "table",
+            "search_prompt": "rectangular dining table for 4 people, modern apartment dining",
+            "room_id": "living_dining",
+            "X": 4.9,
+            "Y": 2.4,
+            "Length": 1.4,
+            "Width": 0.8,
+            "Height": 0.75,
+            "rotationZ": 0,
+            "Material": "wood"
+        },
+        {
+            "object_name": "dining_chair_north",
+            "category": "chair",
+            "search_prompt": "dining chair, simple modern design",
+            "room_id": "living_dining",
+            "X": 4.9,
+            "Y": 3.1,
+            "Length": 0.5,
+            "Width": 0.5,
+            "Height": 0.9,
+            "rotationZ": 180,
+            "Material": "wood"
+        },
+        {
+            "object_name": "dining_chair_south",
+            "category": "chair",
+            "search_prompt": "dining chair, simple modern design",
+            "room_id": "living_dining",
+            "X": 4.9,
+            "Y": 1.7,
+            "Length": 0.5,
+            "Width": 0.5,
+            "Height": 0.9,
+            "rotationZ": 0,
+            "Material": "wood"
+        },
+        {
+            "object_name": "dining_chair_west",
+            "category": "chair",
+            "search_prompt": "dining chair, simple modern design",
+            "room_id": "living_dining",
+            "X": 4.1,
+            "Y": 2.4,
+            "Length": 0.5,
+            "Width": 0.5,
+            "Height": 0.9,
+            "rotationZ": 90,
+            "Material": "wood"
+        },
+        {
+            "object_name": "dining_chair_east",
+            "category": "chair",
+            "search_prompt": "dining chair, simple modern design",
+            "room_id": "living_dining",
+            "X": 5.7,
+            "Y": 2.4,
+            "Length": 0.5,
+            "Width": 0.5,
+            "Height": 0.9,
+            "rotationZ": 270,
+            "Material": "wood"
+        },
+        {
+            "object_name": "parents_bed",
+            "category": "bed",
+            "search_prompt": "double bed with simple frame, modern bedroom",
+            "room_id": "parents_room",
+            "X": 8.2,
+            "Y": 3.6,
+            "Length": 1.6,
+            "Width": 2.0,
+            "Height": 0.6,
+            "rotationZ": 180,
+            "Material": "wood"
+        },
+        {
+            "object_name": "parents_cabinet_east",
+            "category": "cabinet",
+            "search_prompt": "tall cabinet for bedroom storage, modern design",
+            "room_id": "parents_room",
+            "X": 10.2,
+            "Y": 3.4,
+            "Length": 0.4,
+            "Width": 1.2,
+            "Height": 1.0,
+            "rotationZ": 270,
+            "Material": "wood"
+        },
+        {
+            "object_name": "parents_bookshelf_east",
+            "category": "shelf",
+            "search_prompt": "book shelf unit, tall, modern home storage",
+            "room_id": "parents_room",
+            "X": 10.25,
+            "Y": 2.0,
+            "Length": 0.3,
+            "Width": 1.0,
+            "Height": 2.0,
+            "rotationZ": 270,
+            "Material": "wood"
+        },
+        {
+            "object_name": "toilet_fixture",
+            "category": "toilet",
+            "search_prompt": "standard floor-mounted toilet with tank, modern bathroom fixture",
+            "room_id": "toilet",
+            "X": 0.9,
+            "Y": 6.0,
+            "Length": 0.7,
+            "Width": 0.7,
+            "Height": 0.8,
+            "rotationZ": 0,
+            "Material": "ceramic"
+        },
+        {
+            "object_name": "washroom_sink_vanity",
+            "category": "sink",
+            "search_prompt": "bathroom sink vanity with cabinet, compact washroom",
+            "room_id": "washroom",
+            "X": 0.9,
+            "Y": 6.85,
+            "Length": 0.6,
+            "Width": 0.5,
+            "Height": 0.85,
+            "rotationZ": 90,
+            "Material": "ceramic"
+        },
+        {
+            "object_name": "washing_machine",
+            "category": "appliance",
+            "search_prompt": "front-loading or top-loading washing machine, compact laundry appliance",
+            "room_id": "washroom",
+            "X": 0.85,
+            "Y": 7.35,
+            "Length": 0.6,
+            "Width": 0.6,
+            "Height": 0.9,
+            "rotationZ": 90,
+            "Material": "metal"
+        },
+        {
+            "object_name": "bathtub",
+            "category": "bathtub",
+            "search_prompt": "compact bathtub for apartment bathroom, modern style",
+            "room_id": "bathroom",
+            "X": 0.6,
+            "Y": 8.2,
+            "Length": 0.8,
+            "Width": 1.4,
+            "Height": 0.6,
+            "rotationZ": 90,
+            "Material": "acrylic"
+        },
+        {
+            "object_name": "storage_shelf",
+            "category": "shelf",
+            "search_prompt": "utility storage shelving unit, metal or plastic, for storage room",
+            "room_id": "storage_room",
+            "X": 1.5,
+            "Y": 9.7,
+            "Length": 0.5,
+            "Width": 1.5,
+            "Height": 1.8,
+            "rotationZ": 0,
+            "Material": "metal"
+        },
+        {
+            "object_name": "meter_box_equipment",
+            "category": "equipment",
+            "search_prompt": "electrical meter box panel, residential utility equipment",
+            "room_id": "meter_box_room",
+            "X": 1.5,
+            "Y": 11.2,
+            "Length": 1.2,
+            "Width": 0.3,
+            "Height": 1.2,
+            "rotationZ": 0,
+            "Material": "metal"
+        },
+        {
+            "object_name": "shoe_box",
+            "category": "cabinet",
+            "search_prompt": "shoe cabinet for entryway, slim modern design",
+            "room_id": "entrance",
+            "X": 6.05,
+            "Y": 11.0,
+            "Length": 0.3,
+            "Width": 1.2,
+            "Height": 1.0,
+            "rotationZ": 270,
+            "Material": "wood"
+        },
+        {
+            "object_name": "yuzuhiko_desk",
+            "category": "desk",
+            "search_prompt": "study desk for student, rectangular, modern simple design",
+            "room_id": "yuzuhiko_room",
+            "X": 7.1,
+            "Y": 7.6,
+            "Length": 1.2,
+            "Width": 0.6,
+            "Height": 0.75,
+            "rotationZ": 90,
+            "Material": "wood"
+        },
+        {
+            "object_name": "yuzuhiko_chair",
+            "category": "chair",
+            "search_prompt": "desk chair, simple ergonomic office chair without armrests",
+            "room_id": "yuzuhiko_room",
+            "X": 7.85,
+            "Y": 7.6,
+            "Length": 0.5,
+            "Width": 0.5,
+            "Height": 0.9,
+            "rotationZ": 270,
+            "Material": "fabric"
+        },
+        {
+            "object_name": "mikan_desk",
+            "category": "desk",
+            "search_prompt": "study desk for student, rectangular, modern simple design",
+            "room_id": "mikan_room",
+            "X": 9.3,
+            "Y": 9.1,
+            "Length": 1.2,
+            "Width": 0.6,
+            "Height": 0.75,
+            "rotationZ": 180,
+            "Material": "wood"
+        },
+        {
+            "object_name": "mikan_chair",
+            "category": "chair",
+            "search_prompt": "desk chair, simple ergonomic office chair without armrests",
+            "room_id": "mikan_room",
+            "X": 9.3,
+            "Y": 9.7,
+            "Length": 0.5,
+            "Width": 0.5,
+            "Height": 0.9,
+            "rotationZ": 180,
+            "Material": "fabric"
+        },
+        {
+            "object_name": "mikan_cabinet_north",
+            "category": "cabinet",
+            "search_prompt": "low storage cabinet, modern design, for bedroom",
+            "room_id": "mikan_room",
+            "X": 7.8,
+            "Y": 11.35,
+            "Length": 1.2,
+            "Width": 0.45,
+            "Height": 0.9,
+            "rotationZ": 180,
+            "Material": "wood"
+        }
+    ]
+}

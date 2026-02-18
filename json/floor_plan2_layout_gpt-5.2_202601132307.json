@@ -1,0 +1,101 @@
+{
+    "area_name": "Wheelchair_Accessible_Bedroom",
+    "X": 0.0,
+    "Y": 0.0,
+    "Z": 0.0,
+    "area_size_X": 3.2,
+    "area_size_Y": 3.2,
+    "area_objects_list": [
+        {
+            "object_name": "Floor",
+            "category": "floor",
+            "X": 0.0,
+            "Y": 0.0,
+            "Z": 0.0,
+            "Length": 3.2,
+            "Width": 3.2,
+            "Height": 0,
+            "rotationZ": 0,
+            "Material": "Concrete_Polished",
+            "search_prompt": "flat floor surface for a wheelchair accessible bedroom, suitable for hospital or nursing environment"
+        },
+        {
+            "object_name": "Electric_Care_Bed",
+            "category": "bed",
+            "X": -1.0,
+            "Y": 0.625,
+            "Z": 0.0,
+            "Length": 1.2,
+            "Width": 1.95,
+            "Height": 0.4,
+            "rotationZ": 180,
+            "Material": "Cloth_Gray",
+            "search_prompt": "electric nursing care bed with side rails for elderly or mobility impaired user, single size, simple light bedding"
+        },
+        {
+            "object_name": "Wall_Mounted_TV",
+            "category": "appliance",
+            "X": 1.425,
+            "Y": 0.4,
+            "Z": 0.0,
+            "Length": 0.35,
+            "Width": 1.2,
+            "Height": 0.7,
+            "rotationZ": 90,
+            "Material": "Plastic_ABS",
+            "search_prompt": "wall-mounted flat screen TV for bedroom, black frame, slim modern design"
+        },
+        {
+            "object_name": "Compact_Refrigerator",
+            "category": "appliance",
+            "X": 0.725,
+            "Y": 1.35,
+            "Z": 0.0,
+            "Length": 0.55,
+            "Width": 0.5,
+            "Height": 1.2,
+            "rotationZ": 180,
+            "Material": "Steel_Stainless",
+            "search_prompt": "compact refrigerator for patient room or small bedroom, stainless steel finish, single door"
+        },
+        {
+            "object_name": "Simple_Visitor_Chair",
+            "category": "chair",
+            "X": -0.15,
+            "Y": 1.35,
+            "Z": 0.0,
+            "Length": 0.5,
+            "Width": 0.5,
+            "Height": 0.8,
+            "rotationZ": 270,
+            "Material": "Linen_Beige",
+            "search_prompt": "simple upholstered chair for small bedroom or patient room, stable frame, neutral fabric"
+        },
+        {
+            "object_name": "Low_Drawer_Cabinet",
+            "category": "drawer",
+            "X": -1.15,
+            "Y": -1.375,
+            "Z": 0.0,
+            "Length": 0.9,
+            "Width": 0.45,
+            "Height": 0.96,
+            "rotationZ": 0,
+            "Material": "Veneer_UX_Walnut_Cherry",
+            "search_prompt": "low wooden drawer cabinet for bedroom storage, dark walnut or cherry veneer, simple handles"
+        },
+        {
+            "object_name": "Entry_Swing_Door",
+            "category": "door",
+            "X": 1.1,
+            "Y": -1.575,
+            "Z": 0.0,
+            "Length": 0.8,
+            "Width": 0.05,
+            "Height": 2.2,
+            "rotationZ": 0,
+            "Material": "Oak",
+            "search_prompt": "interior swing door for bedroom entry, wooden oak finish, simple modern style"
+        }
+    ]
+}

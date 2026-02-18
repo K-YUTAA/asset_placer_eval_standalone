@@ -1,0 +1,189 @@
+AI Layout Generation Log
+timestamp: 20260124_165109_312431
+
+[AI Settings]
+step1_model: gpt-5.2
+step2_model: gpt-5.2
+reasoning_effort: high
+text_verbosity: high
+image_detail: high
+max_output_tokens: 48000
+max_retries: 1
+retry_delay_sec: 1.0
+
+[Step 1 Stats]
+time_sec: 39.94599175453186
+input_tokens: 1652
+output_tokens: 1296
+total_tokens: 2948
+
+[Step 2 Stats]
+time_sec: 172.50454688072205
+input_tokens: 3136
+output_tokens: 6386
+total_tokens: 9522
+
+[Total Stats]
+time_sec: 212.4505386352539
+input_tokens: 4788
+output_tokens: 7682
+total_tokens: 12470
+
+[Analysis Text]
+- Studio (Living/Dining/Kitchen) overall room rectangle; center (2.5, 4.5), size ≈ (5.0m x 9.0m), walls on x=0/5.0 and y=0/9.0; circulation mainly along right side.
+- Entrance Door (right wall); center (5.0, 7.8), opening width ≈0.9m, swings outward/right; connects into upper-right of room.
+- Window-1 (top wall); center (3.3, 9.0), opening width ≈1.2m; place sill/head z≈1.0–2.0m.
+- Window-2 (left wall); center (0.0, 3.6), opening height along wall ≈1.6m; place sill/head z≈1.0–2.0m.
+- Cupboard (storage, top-left along north wall); center (1.4, 8.6), size ≈(2.6m x 0.6m), oriented along X.
+- Kitchen unit (counter run along left wall, upper); center (1.2, 6.9), size ≈(2.4m x 0.6m), oriented along Y (depth); faces right into room.
+- Peninsula / island attached to kitchen (center-left); center (2.0, 6.0), size ≈(0.9m x 2.0m), oriented along Y; serves as prep/bar edge toward dining.
+- Dining table + 4 dining chairs (mid-upper); table center (2.4, 5.1) size ≈(0.9m x 1.6m) oriented along Y; chairs roughly at (1.5,5.3),(1.5,4.9),(3.3,5.3),(3.3,4.9).
+- Living zone: TV console along left wall + low table + sofa; TV center (0.7, 2.8) size ≈(1.4m x 0.3m) facing right, low table center (2.7, 2.2) size ≈(1.1m x 0.6m), sofa center (3.9, 2.2) size ≈(2.2m x 0.9m) facing left toward TV.
+- House plant (bottom-left corner accent); center (0.7, 0.6), footprint ≈(0.6m x 0.6m), keep clear of left-wall window path.
+
+[AABB Collisions]
+- cupboard_storage vs kitchen_base_unit: overlap_volume=1.2419999999999998
+- cupboard_storage vs dining_table_island: overlap_volume=0.405
+- cupboard_storage vs dining_chair_left_upper: overlap_volume=0.225
+- cupboard_storage vs dining_chair_left_lower: overlap_volume=0.225
+- cupboard_storage vs dining_chair_right_upper: overlap_volume=0.02250000000000012
+- cupboard_storage vs dining_chair_right_lower: overlap_volume=0.02250000000000012
+- cupboard_storage vs tv_display: overlap_volume=0.096
+- cupboard_storage vs coffee_table_low: overlap_volume=0.09450000000000003
+- cupboard_storage vs house_plant_pot: overlap_volume=0.43200000000000005
+- kitchen_base_unit vs dining_table_island: overlap_volume=0.38249999999999995
+- kitchen_base_unit vs dining_chair_left_upper: overlap_volume=0.225
+- kitchen_base_unit vs dining_chair_left_lower: overlap_volume=0.225
+- kitchen_base_unit vs tv_display: overlap_volume=0.096
+- kitchen_base_unit vs coffee_table_low: overlap_volume=0.03149999999999998
+- kitchen_base_unit vs house_plant_pot: overlap_volume=0.32400000000000007
+- dining_table_island vs coffee_table_low: overlap_volume=0.04200000000000004
+- dining_chair_left_upper vs dining_chair_left_lower: overlap_volume=0.225
+- dining_chair_left_upper vs house_plant_pot: overlap_volume=0.06749999999999996
+- dining_chair_left_lower vs house_plant_pot: overlap_volume=0.06749999999999996
+- dining_chair_right_upper vs dining_chair_right_lower: overlap_volume=0.225
+- dining_chair_right_upper vs coffee_table_low: overlap_volume=0.0875
+- dining_chair_right_lower vs coffee_table_low: overlap_volume=0.0875
+
+[Room Size]
+area_size_X: 5.0
+area_size_Y: 9.0
+
+[Inputs]
+image_path: C:/Users/tmaru/isaacsim/inputs_isaac/living_room2.jpeg
+
+[dimensions.txt]
+家具の大きさは一般的に考えて常識的なサイズで推論してください。
+また、部屋のサイズもそれに応じてお願いします。
+窓の高さはzが1m~2mの間に設置してください
+
+[prompt1]
+You are an interior layout analyst. Provide a concise summary for layout generation.
+- Coordinate system: X = right, Y = up in the image (depth), Z = up.
+- Origin: lower-left inner corner of the overall plan.
+- Units: meters.
+- If the floor plan has multiple rooms, identify each room and its boundary lines and openings.
+- Output format: 8-14 bullet lines max. Each line: room name (if any), key objects, approx center (x,y),
+  approx size (LxW), and orientation/opening notes if obvious.
+- No long explanations, no headings, no tables.
+
+
+[prompt2]
+system_input='''You are a 2D layout-to-3D scene expert. Your task is to interpret a top-down 2D floor plan
+and output a JSON scene description. The top-down view of the resulting 3D scene must match the plan.
+
+Coordinate system (Z-Up, Isaac Sim):
+- X: right (+X), left (-X)
+- Y: up in the image / depth (+Y)
+- Z: up (height)
+- Origin (0,0): lower-left inner corner of the overall plan
+
+CRITICAL UNIT RULE:
+- All coordinates and dimensions must be in METERS.
+- If input is in cm, convert to meters (e.g., 250 cm -> 2.5).
+
+Do NOT output any prose. Output MUST be valid JSON only.
+
+MULTI-ROOM JSON SCHEMA (preferred):
+{
+  "area_name": string,
+  "area_size_X": number,  // meters (overall)
+  "area_size_Y": number,  // meters (overall)
+  "room_polygon": [        // optional single-room fallback
+    { "X": number, "Y": number }
+  ],
+  "outer_polygon": [       // preferred building outline (may be concave)
+    { "X": number, "Y": number }
+  ],
+  "rooms": [               // preferred for multi-room plans
+    {
+      "room_id": string,
+      "room_name": string (optional),
+      "room_polygon": [ { "X": number, "Y": number } ],
+      "openings": [        // doors/windows on room boundary
+        { "type": "door"|"window", "X": number, "Y": number,
+          "Width": number, "Height": number, "SillHeight": number }
+      ]
+    }
+  ],
+  "windows": [             // optional global window openings
+    { "X": number, "Y": number, "Width": number, "Height": number, "SillHeight": number }
+  ],
+  "area_objects_list": [
+    {
+      "object_name": string,
+      "category": string,
+      "search_prompt": string,
+      "room_id": string (optional),
+      "X": number,      // meters
+      "Y": number,      // meters
+      "Length": number, // meters (X-axis size)
+      "Width": number,  // meters (Y-axis size)
+      "Height": number, // meters (Z-axis size)
+      "rotationZ": number,  // degrees: 0/90/180/270
+      "Material": string (optional)
+    }
+  ]
+}
+
+Placement rules:
+1) The image is an XY top-down plan. Preserve the layout as drawn.
+2) Right in the image is +X. Up in the image is +Y.
+3) Use Length for the X-axis size, Width for the Y-axis size, Height for Z.
+4) Do NOT output any "wall" objects. Walls are procedural from room polygons.
+5) Doors/windows: include them in room openings when visible. Do NOT invent openings.
+6) Keep object placement faithful to the drawing. Do not move objects to fix collisions.
+7) Room polygons must not overlap. Adjacent rooms should share the exact same boundary coordinates.
+8) Openings must lie exactly on a room boundary edge (same X or same Y for axis-aligned walls).
+   If a door is between two rooms, place it on the shared edge (can appear in both rooms or once).
+9) If the building outline is not a rectangle, include "outer_polygon" with the true outline (concave allowed).
+   Do NOT approximate the outer boundary as a rectangle.
+
+Functional orientation (rotationZ):
+- 0 degrees: faces +Y (image up)
+- 90 degrees: faces +X (image right)
+- 180 degrees: faces -Y (image down)
+- 270 degrees: faces -X (image left)
+
+Define functional front per category:
+- Bed: direction a person faces from head to foot.
+- Chair/Sofa: direction a seated person faces.
+- TV/Display: direction the screen faces.
+- Door: direction the door opens into the room (interior).
+- Refrigerator/Drawer/Cabinet: direction the front opens.
+
+Categories (use one of these unless absolutely necessary):
+bed, table, desk, chair, sofa, wardrobe, drawer, shelf, cabinet, wheelchair,
+toilet, sink, bathtub, shower, door, window, floor, appliance, equipment, other_furniture
+
+search_prompt guidelines:
+- Write mainly in English.
+- Describe object type, usage context, and key attributes.
+- Do NOT describe relative placement in this specific room.
+
+Remember: Output a single JSON object ONLY.
+'''
+
+user_input='''You have been provided a floor plan image and a list of dimensions.
+Analyze the image to determine precise placement and orientation of each object.
+Then generate the JSON output following the system instructions.'''

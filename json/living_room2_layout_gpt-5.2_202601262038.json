@@ -1,0 +1,231 @@
+{
+    "area_name": "Open-plan Kitchen Dining Living",
+    "area_size_X": 5.6,
+    "area_size_Y": 9.2,
+    "outer_polygon": [
+        {
+            "X": 0.0,
+            "Y": 0.0
+        },
+        {
+            "X": 5.6,
+            "Y": 0.0
+        },
+        {
+            "X": 5.6,
+            "Y": 9.2
+        },
+        {
+            "X": 0.0,
+            "Y": 9.2
+        }
+    ],
+    "rooms": [
+        {
+            "room_id": "room_1",
+            "room_name": "OpenPlan",
+            "room_polygon": [
+                {
+                    "X": 0.0,
+                    "Y": 0.0
+                },
+                {
+                    "X": 5.6,
+                    "Y": 0.0
+                },
+                {
+                    "X": 5.6,
+                    "Y": 9.2
+                },
+                {
+                    "X": 0.0,
+                    "Y": 9.2
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 5.6,
+                    "Y": 7.25,
+                    "Width": 0.9,
+                    "Height": 2.1,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "window",
+                    "X": 3.7,
+                    "Y": 9.2,
+                    "Width": 1.6,
+                    "Height": 1.0,
+                    "SillHeight": 1.0
+                },
+                {
+                    "type": "window",
+                    "X": 0.0,
+                    "Y": 2.7,
+                    "Width": 1.8,
+                    "Height": 1.0,
+                    "SillHeight": 1.0
+                }
+            ]
+        }
+    ],
+    "area_objects_list": [
+        {
+            "object_name": "entry_door",
+            "category": "door",
+            "search_prompt": "Interior single swing entry door, modern, plain surface, 0.9m width",
+            "room_id": "room_1",
+            "X": 5.6,
+            "Y": 7.25,
+            "Length": 0.04,
+            "Width": 0.9,
+            "Height": 2.1,
+            "rotationZ": 270,
+            "Material": "wood"
+        },
+        {
+            "object_name": "cupboard_top_left",
+            "category": "cabinet",
+            "search_prompt": "Tall storage cupboard cabinet for kitchen, wall-aligned, multiple doors, modern style",
+            "room_id": "room_1",
+            "X": 1.6,
+            "Y": 8.8,
+            "Length": 3.2,
+            "Width": 0.6,
+            "Height": 2.2,
+            "rotationZ": 180,
+            "Material": "laminate"
+        },
+        {
+            "object_name": "kitchen_unit_left_upper",
+            "category": "cabinet",
+            "search_prompt": "Kitchen base cabinet run with countertop, modern, includes drawers and doors, standard counter height",
+            "room_id": "room_1",
+            "X": 1.4,
+            "Y": 6.8,
+            "Length": 2.8,
+            "Width": 0.6,
+            "Height": 0.9,
+            "rotationZ": 180,
+            "Material": "laminate"
+        },
+        {
+            "object_name": "dining_table_peninsula",
+            "category": "table",
+            "search_prompt": "Dining table / peninsula table, rectangular, seats four, modern simple design",
+            "room_id": "room_1",
+            "X": 2.3,
+            "Y": 5.2,
+            "Length": 0.9,
+            "Width": 1.8,
+            "Height": 0.75,
+            "rotationZ": 0,
+            "Material": "wood"
+        },
+        {
+            "object_name": "dining_chair_left_upper",
+            "category": "chair",
+            "search_prompt": "Dining chair, armless, modern, compact size",
+            "room_id": "room_1",
+            "X": 1.55,
+            "Y": 5.8,
+            "Length": 0.45,
+            "Width": 0.45,
+            "Height": 0.9,
+            "rotationZ": 90,
+            "Material": "wood"
+        },
+        {
+            "object_name": "dining_chair_left_lower",
+            "category": "chair",
+            "search_prompt": "Dining chair, armless, modern, compact size",
+            "room_id": "room_1",
+            "X": 1.55,
+            "Y": 4.6,
+            "Length": 0.45,
+            "Width": 0.45,
+            "Height": 0.9,
+            "rotationZ": 90,
+            "Material": "wood"
+        },
+        {
+            "object_name": "dining_chair_right_upper",
+            "category": "chair",
+            "search_prompt": "Dining chair, armless, modern, compact size",
+            "room_id": "room_1",
+            "X": 3.05,
+            "Y": 5.8,
+            "Length": 0.45,
+            "Width": 0.45,
+            "Height": 0.9,
+            "rotationZ": 270,
+            "Material": "wood"
+        },
+        {
+            "object_name": "dining_chair_right_lower",
+            "category": "chair",
+            "search_prompt": "Dining chair, armless, modern, compact size",
+            "room_id": "room_1",
+            "X": 3.05,
+            "Y": 4.6,
+            "Length": 0.45,
+            "Width": 0.45,
+            "Height": 0.9,
+            "rotationZ": 270,
+            "Material": "wood"
+        },
+        {
+            "object_name": "tv_console_left_wall",
+            "category": "equipment",
+            "search_prompt": "Flat screen TV on low media console, modern minimalist, living room entertainment unit",
+            "room_id": "room_1",
+            "X": 0.6,
+            "Y": 3.2,
+            "Length": 0.3,
+            "Width": 1.4,
+            "Height": 1.1,
+            "rotationZ": 90,
+            "Material": "plastic"
+        },
+        {
+            "object_name": "sofa_right_lower",
+            "category": "sofa",
+            "search_prompt": "2 to 3 seat sofa, modern, straight design, upholstered, living room seating",
+            "room_id": "room_1",
+            "X": 4.4,
+            "Y": 2.4,
+            "Length": 0.9,
+            "Width": 2.1,
+            "Height": 0.85,
+            "rotationZ": 270,
+            "Material": "fabric"
+        },
+        {
+            "object_name": "low_table_center",
+            "category": "table",
+            "search_prompt": "Low coffee table, rectangular, modern simple design, living room",
+            "room_id": "room_1",
+            "X": 3.0,
+            "Y": 2.4,
+            "Length": 0.6,
+            "Width": 1.1,
+            "Height": 0.4,
+            "rotationZ": 0,
+            "Material": "wood"
+        },
+        {
+            "object_name": "house_plant_bottom_left",
+            "category": "other_furniture",
+            "search_prompt": "Indoor potted house plant, medium size, decorative living room plant in round pot",
+            "room_id": "room_1",
+            "X": 0.9,
+            "Y": 0.7,
+            "Length": 0.5,
+            "Width": 0.5,
+            "Height": 1.2,
+            "rotationZ": 0,
+            "Material": "ceramic"
+        }
+    ]
+}

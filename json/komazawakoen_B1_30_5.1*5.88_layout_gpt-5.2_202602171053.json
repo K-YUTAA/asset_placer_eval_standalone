@@ -1,0 +1,239 @@
+{
+    "area_name": "bedroom_toilet_unit",
+    "area_size_X": 5.88,
+    "area_size_Y": 5.1,
+    "size_mode": "local",
+    "outer_polygon": [
+        {
+            "X": 0.0,
+            "Y": 0.0
+        },
+        {
+            "X": 5.88,
+            "Y": 0.0
+        },
+        {
+            "X": 5.88,
+            "Y": 5.1
+        },
+        {
+            "X": 0.0,
+            "Y": 5.1
+        }
+    ],
+    "rooms": [
+        {
+            "room_id": "room_1",
+            "room_name": "bedroom",
+            "room_polygon": [
+                {
+                    "X": 0.0,
+                    "Y": 0.0
+                },
+                {
+                    "X": 0.0,
+                    "Y": 3.0
+                },
+                {
+                    "X": 1.8,
+                    "Y": 3.0
+                },
+                {
+                    "X": 1.8,
+                    "Y": 5.1
+                },
+                {
+                    "X": 5.88,
+                    "Y": 5.1
+                },
+                {
+                    "X": 5.88,
+                    "Y": 0.0
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 2.94,
+                    "Y": 5.1,
+                    "Width": 1.8,
+                    "Height": 2.1,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "window",
+                    "X": 1.9,
+                    "Y": 0.0,
+                    "Width": 2.7,
+                    "Height": 1.2,
+                    "SillHeight": 1.0
+                }
+            ]
+        },
+        {
+            "room_id": "room_2",
+            "room_name": "toilet",
+            "room_polygon": [
+                {
+                    "X": 0.0,
+                    "Y": 3.0
+                },
+                {
+                    "X": 0.0,
+                    "Y": 5.1
+                },
+                {
+                    "X": 1.8,
+                    "Y": 5.1
+                },
+                {
+                    "X": 1.8,
+                    "Y": 3.0
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 1.8,
+                    "Y": 4.55,
+                    "Width": 0.7,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                }
+            ]
+        }
+    ],
+    "area_objects_list": [
+        {
+            "object_name": "floor_1",
+            "category": "floor",
+            "search_prompt": "floor plane",
+            "X": 2.94,
+            "Y": 2.55,
+            "Length": 5.88,
+            "Width": 5.1,
+            "Height": 0.05,
+            "rotationZ": 0
+        },
+        {
+            "object_name": "bed_1",
+            "category": "bed",
+            "search_prompt": "single bed",
+            "room_id": "room_1",
+            "X": 4.9,
+            "Y": 2.45,
+            "Length": 1.2,
+            "Width": 2.1,
+            "Height": 0.6,
+            "rotationZ": 180
+        },
+        {
+            "object_name": "sofa_1",
+            "category": "sofa",
+            "search_prompt": "two seat sofa",
+            "room_id": "room_1",
+            "X": 2.75,
+            "Y": 2.5,
+            "Length": 2.0,
+            "Width": 0.9,
+            "Height": 0.85,
+            "rotationZ": 270
+        },
+        {
+            "object_name": "table_1",
+            "category": "table",
+            "search_prompt": "coffee table",
+            "room_id": "room_1",
+            "X": 1.65,
+            "Y": 2.5,
+            "Length": 0.9,
+            "Width": 0.7,
+            "Height": 0.45,
+            "rotationZ": 0
+        },
+        {
+            "object_name": "tv_cabinet_1",
+            "category": "cabinet",
+            "search_prompt": "low tv cabinet",
+            "room_id": "room_1",
+            "X": 0.23,
+            "Y": 1.55,
+            "Length": 1.6,
+            "Width": 0.46,
+            "Height": 0.6,
+            "rotationZ": 90
+        },
+        {
+            "object_name": "sink_unit_1",
+            "category": "sink",
+            "search_prompt": "sink vanity cabinet",
+            "room_id": "room_1",
+            "X": 3.85,
+            "Y": 4.8,
+            "Length": 1.3,
+            "Width": 0.6,
+            "Height": 0.9,
+            "rotationZ": 180
+        },
+        {
+            "object_name": "storage_cabinet_1",
+            "category": "cabinet",
+            "search_prompt": "tall storage cabinet",
+            "room_id": "room_1",
+            "X": 5.15,
+            "Y": 4.8,
+            "Length": 1.3,
+            "Width": 0.6,
+            "Height": 2.0,
+            "rotationZ": 180
+        },
+        {
+            "object_name": "toilet_1",
+            "category": "toilet",
+            "search_prompt": "toilet fixture",
+            "room_id": "room_2",
+            "X": 0.75,
+            "Y": 4.45,
+            "Length": 0.7,
+            "Width": 1.1,
+            "Height": 0.8,
+            "rotationZ": 180
+        },
+        {
+            "object_name": "door_1",
+            "category": "door",
+            "search_prompt": "sliding door",
+            "room_id": "room_1",
+            "X": 2.94,
+            "Y": 5.1,
+            "Length": 1.8,
+            "Width": 0.05,
+            "Height": 2.1,
+            "rotationZ": 180
+        },
+        {
+            "object_name": "door_2",
+            "category": "door",
+            "search_prompt": "interior hinged door",
+            "room_id": "room_2",
+            "X": 1.8,
+            "Y": 4.55,
+            "Length": 0.7,
+            "Width": 0.05,
+            "Height": 2.0,
+            "rotationZ": 90
+        },
+        {
+            "object_name": "window_1",
+            "category": "window",
+            "search_prompt": "window",
+            "room_id": "room_1",
+            "X": 1.9,
+            "Y": 0.0,
+            "Length": 2.7,
+            "Width": 0.05,
+            "Height": 1.2,
+            "rotationZ": 0
+        }
+    ]
+}

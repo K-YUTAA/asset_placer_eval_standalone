@@ -1,0 +1,247 @@
+AI Layout Generation Log
+timestamp: 20260125_205855_463360
+
+[AI Settings]
+step1_model: gpt-5.2
+step2_model: gpt-5.2
+reasoning_effort: high
+text_verbosity: high
+image_detail: high
+max_output_tokens: 36000
+max_retries: 1
+retry_delay_sec: 1.0
+
+[Step 1 Stats]
+time_sec: 176.9759976863861
+input_tokens: 1921
+output_tokens: 6281
+total_tokens: 8202
+
+[Step 2 Stats]
+time_sec: 488.90929889678955
+input_tokens: 3614
+output_tokens: 21316
+total_tokens: 24930
+
+[Total Stats]
+time_sec: 665.8852965831757
+input_tokens: 5535
+output_tokens: 27597
+total_tokens: 33132
+
+[Analysis Text]
+- Garage：車1台；中心(4.0,5.0)；約8.0×10.0；西側に大型開口（車庫扉）想定、東側で住居側へ接続動線  
+- Entrance/玄関：下足収納；中心(9.4,6.9)；約2.8×1.8；西壁に主出入口、東へ廊下ドア  
+- Hallway/廊下：各室への分岐；中心(11.9,6.9)；約2.2×1.8；南(−Y)にLD、北/東に各個室・水回りドア  
+- Living/Dining（LD一体）：ソファ・TV・ローテーブル・4人掛けテーブル；中心(12.0,2.4)；約8.0×4.8；南外壁(y≈0)に連続窓、左外壁(x≈8)にも窓（窓高さz=1–2m）  
+- Kitchen：I型/アイランド（シンク・コンロ）＋冷蔵庫；中心(17.5,2.4)；約3.0×4.8；西でLDとオープン接続、南外壁に窓（z=1–2m）  
+- Storage/納戸：可動棚想定；中心(19.9,2.4)；約1.8×4.8；北側(y≈4.8付近)から出入口、キッチン隣接  
+- Bedroom（北中央）：ダブルベッド＋クローゼット；中心(15.0,8.0)；約4.0×4.0；北外壁(y≈10)に窓（z=1–2m）、南側から入室ドア  
+- Bath/Washroom（浴室＋洗面）：浴槽＋洗面台；中心(18.3,8.0)；約2.5×4.0；廊下側からドア、北外壁に窓（z=1–2m）  
+- Toilet + Laundry washroom：便器＋洗濯機＋小型洗面；中心(20.2,8.0)；約1.3×4.0；廊下側からドア、北外壁に窓（z=1–2m）  
+- Closets（右中段/収納列）：両開きクローゼット群；中心(22.4,5.4)；約3.2×1.2；扉は南側（廊下/各室側）に開口  
+- Bedroom NE（北東）：ベッド＋クローゼット；中心(22.4,8.0)；約3.2×4.0；北外壁＋東外壁(x≈24)に窓（z=1–2m）、西側に出入口  
+- Bedroom SE（南東）：ベッド＋デスク/チェア；中心(22.4,2.4)；約3.2×4.8；南外壁(y≈0)＋東外壁に窓（z=1–2m）、北/西側に出入口
+
+[AABB Collisions]
+- shoe_cabinet_01 vs tv_stand_01: overlap_volume=0.06737499999999993
+- shoe_cabinet_01 vs tv_01: overlap_volume=0.009099999999999945
+- shoe_cabinet_01 vs coffee_table_01: overlap_volume=0.02800000000000015
+- door_main_entrance vs tv_stand_01: overlap_volume=0.011000000000000157
+- door_main_entrance vs tv_01: overlap_volume=0.002600000000000037
+- door_entrance_to_hallway vs sofa_01: overlap_volume=0.03825000000000054
+- door_entrance_to_hallway vs coffee_table_01: overlap_volume=0.01200000000000017
+- door_hallway_to_corridor vs door_corridor_to_living: overlap_volume=0.08999999999999986
+- door_hallway_to_corridor vs sofa_01: overlap_volume=0.038249999999999944
+- door_corridor_to_living vs sofa_01: overlap_volume=0.038249999999999944
+- door_corridor_to_storage vs door_corridor_to_toilet: overlap_volume=0.04499999999999993
+- door_corridor_to_storage vs storage_shelf_01: overlap_volume=0.03500000000000014
+- door_corridor_to_storage vs storage_shelf_02: overlap_volume=0.03499999999999979
+- door_corridor_to_storage vs toilet_01: overlap_volume=0.021999999999999888
+- door_corridor_to_storage vs washing_machine_01: overlap_volume=0.013499999999999873
+- door_corridor_to_storage vs laundry_sink_01: overlap_volume=0.02025000000000013
+- door_corridor_to_bedroom_north vs dining_table_01: overlap_volume=0.005625000000000014
+- door_corridor_to_bedroom_north vs dining_chair_02: overlap_volume=0.005624999999999921
+- door_corridor_to_bedroom_north vs dining_chair_04: overlap_volume=0.005624999999999921
+- door_corridor_to_bedroom_north vs bed_north_01: overlap_volume=0.026999999999999958
+- door_corridor_to_bathroom vs kitchen_island_01: overlap_volume=0.02699999999999991
+- door_corridor_to_bathroom vs refrigerator_01: overlap_volume=0.04499999999999968
+- door_corridor_to_bathroom vs bathtub_01: overlap_volume=0.020999999999999977
+- door_corridor_to_bathroom vs bathroom_sink_01: overlap_volume=0.03599999999999987
+- door_corridor_to_toilet vs storage_shelf_01: overlap_volume=3.552713678800501e-16
+- door_corridor_to_toilet vs storage_shelf_02: overlap_volume=0.05
+- door_corridor_to_toilet vs toilet_01: overlap_volume=0.0240000000000002
+- door_corridor_to_toilet vs washing_machine_01: overlap_volume=0.024750000000000036
+- door_corridor_to_toilet vs laundry_sink_01: overlap_volume=0.007875000000000193
+- door_corridor_to_closet_row vs desk_se_01: overlap_volume=0.02249999999999872
+- door_closet_row_to_bedroom_se vs door_closet_row_to_bedroom_ne: overlap_volume=0.08999999999999986
+- door_closet_row_to_bedroom_se vs bed_ne_01: overlap_volume=0.025499999999999936
+- door_closet_row_to_bedroom_se vs wardrobe_ne_01: overlap_volume=0.005000000000000071
+- door_closet_row_to_bedroom_se vs bed_se_01: overlap_volume=0.02400000000000002
+- door_closet_row_to_bedroom_se vs desk_se_01: overlap_volume=0.015000000000000081
+- door_closet_row_to_bedroom_se vs chair_se_01: overlap_volume=0.022500000000000003
+- door_closet_row_to_bedroom_ne vs bed_ne_01: overlap_volume=0.025499999999999936
+- door_closet_row_to_bedroom_ne vs wardrobe_ne_01: overlap_volume=0.005000000000000071
+- door_closet_row_to_bedroom_ne vs bed_se_01: overlap_volume=0.02400000000000002
+- door_closet_row_to_bedroom_ne vs desk_se_01: overlap_volume=0.015000000000000081
+- door_closet_row_to_bedroom_ne vs chair_se_01: overlap_volume=0.022500000000000003
+- tv_stand_01 vs tv_01: overlap_volume=0.045099999999999946
+- sofa_01 vs coffee_table_01: overlap_volume=0.09600000000000009
+- dining_table_01 vs dining_chair_01: overlap_volume=0.15187499999999976
+- dining_table_01 vs dining_chair_02: overlap_volume=0.15187499999999976
+- dining_table_01 vs dining_chair_03: overlap_volume=0.15187499999999976
+- dining_table_01 vs dining_chair_04: overlap_volume=0.15187499999999976
+- dining_table_01 vs bed_north_01: overlap_volume=0.3780000000000006
+- dining_table_01 vs wardrobe_north_01: overlap_volume=0.37125000000000047
+- dining_chair_01 vs dining_chair_03: overlap_volume=0.18224999999999972
+- dining_chair_01 vs wardrobe_north_01: overlap_volume=0.18224999999999972
+- dining_chair_02 vs dining_chair_04: overlap_volume=0.18224999999999972
+- dining_chair_02 vs bed_north_01: overlap_volume=0.12149999999999982
+- dining_chair_03 vs wardrobe_north_01: overlap_volume=0.18224999999999972
+- dining_chair_04 vs bed_north_01: overlap_volume=0.12149999999999982
+- kitchen_island_01 vs refrigerator_01: overlap_volume=0.2024999999999981
+- kitchen_island_01 vs bathtub_01: overlap_volume=0.6749999999999999
+- kitchen_island_01 vs bathroom_sink_01: overlap_volume=0.31499999999999967
+- refrigerator_01 vs bathtub_01: overlap_volume=0.17999999999999935
+- refrigerator_01 vs bathroom_sink_01: overlap_volume=0.2699999999999991
+- storage_shelf_01 vs toilet_01: overlap_volume=0.05600000000000079
+- storage_shelf_01 vs laundry_sink_01: overlap_volume=0.08662500000000066
+- storage_shelf_02 vs toilet_01: overlap_volume=0.27999999999999997
+- storage_shelf_02 vs washing_machine_01: overlap_volume=0.2429999999999996
+- storage_shelf_02 vs laundry_sink_01: overlap_volume=0.023625000000000895
+- bathtub_01 vs bathroom_sink_01: overlap_volume=0.2400000000000002
+- toilet_01 vs washing_machine_01: overlap_volume=0.21600000000000139
+- toilet_01 vs laundry_sink_01: overlap_volume=0.0770000000000006
+- washing_machine_01 vs laundry_sink_01: overlap_volume=0.007875000000000671
+- bed_ne_01 vs bed_se_01: overlap_volume=1.8720000000000028
+- bed_ne_01 vs desk_se_01: overlap_volume=0.1260000000000005
+- bed_ne_01 vs chair_se_01: overlap_volume=0.15
+- wardrobe_ne_01 vs desk_se_01: overlap_volume=0.27000000000000063
+- bed_se_01 vs desk_se_01: overlap_volume=0.10800000000000153
+- bed_se_01 vs chair_se_01: overlap_volume=0.15
+- desk_se_01 vs chair_se_01: overlap_volume=0.09375000000000133
+
+[Room Size]
+area_size_X: 24.0
+area_size_Y: 10.0
+
+[Inputs]
+image_path: C:/Users/tmaru/isaacsim/inputs_isaac/house_garage.jpeg
+
+[dimensions.txt]
+家具の大きさは一般的に考えて常識的なサイズで推論してください。
+また、部屋のサイズもそれに応じてお願いします。
+窓の高さはzが1m~2mの間に設置してください
+
+[prompt1]
+You are an interior layout analyst. Provide a concise summary for layout generation.
+- Coordinate system: X = right, Y = up in the image (depth), Z = up.
+- Origin: lower-left inner corner of the overall plan.
+- Units: meters.
+- If the floor plan has multiple rooms, identify each room and its boundary lines and openings.
+- Output format: 8-14 bullet lines max. Each line: room name (if any), key objects, approx center (x,y),
+  approx size (LxW), and orientation/opening notes if obvious.
+- No long explanations, no headings, no tables.
+
+
+[prompt2]
+system_input='''You are a 2D layout-to-3D scene expert. Your task is to interpret a top-down 2D floor plan
+and output a JSON scene description. The top-down view of the resulting 3D scene must match the plan.
+
+Coordinate system (Z-Up, Isaac Sim):
+- X: right (+X), left (-X)
+- Y: up in the image / depth (+Y)
+- Z: up (height)
+- Origin (0,0): lower-left inner corner of the overall plan
+
+CRITICAL UNIT RULE:
+- All coordinates and dimensions must be in METERS.
+- If input is in cm, convert to meters (e.g., 250 cm -> 2.5).
+
+Do NOT output any prose. Output MUST be valid JSON only.
+
+MULTI-ROOM JSON SCHEMA (preferred):
+{
+  "area_name": string,
+  "area_size_X": number,  // meters (overall)
+  "area_size_Y": number,  // meters (overall)
+  "room_polygon": [        // optional single-room fallback
+    { "X": number, "Y": number }
+  ],
+  "outer_polygon": [       // preferred building outline (may be concave)
+    { "X": number, "Y": number }
+  ],
+  "rooms": [               // preferred for multi-room plans
+    {
+      "room_id": string,
+      "room_name": string (optional),
+      "room_polygon": [ { "X": number, "Y": number } ],
+      "openings": [        // doors/windows on room boundary
+        { "type": "door"|"window", "X": number, "Y": number,
+          "Width": number, "Height": number, "SillHeight": number }
+      ]
+    }
+  ],
+  "windows": [             // optional global window openings
+    { "X": number, "Y": number, "Width": number, "Height": number, "SillHeight": number }
+  ],
+  "area_objects_list": [
+    {
+      "object_name": string,
+      "category": string,
+      "search_prompt": string,
+      "room_id": string (optional),
+      "X": number,      // meters
+      "Y": number,      // meters
+      "Length": number, // meters (X-axis size)
+      "Width": number,  // meters (Y-axis size)
+      "Height": number, // meters (Z-axis size)
+      "rotationZ": number,  // degrees: 0/90/180/270
+      "Material": string (optional)
+    }
+  ]
+}
+
+Placement rules:
+1) The image is an XY top-down plan. Preserve the layout as drawn.
+2) Right in the image is +X. Up in the image is +Y.
+3) Use Length for the X-axis size, Width for the Y-axis size, Height for Z.
+4) Do NOT output any "wall" objects. Walls are procedural from room polygons.
+5) Doors/windows: include them in room openings when visible. Do NOT invent openings.
+   For every door opening, also add a matching door object to area_objects_list.
+   Use rotationZ to indicate the door opens into the room (interior).
+6) Keep object placement faithful to the drawing. Do not move objects to fix collisions.
+7) Room polygons must not overlap. Adjacent rooms should share the exact same boundary coordinates.
+8) Openings must lie exactly on a room boundary edge (same X or same Y for axis-aligned walls).
+   If a door is between two rooms, place it on the shared edge (can appear in both rooms or once).
+9) If the building outline is not a rectangle, include "outer_polygon" with the true outline (concave allowed).
+   Do NOT approximate the outer boundary as a rectangle.
+
+Functional orientation (rotationZ):
+- 0 degrees: faces +Y (image up)
+- 90 degrees: faces +X (image right)
+- 180 degrees: faces -Y (image down)
+- 270 degrees: faces -X (image left)
+
+Define functional front per category:
+- Bed: direction a person faces from head to foot.
+- Chair/Sofa: direction a seated person faces.
+- TV/Display: direction the screen faces.
+- Door: direction the door opens into the room (interior).
+- Refrigerator/Drawer/Cabinet: direction the front opens.
+
+Categories (use one of these unless absolutely necessary):
+bed, table, desk, chair, sofa, wardrobe, drawer, shelf, cabinet, wheelchair,
+toilet, sink, bathtub, shower, door, window, floor, appliance, equipment, other_furniture
+
+search_prompt guidelines:
+- Write mainly in English.
+- Describe object type, usage context, and key attributes.
+- Do NOT describe relative placement in this specific room.
+
+Remember: Output a single JSON object ONLY.
+'''
+
+user_input='''You have been provided a floor plan image and a list of dimensions.
+Analyze the image to determine precise placement and orientation of each object.
+Then generate the JSON output following the system instructions.'''

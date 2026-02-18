@@ -1,0 +1,268 @@
+{
+  "area_name": "Open-plan LDK",
+  "area_size_X": 9.0,
+  "area_size_Y": 6.0,
+  "outer_polygon": [
+    {
+      "X": 0.0,
+      "Y": 0.0
+    },
+    {
+      "X": 9.0,
+      "Y": 0.0
+    },
+    {
+      "X": 9.0,
+      "Y": 3.5
+    },
+    {
+      "X": 4.0,
+      "Y": 3.5
+    },
+    {
+      "X": 4.0,
+      "Y": 6.0
+    },
+    {
+      "X": 0.0,
+      "Y": 6.0
+    }
+  ],
+  "rooms": [
+    {
+      "room_id": "room_1",
+      "room_name": "LDK",
+      "room_polygon": [
+        {
+          "X": 0.0,
+          "Y": 0.0
+        },
+        {
+          "X": 9.0,
+          "Y": 0.0
+        },
+        {
+          "X": 9.0,
+          "Y": 3.5
+        },
+        {
+          "X": 4.0,
+          "Y": 3.5
+        },
+        {
+          "X": 4.0,
+          "Y": 6.0
+        },
+        {
+          "X": 0.0,
+          "Y": 6.0
+        }
+      ],
+      "openings": [
+        {
+          "type": "door",
+          "X": 4.0,
+          "Y": 4.8,
+          "Width": 0.9,
+          "Height": 2.05,
+          "SillHeight": 0.0
+        },
+        {
+          "type": "door",
+          "X": 7.8,
+          "Y": 0.0,
+          "Width": 0.9,
+          "Height": 2.05,
+          "SillHeight": 0.0
+        },
+        {
+          "type": "window",
+          "X": 3.5,
+          "Y": 6.0,
+          "Width": 1.0,
+          "Height": 1.0,
+          "SillHeight": 1.0
+        },
+        {
+          "type": "window",
+          "X": 0.0,
+          "Y": 2.25,
+          "Width": 1.5,
+          "Height": 1.0,
+          "SillHeight": 1.0
+        }
+      ]
+    }
+  ],
+  "area_objects_list": [
+    {
+      "object_name": "cupboard_top_wall",
+      "category": "cabinet",
+      "search_prompt": "long storage cupboard cabinet for dining/living room, wood finish, closed doors",
+      "room_id": "room_1",
+      "X": 1.7,
+      "Y": 5.7,
+      "Length": 2.6,
+      "Width": 0.6,
+      "Height": 2.1,
+      "rotationZ": 180,
+      "Material": "wood"
+    },
+    {
+      "object_name": "kitchen_counter_system",
+      "category": "cabinet",
+      "search_prompt": "modular kitchen counter system with worktop, base cabinets, modern style",
+      "room_id": "room_1",
+      "X": 1.6,
+      "Y": 4.35,
+      "Length": 3.2,
+      "Width": 1.2,
+      "Height": 0.9,
+      "rotationZ": 0,
+      "Material": "laminate"
+    },
+    {
+      "object_name": "dining_table",
+      "category": "table",
+      "search_prompt": "rectangular dining table for 4 people, modern simple design",
+      "room_id": "room_1",
+      "X": 2.4,
+      "Y": 3.1,
+      "Length": 0.9,
+      "Width": 1.6,
+      "Height": 0.75,
+      "rotationZ": 0,
+      "Material": "wood"
+    },
+    {
+      "object_name": "dining_chair_left_1",
+      "category": "chair",
+      "search_prompt": "dining chair, armless, simple modern design",
+      "room_id": "room_1",
+      "X": 1.7,
+      "Y": 3.4,
+      "Length": 0.45,
+      "Width": 0.45,
+      "Height": 0.9,
+      "rotationZ": 90,
+      "Material": "wood"
+    },
+    {
+      "object_name": "dining_chair_left_2",
+      "category": "chair",
+      "search_prompt": "dining chair, armless, simple modern design",
+      "room_id": "room_1",
+      "X": 1.7,
+      "Y": 2.8,
+      "Length": 0.45,
+      "Width": 0.45,
+      "Height": 0.9,
+      "rotationZ": 90,
+      "Material": "wood"
+    },
+    {
+      "object_name": "dining_chair_right_1",
+      "category": "chair",
+      "search_prompt": "dining chair, armless, simple modern design",
+      "room_id": "room_1",
+      "X": 3.1,
+      "Y": 3.4,
+      "Length": 0.45,
+      "Width": 0.45,
+      "Height": 0.9,
+      "rotationZ": 270,
+      "Material": "wood"
+    },
+    {
+      "object_name": "dining_chair_right_2",
+      "category": "chair",
+      "search_prompt": "dining chair, armless, simple modern design",
+      "room_id": "room_1",
+      "X": 3.1,
+      "Y": 2.8,
+      "Length": 0.45,
+      "Width": 0.45,
+      "Height": 0.9,
+      "rotationZ": 270,
+      "Material": "wood"
+    },
+    {
+      "object_name": "tv_stand_and_tv",
+      "category": "equipment",
+      "search_prompt": "flat screen TV on a slim TV stand, living room entertainment unit",
+      "room_id": "room_1",
+      "X": 0.25,
+      "Y": 2.1,
+      "Length": 0.45,
+      "Width": 1.2,
+      "Height": 1.2,
+      "rotationZ": 90,
+      "Material": "metal"
+    },
+    {
+      "object_name": "low_table",
+      "category": "table",
+      "search_prompt": "low coffee table, rectangular, living room center table",
+      "room_id": "room_1",
+      "X": 2.8,
+      "Y": 1.35,
+      "Length": 1.1,
+      "Width": 0.6,
+      "Height": 0.4,
+      "rotationZ": 0,
+      "Material": "wood"
+    },
+    {
+      "object_name": "sofa",
+      "category": "sofa",
+      "search_prompt": "2 to 3 seat sofa, modern fabric upholstery, living room seating",
+      "room_id": "room_1",
+      "X": 4.1,
+      "Y": 1.35,
+      "Length": 2.0,
+      "Width": 0.9,
+      "Height": 0.85,
+      "rotationZ": 270,
+      "Material": "fabric"
+    },
+    {
+      "object_name": "cabinet_right_1",
+      "category": "cabinet",
+      "search_prompt": "sideboard cabinet for storage, modern, medium height",
+      "room_id": "room_1",
+      "X": 5.7,
+      "Y": 3.15,
+      "Length": 1.8,
+      "Width": 0.5,
+      "Height": 0.9,
+      "rotationZ": 180,
+      "Material": "wood"
+    },
+    {
+      "object_name": "cabinet_right_2",
+      "category": "cabinet",
+      "search_prompt": "sideboard cabinet for storage, modern, medium height",
+      "room_id": "room_1",
+      "X": 7.7,
+      "Y": 3.15,
+      "Length": 1.8,
+      "Width": 0.5,
+      "Height": 0.9,
+      "rotationZ": 180,
+      "Material": "wood"
+    },
+    {
+      "object_name": "house_plant",
+      "category": "other_furniture",
+      "search_prompt": "indoor potted house plant, decorative floor plant",
+      "room_id": "room_1",
+      "X": 1.0,
+      "Y": 0.7,
+      "Length": 0.5,
+      "Width": 0.5,
+      "Height": 1.2,
+      "rotationZ": 0,
+      "Material": "ceramic"
+    }
+  ]
+}

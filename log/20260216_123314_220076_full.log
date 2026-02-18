@@ -1,0 +1,118 @@
+AI Layout Generation Log
+timestamp: 20260216_123314_220076
+
+[AI Settings]
+step1_model: gpt-5.2
+step2_model: gpt-5.2
+reasoning_effort: medium
+max_output_tokens: 48000
+text_verbosity: high
+image_detail: high
+
+[Step 1 Stats]
+time_sec: 18.932018280029297
+input_tokens: 1818
+output_tokens: 933
+total_tokens: 2751
+
+[Step 2 Stats]
+time_sec: 39.31276273727417
+input_tokens: 2516
+output_tokens: 2434
+total_tokens: 4950
+
+[Total Stats]
+time_sec: 58.24478101730347
+input_tokens: 4334
+output_tokens: 3367
+total_tokens: 7701
+
+[Analysis Text]
+- Bed, 1, center≈(4.25,2.50), size≈(2.00x1.30), oriented length along Y (head toward top wall)
+- Sofa, 1, center≈(2.75,2.95), size≈(1.80x0.90), oriented length along Y
+- Coffee table (oval), 1, center≈(1.85,2.95), size≈(0.90x0.70), centered in front/left of sofa
+- TV cabinet, 1, center≈(0.40,2.20), size≈(1.60x0.50), against left wall, long side along Y
+- Kitchen counter w/ sink + storage, 1 run, center≈(4.00,5.55), size≈(2.20x0.60), against top wall, long side along X
+- Toilet room (enclosed), 1, center≈(0.85,5.05), size≈(1.70x1.70), in top-left corner with inward swing door to main room
+- Sliding door (top wall), 1, center≈(2.55,5.88), size≈(1.60x0.10), opening along top wall (slides along X)
+- Sliding door (internal/left side), 1, center≈(0.95,3.55), size≈(1.20x0.10), opening along partition near left side (slides along X)
+- Window (bottom wall), 1, center≈(1.60,0.00), size≈(2.60x0.10), along bottom wall left of center (spans along X)
+
+[AABB Collisions]
+- Bed vs KitchenCounter_Run: overlap_volume=0.4290000000000001
+- Sofa vs CoffeeTable: overlap_volume=1.2434497875801752e-16
+- Sofa vs KitchenCounter_Run: overlap_volume=0.15300000000000014
+- Sofa vs SlidingDoor_TopWall: overlap_volume=0.07650000000000003
+- Sofa vs Window_BottomWall: overlap_volume=0.051000000000000045
+- CoffeeTable vs ToiletRoom_Enclosure: overlap_volume=0.08399999999999995
+- CoffeeTable vs SlidingDoor_TopWall: overlap_volume=0.02200000000000002
+- CoffeeTable vs SlidingDoor_Internal_Left: overlap_volume=0.005999999999999988
+- CoffeeTable vs Window_BottomWall: overlap_volume=0.03600000000000001
+- TVCabinet vs ToiletRoom_Enclosure: overlap_volume=0.44000000000000006
+- TVCabinet vs SlidingDoor_Internal_Left: overlap_volume=0.016500000000000004
+- TVCabinet vs Window_BottomWall: overlap_volume=0.019250000000000003
+- KitchenCounter_Run vs SlidingDoor_TopWall: overlap_volume=0.04049999999999998
+- KitchenCounter_Run vs Window_BottomWall: overlap_volume=3.996802888650564e-17
+- ToiletRoom_Enclosure vs SlidingDoor_Internal_Left: overlap_volume=0.2459999999999999
+- ToiletRoom_Enclosure vs Window_BottomWall: overlap_volume=0.168
+- SlidingDoor_TopWall vs Window_BottomWall: overlap_volume=0.13800000000000007
+- SlidingDoor_Internal_Left vs Window_BottomWall: overlap_volume=0.144
+
+[Room Size]
+area_size_X: 5.1
+area_size_Y: 5.88
+
+[Inputs]
+image_path: C:/Users/tmaru/isaacsim/source/extensions/my.research.asset_placer_isaac/inputs_isaac/komazawakoen_B1_30_5.15.88.png
+
+[dimensions.txt]
+﻿# LAYOUT_HINTS
+OUTLINE=RECT
+SCALE_WIDTH_M=5.10
+SCALE_HEIGHT_M=5.88
+ROOMS=ldk:0,living:0,dining:0,kitchen:0,bedroom:1,kids_room:0,study:0,bathroom:0,toilet:1,washroom:0,closet:0,storage:0,hallway:0,entrance:0,garage:0,balcony:0,laundry:0,pantry:0,utility:0,office:0,guest_room:0
+DOOR_COUNT=2
+WINDOW_COUNT=1
+WINDOW_HEIGHT_M=1.2
+WINDOW_SILL_M=1.0
+
+
+[prompt1]
+You are an interior layout analyst. Provide a concise summary for layout generation.
+- Coordinate system: X = right, Y = depth (up in the image), Z = up.
+- Origin: lower-left inner corner of the room.
+- Units: meters.
+- Output format: 6-12 bullet lines max. Each line: object name, count, approx center (x,y), approx size (LxW), and orientation note if obvious.
+- No long explanations, no headings, no tables.
+
+[prompt2]
+Create a JSON layout description for the room based on the analysis, dimensions text, and floor plan image. Output MUST be valid JSON only (no prose).
+Schema:
+{
+  "area_name": string,
+  "area_size_X": number,  # meters
+  "area_size_Y": number,  # meters
+  "size_mode": "local",
+  "area_objects_list": [
+    {
+      "object_name": string,
+      "category": string (optional),
+      "search_prompt": string (optional),
+      "X": number,  # meters
+      "Y": number,  # meters
+      "Length": number,  # meters (local +X / right)
+      "Width": number,   # meters (local +Y / forward / functional front)
+      "Height": number,  # meters (local +Z / up)
+      "rotationZ": number  # degrees: 0:+Y, 90:+X, 180:-Y, 270:-X (object +Y direction)
+    }
+  ]
+}
+Notes: Z is up; positions are X/Y only. Use meters everywhere. Local size semantics: Length=local +X (right), Width=local +Y (forward/functional front), Height=local +Z. rotationZ defines the world direction of local +Y (0:+Y, 90:+X, 180:-Y, 270:-X). Do NOT swap Length/Width based on rotationZ.
+
+[SIZE_MODE OVERRIDE]
+This override has highest priority over any previous size definition.
+Use top-level `size_mode` = "local".
+Length = object local +X (right), Width = object local +Y (forward / functional front), Height = local +Z.
+rotationZ defines where object local +Y points in world (0:+Y, 90:+X, 180:-Y, 270:-X).
+Do NOT swap Length/Width based on rotationZ.
+

@@ -1,0 +1,1072 @@
+{
+    "area_name": "Apartment_FloorPlan",
+    "area_size_X": 15.0,
+    "area_size_Y": 11.0,
+    "outer_polygon": [
+        {
+            "X": 0.0,
+            "Y": 0.0
+        },
+        {
+            "X": 15.0,
+            "Y": 0.0
+        },
+        {
+            "X": 15.0,
+            "Y": 11.0
+        },
+        {
+            "X": 0.0,
+            "Y": 11.0
+        }
+    ],
+    "rooms": [
+        {
+            "room_id": "r_rachel_bedroom",
+            "room_name": "Rachel Bedroom",
+            "room_polygon": [
+                {
+                    "X": 0.0,
+                    "Y": 0.0
+                },
+                {
+                    "X": 5.8,
+                    "Y": 0.0
+                },
+                {
+                    "X": 5.8,
+                    "Y": 4.2
+                },
+                {
+                    "X": 0.0,
+                    "Y": 4.2
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 5.8,
+                    "Y": 3.7,
+                    "Width": 0.8,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "window",
+                    "X": 2.7,
+                    "Y": 0.0,
+                    "Width": 2.0,
+                    "Height": 1.0,
+                    "SillHeight": 1.0
+                }
+            ]
+        },
+        {
+            "room_id": "r_hall",
+            "room_name": "Entry and Hall",
+            "room_polygon": [
+                {
+                    "X": 0.0,
+                    "Y": 4.2
+                },
+                {
+                    "X": 5.8,
+                    "Y": 4.2
+                },
+                {
+                    "X": 5.8,
+                    "Y": 3.2
+                },
+                {
+                    "X": 12.6,
+                    "Y": 3.2
+                },
+                {
+                    "X": 12.6,
+                    "Y": 6.0
+                },
+                {
+                    "X": 5.8,
+                    "Y": 6.0
+                },
+                {
+                    "X": 5.8,
+                    "Y": 7.8
+                },
+                {
+                    "X": 0.0,
+                    "Y": 7.8
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 0.0,
+                    "Y": 6.0,
+                    "Width": 0.9,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "door",
+                    "X": 5.8,
+                    "Y": 3.7,
+                    "Width": 0.8,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "door",
+                    "X": 2.4,
+                    "Y": 7.8,
+                    "Width": 0.75,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "door",
+                    "X": 4.4,
+                    "Y": 7.8,
+                    "Width": 0.75,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "door",
+                    "X": 7.0,
+                    "Y": 3.2,
+                    "Width": 0.8,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "door",
+                    "X": 9.0,
+                    "Y": 3.2,
+                    "Width": 0.8,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "door",
+                    "X": 11.0,
+                    "Y": 4.0,
+                    "Width": 0.8,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                }
+            ]
+        },
+        {
+            "room_id": "r_guest_bath",
+            "room_name": "Guest Bathroom",
+            "room_polygon": [
+                {
+                    "X": 0.0,
+                    "Y": 7.8
+                },
+                {
+                    "X": 3.0,
+                    "Y": 7.8
+                },
+                {
+                    "X": 3.0,
+                    "Y": 10.0
+                },
+                {
+                    "X": 0.0,
+                    "Y": 10.0
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 2.4,
+                    "Y": 7.8,
+                    "Width": 0.75,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "window",
+                    "X": 2.2,
+                    "Y": 10.0,
+                    "Width": 0.8,
+                    "Height": 1.0,
+                    "SillHeight": 1.0
+                }
+            ]
+        },
+        {
+            "room_id": "r_half_bath",
+            "room_name": "Half Bath",
+            "room_polygon": [
+                {
+                    "X": 3.0,
+                    "Y": 7.8
+                },
+                {
+                    "X": 5.8,
+                    "Y": 7.8
+                },
+                {
+                    "X": 5.8,
+                    "Y": 10.0
+                },
+                {
+                    "X": 3.0,
+                    "Y": 10.0
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 4.4,
+                    "Y": 7.8,
+                    "Width": 0.75,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                }
+            ]
+        },
+        {
+            "room_id": "r_open_living_kitchen",
+            "room_name": "Open Living Dining Kitchen",
+            "room_polygon": [
+                {
+                    "X": 5.8,
+                    "Y": 6.0
+                },
+                {
+                    "X": 15.0,
+                    "Y": 6.0
+                },
+                {
+                    "X": 15.0,
+                    "Y": 11.0
+                },
+                {
+                    "X": 8.2,
+                    "Y": 11.0
+                },
+                {
+                    "X": 8.2,
+                    "Y": 9.6
+                },
+                {
+                    "X": 5.8,
+                    "Y": 9.6
+                }
+            ],
+            "openings": [
+                {
+                    "type": "window",
+                    "X": 11.4,
+                    "Y": 11.0,
+                    "Width": 3.0,
+                    "Height": 1.0,
+                    "SillHeight": 1.0
+                },
+                {
+                    "type": "window",
+                    "X": 15.0,
+                    "Y": 8.9,
+                    "Width": 1.0,
+                    "Height": 1.0,
+                    "SillHeight": 1.0
+                }
+            ]
+        },
+        {
+            "room_id": "r_top_closet",
+            "room_name": "Top Closet",
+            "room_polygon": [
+                {
+                    "X": 5.8,
+                    "Y": 9.6
+                },
+                {
+                    "X": 8.2,
+                    "Y": 9.6
+                },
+                {
+                    "X": 8.2,
+                    "Y": 11.0
+                },
+                {
+                    "X": 5.8,
+                    "Y": 11.0
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 7.6,
+                    "Y": 9.6,
+                    "Width": 0.75,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                }
+            ]
+        },
+        {
+            "room_id": "r_utility",
+            "room_name": "Utility",
+            "room_polygon": [
+                {
+                    "X": 5.8,
+                    "Y": 0.0
+                },
+                {
+                    "X": 8.2,
+                    "Y": 0.0
+                },
+                {
+                    "X": 8.2,
+                    "Y": 3.2
+                },
+                {
+                    "X": 5.8,
+                    "Y": 3.2
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 7.0,
+                    "Y": 3.2,
+                    "Width": 0.8,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                }
+            ]
+        },
+        {
+            "room_id": "r_monica_bathroom",
+            "room_name": "Monica Bathroom",
+            "room_polygon": [
+                {
+                    "X": 8.2,
+                    "Y": 0.0
+                },
+                {
+                    "X": 11.0,
+                    "Y": 0.0
+                },
+                {
+                    "X": 11.0,
+                    "Y": 3.2
+                },
+                {
+                    "X": 8.2,
+                    "Y": 3.2
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 9.0,
+                    "Y": 3.2,
+                    "Width": 0.8,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "window",
+                    "X": 9.6,
+                    "Y": 0.0,
+                    "Width": 0.8,
+                    "Height": 1.0,
+                    "SillHeight": 1.0
+                }
+            ]
+        },
+        {
+            "room_id": "r_monica_bedroom",
+            "room_name": "Monica Bedroom",
+            "room_polygon": [
+                {
+                    "X": 11.0,
+                    "Y": 0.0
+                },
+                {
+                    "X": 15.0,
+                    "Y": 0.0
+                },
+                {
+                    "X": 15.0,
+                    "Y": 4.2
+                },
+                {
+                    "X": 11.0,
+                    "Y": 4.2
+                }
+            ],
+            "openings": [
+                {
+                    "type": "door",
+                    "X": 11.0,
+                    "Y": 4.0,
+                    "Width": 0.8,
+                    "Height": 2.0,
+                    "SillHeight": 0.0
+                },
+                {
+                    "type": "window",
+                    "X": 12.9,
+                    "Y": 0.0,
+                    "Width": 1.8,
+                    "Height": 1.0,
+                    "SillHeight": 1.0
+                },
+                {
+                    "type": "window",
+                    "X": 15.0,
+                    "Y": 2.1,
+                    "Width": 0.9,
+                    "Height": 1.0,
+                    "SillHeight": 1.0
+                }
+            ]
+        }
+    ],
+    "area_objects_list": [
+        {
+            "object_name": "Door_Entrance",
+            "category": "door",
+            "search_prompt": "interior entrance swing door, residential, simple wooden door",
+            "room_id": "r_hall",
+            "X": 0.0,
+            "Y": 6.0,
+            "Length": 0.05,
+            "Width": 0.9,
+            "Height": 2.0,
+            "rotationZ": 90,
+            "Material": "wood"
+        },
+        {
+            "object_name": "Door_RachelBedroom",
+            "category": "door",
+            "search_prompt": "interior hinged door for bedroom, residential, simple panel door",
+            "room_id": "r_rachel_bedroom",
+            "X": 5.8,
+            "Y": 3.7,
+            "Length": 0.05,
+            "Width": 0.8,
+            "Height": 2.0,
+            "rotationZ": 270,
+            "Material": "wood"
+        },
+        {
+            "object_name": "Door_GuestBathroom",
+            "category": "door",
+            "search_prompt": "interior hinged bathroom door, residential, simple panel door",
+            "room_id": "r_guest_bath",
+            "X": 2.4,
+            "Y": 7.8,
+            "Length": 0.75,
+            "Width": 0.05,
+            "Height": 2.0,
+            "rotationZ": 0,
+            "Material": "wood"
+        },
+        {
+            "object_name": "Door_HalfBath",
+            "category": "door",
+            "search_prompt": "interior hinged half-bath door, residential, simple panel door",
+            "room_id": "r_half_bath",
+            "X": 4.4,
+            "Y": 7.8,
+            "Length": 0.75,
+            "Width": 0.05,
+            "Height": 2.0,
+            "rotationZ": 0,
+            "Material": "wood"
+        },
+        {
+            "object_name": "Door_TopCloset",
+            "category": "door",
+            "search_prompt": "interior hinged closet door, residential, simple door",
+            "room_id": "r_top_closet",
+            "X": 7.6,
+            "Y": 9.6,
+            "Length": 0.75,
+            "Width": 0.05,
+            "Height": 2.0,
+            "rotationZ": 0,
+            "Material": "wood"
+        },
+        {
+            "object_name": "Door_Utility",
+            "category": "door",
+            "search_prompt": "interior utility room door, residential, simple panel door",
+            "room_id": "r_utility",
+            "X": 7.0,
+            "Y": 3.2,
+            "Length": 0.8,
+            "Width": 0.05,
+            "Height": 2.0,
+            "rotationZ": 180,
+            "Material": "wood"
+        },
+        {
+            "object_name": "Door_MonicaBathroom",
+            "category": "door",
+            "search_prompt": "interior hinged bathroom door, residential, simple panel door",
+            "room_id": "r_monica_bathroom",
+            "X": 9.0,
+            "Y": 3.2,
+            "Length": 0.8,
+            "Width": 0.05,
+            "Height": 2.0,
+            "rotationZ": 180,
+            "Material": "wood"
+        },
+        {
+            "object_name": "Door_MonicaBedroom",
+            "category": "door",
+            "search_prompt": "interior hinged bedroom door, residential, simple panel door",
+            "room_id": "r_monica_bedroom",
+            "X": 11.0,
+            "Y": 4.0,
+            "Length": 0.05,
+            "Width": 0.8,
+            "Height": 2.0,
+            "rotationZ": 90,
+            "Material": "wood"
+        },
+        {
+            "object_name": "Sofa_3Seat",
+            "category": "sofa",
+            "search_prompt": "three-seat living room sofa, upholstered, modern comfortable couch",
+            "room_id": "r_open_living_kitchen",
+            "X": 11.6,
+            "Y": 10.2,
+            "Length": 2.2,
+            "Width": 0.9,
+            "Height": 0.85,
+            "rotationZ": 180,
+            "Material": "fabric"
+        },
+        {
+            "object_name": "Sofa_2Seat",
+            "category": "sofa",
+            "search_prompt": "two-seat loveseat sofa, upholstered, modern living room couch",
+            "room_id": "r_open_living_kitchen",
+            "X": 14.4,
+            "Y": 8.2,
+            "Length": 1.8,
+            "Width": 0.9,
+            "Height": 0.85,
+            "rotationZ": 270,
+            "Material": "fabric"
+        },
+        {
+            "object_name": "CoffeeTable_Low",
+            "category": "table",
+            "search_prompt": "low rectangular coffee table for living room, wood or laminate top",
+            "room_id": "r_open_living_kitchen",
+            "X": 12.5,
+            "Y": 7.6,
+            "Length": 1.2,
+            "Width": 0.6,
+            "Height": 0.45,
+            "rotationZ": 0,
+            "Material": "wood"
+        },
+        {
+            "object_name": "Armchair",
+            "category": "chair",
+            "search_prompt": "single armchair lounge chair, upholstered, living room seating",
+            "room_id": "r_open_living_kitchen",
+            "X": 11.7,
+            "Y": 6.3,
+            "Length": 0.9,
+            "Width": 0.9,
+            "Height": 0.9,
+            "rotationZ": 0,
+            "Material": "fabric"
+        },
+        {
+            "object_name": "SideTable_Living",
+            "category": "table",
+            "search_prompt": "small square side table for living room, compact end table",
+            "room_id": "r_open_living_kitchen",
+            "X": 13.9,
+            "Y": 6.3,
+            "Length": 0.5,
+            "Width": 0.5,
+            "Height": 0.5,
+            "rotationZ": 0,
+            "Material": "wood"
+        },
+        {
+            "object_name": "DiningTable",
+            "category": "table",
+            "search_prompt": "rectangular dining table for 6 people, modern apartment dining table",
+            "room_id": "r_open_living_kitchen",
+            "X": 9.6,
+            "Y": 7.5,
+            "Length": 1.8,
+            "Width": 0.9,
+            "Height": 0.75,
+            "rotationZ": 0,
+            "Material": "wood"
+        },
+        {
+            "object_name": "DiningChair_1_North",
+            "category": "chair",
+            "search_prompt": "dining chair, simple modern chair, wooden or upholstered seat",
+            "room_id": "r_open_living_kitchen",
+            "X": 9.1,
+            "Y": 8.2,
+            "Length": 0.5,
+            "Width": 0.5,
+            "Height": 0.9,
+            "rotationZ": 180,
+            "Material": "wood"
+        },
+        {
+            "object_name": "DiningChair_2_North",
+            "category": "chair",
+            "search_prompt": "dining chair, simple modern chair, wooden or upholstered seat",
+            "room_id": "r_open_living_kitchen",
+            "X": 9.6,
+            "Y": 8.2,
+            "Length": 0.5,
+            "Width": 0.5,
+            "Height": 0.9,
+            "rotationZ": 180,
+            "Material": "wood"
+        },
+        {
+            "object_name": "DiningChair_3_North",
+            "category": "chair",
+            "search_prompt": "dining chair, simple modern chair, wooden or upholstered seat",
+            "room_id": "r_open_living_kitchen",
+            "X": 10.1,
+            "Y": 8.2,
+            "Length": 0.5,
+            "Width": 0.5,
+            "Height": 0.9,
+            "rotationZ": 180,
+            "Material": "wood"
+        },
+        {
+            "object_name": "DiningChair_4_WestHead",
+            "category": "chair",
+            "search_prompt": "dining chair, simple modern chair, wooden or upholstered seat",
+            "room_id": "r_open_living_kitchen",
+            "X": 8.6,
+            "Y": 7.5,
+            "Length": 0.5,
+            "Width": 0.5,
+            "Height": 0.9,
+            "rotationZ": 90,
+            "Material": "wood"
+        },
+        {
+            "object_name": "DiningChair_5_EastHead",
+            "category": "chair",
+            "search_prompt": "dining chair, simple modern chair, wooden or upholstered seat",
+            "room_id": "r_open_living_kitchen",
+            "X": 10.6,
+            "Y": 7.5,
+            "Length": 0.5,
+            "Width": 0.5,
+            "Height": 0.9,
+            "rotationZ": 270,
+            "Material": "wood"
+        },
+        {
+            "object_name": "DiningChair_6_South",
+            "category": "chair",
+            "search_prompt": "dining chair, simple modern chair, wooden or upholstered seat",
+            "room_id": "r_open_living_kitchen",
+            "X": 9.6,
+            "Y": 6.8,
+            "Length": 0.5,
+            "Width": 0.5,
+            "Height": 0.9,
+            "rotationZ": 0,
+            "Material": "wood"
+        },
+        {
+            "object_name": "Refrigerator",
+            "category": "appliance",
+            "search_prompt": "tall refrigerator freezer combo, modern kitchen appliance, white or stainless",
+            "room_id": "r_open_living_kitchen",
+            "X": 6.3,
+            "Y": 8.5,
+            "Length": 0.8,
+            "Width": 0.75,
+            "Height": 1.8,
+            "rotationZ": 90,
+            "Material": "metal"
+        },
+        {
+            "object_name": "Stove_Oven",
+            "category": "appliance",
+            "search_prompt": "kitchen stove with oven, freestanding range, modern appliance",
+            "room_id": "r_open_living_kitchen",
+            "X": 6.6,
+            "Y": 7.6,
+            "Length": 0.6,
+            "Width": 0.6,
+            "Height": 0.9,
+            "rotationZ": 90,
+            "Material": "metal"
+        },
+        {
+            "object_name": "TallCabinet_Pantry",
+            "category": "cabinet",
+            "search_prompt": "tall kitchen pantry cabinet, modern storage unit, doors and shelves",
+            "room_id": "r_open_living_kitchen",
+            "X": 6.2,
+            "Y": 8.0,
+            "Length": 0.8,
+            "Width": 0.6,
+            "Height": 2.1,
+            "rotationZ": 90,
+            "Material": "wood"
+        },
+        {
+            "object_name": "BaseCounter_Run",
+            "category": "cabinet",
+            "search_prompt": "kitchen base cabinet counter run, modern countertop, lower storage",
+            "room_id": "r_open_living_kitchen",
+            "X": 8.0,
+            "Y": 6.2,
+            "Length": 3.0,
+            "Width": 0.6,
+            "Height": 0.9,
+            "rotationZ": 180,
+            "Material": "wood"
+        },
+        {
+            "object_name": "KitchenSink",
+            "category": "sink",
+            "search_prompt": "kitchen sink with countertop base, modern stainless sink fixture",
+            "room_id": "r_open_living_kitchen",
+            "X": 9.1,
+            "Y": 6.2,
+            "Length": 0.8,
+            "Width": 0.6,
+            "Height": 0.9,
+            "rotationZ": 180,
+            "Material": "metal"
+        },
+        {
+            "object_name": "Sideboard_Hall",
+            "category": "cabinet",
+            "search_prompt": "hallway sideboard cabinet, low storage console with doors and drawers",
+            "room_id": "r_hall",
+            "X": 2.2,
+            "Y": 4.5,
+            "Length": 2.0,
+            "Width": 0.45,
+            "Height": 0.9,
+            "rotationZ": 0,
+            "Material": "wood"
+        },
+        {
+            "object_name": "Hall_Closet_Storage",
+            "category": "wardrobe",
+            "search_prompt": "hallway closet wardrobe, tall storage cabinet with hanging space",
+            "room_id": "r_hall",
+            "X": 1.2,
+            "Y": 5.3,
+            "Length": 2.0,
+            "Width": 0.8,
+            "Height": 2.4,
+            "rotationZ": 0,
+            "Material": "wood"
+        },
+        {
+            "object_name": "Hall_Shelf_Bookcase",
+            "category": "shelf",
+            "search_prompt": "low depth bookcase shelf unit, hallway storage shelving, modern",
+            "room_id": "r_hall",
+            "X": 8.4,
+            "Y": 4.5,
+            "Length": 2.2,
+            "Width": 0.35,
+            "Height": 2.0,
+            "rotationZ": 180,
+            "Material": "wood"
+        },
+        {
+            "object_name": "Bathtub_Guest",
+            "category": "bathtub",
+            "search_prompt": "standard bathtub, built-in alcove tub, white acrylic",
+            "room_id": "r_guest_bath",
+            "X": 1.0,
+            "Y": 8.9,
+            "Length": 1.6,
+            "Width": 0.75,
+            "Height": 0.6,
+            "rotationZ": 90,
+            "Material": "ceramic"
+        },
+        {
+            "object_name": "Toilet_HalfBath",
+            "category": "toilet",
+            "search_prompt": "standard toilet, modern residential bathroom toilet",
+            "room_id": "r_half_bath",
+            "X": 4.0,
+            "Y": 8.4,
+            "Length": 0.7,
+            "Width": 0.4,
+            "Height": 0.8,
+            "rotationZ": 0,
+            "Material": "ceramic"
+        },
+        {
+            "object_name": "Sink_HalfBath",
+            "category": "sink",
+            "search_prompt": "small bathroom sink, compact wall-mounted or pedestal sink",
+            "room_id": "r_half_bath",
+            "X": 5.0,
+            "Y": 8.4,
+            "Length": 0.5,
+            "Width": 0.4,
+            "Height": 0.85,
+            "rotationZ": 180,
+            "Material": "ceramic"
+        },
+        {
+            "object_name": "Utility_Shelf",
+            "category": "shelf",
+            "search_prompt": "tall utility storage shelving unit, metal or wood shelves",
+            "room_id": "r_utility",
+            "X": 6.2,
+            "Y": 1.6,
+            "Length": 0.4,
+            "Width": 1.8,
+            "Height": 2.0,
+            "rotationZ": 90,
+            "Material": "metal"
+        },
+        {
+            "object_name": "Shower_MonicaBath",
+            "category": "shower",
+            "search_prompt": "corner shower enclosure, glass shower cabin, modern bathroom",
+            "room_id": "r_monica_bathroom",
+            "X": 10.5,
+            "Y": 0.7,
+            "Length": 0.9,
+            "Width": 0.9,
+            "Height": 2.2,
+            "rotationZ": 0,
+            "Material": "glass"
+        },
+        {
+            "object_name": "Toilet_MonicaBath",
+            "category": "toilet",
+            "search_prompt": "standard toilet, modern residential bathroom toilet",
+            "room_id": "r_monica_bathroom",
+            "X": 9.4,
+            "Y": 1.5,
+            "Length": 0.7,
+            "Width": 0.4,
+            "Height": 0.8,
+            "rotationZ": 0,
+            "Material": "ceramic"
+        },
+        {
+            "object_name": "SinkVanity_MonicaBath",
+            "category": "sink",
+            "search_prompt": "bathroom vanity with sink, countertop basin with cabinet storage",
+            "room_id": "r_monica_bathroom",
+            "X": 9.0,
+            "Y": 2.6,
+            "Length": 0.8,
+            "Width": 0.5,
+            "Height": 0.9,
+            "rotationZ": 180,
+            "Material": "wood"
+        },
+        {
+            "object_name": "TowelCabinet_MonicaBath",
+            "category": "cabinet",
+            "search_prompt": "tall narrow bathroom storage cabinet for towels, modern",
+            "room_id": "r_monica_bathroom",
+            "X": 10.7,
+            "Y": 2.4,
+            "Length": 0.4,
+            "Width": 1.2,
+            "Height": 1.8,
+            "rotationZ": 270,
+            "Material": "wood"
+        },
+        {
+            "object_name": "Bed_Rachel",
+            "category": "bed",
+            "search_prompt": "queen size bed with headboard, modern bedroom bed frame",
+            "room_id": "r_rachel_bedroom",
+            "X": 2.8,
+            "Y": 1.4,
+            "Length": 2.0,
+            "Width": 1.6,
+            "Height": 0.6,
+            "rotationZ": 0,
+            "Material": "wood"
+        },
+        {
+            "object_name": "Nightstand_Rachel_Left",
+            "category": "table",
+            "search_prompt": "small bedroom nightstand, bedside table with drawer",
+            "room_id": "r_rachel_bedroom",
+            "X": 1.9,
+            "Y": 0.6,
+            "Length": 0.5,
+            "Width": 0.5,
+            "Height": 0.5,
+            "rotationZ": 0,
+            "Material": "wood"
+        },
+        {
+            "object_name": "Nightstand_Rachel_Right",
+            "category": "table",
+            "search_prompt": "small bedroom nightstand, bedside table with drawer",
+            "room_id": "r_rachel_bedroom",
+            "X": 3.7,
+            "Y": 0.6,
+            "Length": 0.5,
+            "Width": 0.5,
+            "Height": 0.5,
+            "rotationZ": 0,
+            "Material": "wood"
+        },
+        {
+            "object_name": "Dresser_Rachel",
+            "category": "cabinet",
+            "search_prompt": "bedroom dresser cabinet, long storage dresser with drawers",
+            "room_id": "r_rachel_bedroom",
+            "X": 0.6,
+            "Y": 1.7,
+            "Length": 2.0,
+            "Width": 0.5,
+            "Height": 0.85,
+            "rotationZ": 90,
+            "Material": "wood"
+        },
+        {
+            "object_name": "Desk_Rachel",
+            "category": "desk",
+            "search_prompt": "compact writing desk, modern home office desk for bedroom",
+            "room_id": "r_rachel_bedroom",
+            "X": 5.2,
+            "Y": 3.0,
+            "Length": 1.2,
+            "Width": 0.6,
+            "Height": 0.75,
+            "rotationZ": 270,
+            "Material": "wood"
+        },
+        {
+            "object_name": "DeskChair_Rachel",
+            "category": "chair",
+            "search_prompt": "desk chair, simple task chair for home office",
+            "room_id": "r_rachel_bedroom",
+            "X": 4.7,
+            "Y": 3.0,
+            "Length": 0.5,
+            "Width": 0.5,
+            "Height": 0.9,
+            "rotationZ": 270,
+            "Material": "fabric"
+        },
+        {
+            "object_name": "Bed_Monica",
+            "category": "bed",
+            "search_prompt": "queen size bed with headboard, modern bedroom bed frame",
+            "room_id": "r_monica_bedroom",
+            "X": 13.0,
+            "Y": 1.6,
+            "Length": 2.0,
+            "Width": 1.6,
+            "Height": 0.6,
+            "rotationZ": 270,
+            "Material": "wood"
+        },
+        {
+            "object_name": "SideTable_Monica_Bottom",
+            "category": "table",
+            "search_prompt": "small bedroom side table, compact nightstand",
+            "room_id": "r_monica_bedroom",
+            "X": 12.0,
+            "Y": 0.6,
+            "Length": 0.5,
+            "Width": 0.5,
+            "Height": 0.5,
+            "rotationZ": 0,
+            "Material": "wood"
+        },
+        {
+            "object_name": "Nightstand_Monica_UpperRight",
+            "category": "table",
+            "search_prompt": "small bedroom nightstand, bedside table with drawer",
+            "room_id": "r_monica_bedroom",
+            "X": 14.3,
+            "Y": 2.1,
+            "Length": 0.5,
+            "Width": 0.5,
+            "Height": 0.5,
+            "rotationZ": 0,
+            "Material": "wood"
+        },
+        {
+            "object_name": "Nightstand_Monica_LowerRight",
+            "category": "table",
+            "search_prompt": "small bedroom nightstand, bedside table with drawer",
+            "room_id": "r_monica_bedroom",
+            "X": 14.3,
+            "Y": 1.2,
+            "Length": 0.5,
+            "Width": 0.5,
+            "Height": 0.5,
+            "rotationZ": 0,
+            "Material": "wood"
+        },
+        {
+            "object_name": "Desk_Monica",
+            "category": "desk",
+            "search_prompt": "compact writing desk, modern home office desk for bedroom",
+            "room_id": "r_monica_bedroom",
+            "X": 11.3,
+            "Y": 2.6,
+            "Length": 1.2,
+            "Width": 0.6,
+            "Height": 0.75,
+            "rotationZ": 90,
+            "Material": "wood"
+        },
+        {
+            "object_name": "DeskChair_Monica",
+            "category": "chair",
+            "search_prompt": "desk chair, simple task chair for home office",
+            "room_id": "r_monica_bedroom",
+            "X": 11.9,
+            "Y": 2.6,
+            "Length": 0.5,
+            "Width": 0.5,
+            "Height": 0.9,
+            "rotationZ": 90,
+            "Material": "fabric"
+        },
+        {
+            "object_name": "Bookcase_MonicaBedroom",
+            "category": "shelf",
+            "search_prompt": "bookcase shelf unit, low depth shelving for books and decor",
+            "room_id": "r_monica_bedroom",
+            "X": 12.9,
+            "Y": 4.0,
+            "Length": 2.2,
+            "Width": 0.35,
+            "Height": 2.0,
+            "rotationZ": 180,
+            "Material": "wood"
+        }
+    ]
+}
