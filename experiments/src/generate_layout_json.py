@@ -6,7 +6,10 @@ import json
 import mimetypes
 import os
 import pathlib
+import subprocess
+import sys
 import time
+from collections import Counter
 from typing import Any, Dict, List, Optional, Tuple
 
 from dotenv import load_dotenv
@@ -15,10 +18,38 @@ from openai import OpenAI
 from layout_tools import extract_json_payload, read_text, write_json
 
 DEFAULT_MODEL = "gpt-5.2"
-DEFAULT_REASONING_EFFORT = "high"
+DEFAULT_REASONING_EFFORT = "medium"
 DEFAULT_TEXT_VERBOSITY = "high"
 DEFAULT_MAX_OUTPUT_TOKENS = 32000
 DEFAULT_IMAGE_DETAIL = "high"
+
+DEFAULT_GEMINI_MODEL = "gemini-2.5-flash"
+DEFAULT_GEMINI_TASK = "boxes"
+DEFAULT_GEMINI_LABEL_LANGUAGE = "English"
+DEFAULT_GEMINI_TEMPERATURE = 0.6
+DEFAULT_GEMINI_THINKING_BUDGET = 0
+DEFAULT_GEMINI_MAX_ITEMS = 20
+DEFAULT_GEMINI_RESIZE_MAX = 640
+DEFAULT_GEMINI_ROOM_INNER_FRAME_PROMPT = (
+    "This image is a floor plan. Detect only the inner room boundary frames (inside face of walls). "
+    "Return a JSON list where each entry has keys \"label\", \"box_2d\", and \"mask\". "
+    "Use label \"room_inner_frame\" for the main room and \"subroom_inner_frame\" for enclosed sub-rooms. "
+    "The mask must represent the interior area bounded by each inner frame. "
+    "Do not include furniture, text, doors, windows, or wall thickness outside the interior."
+)
+DEFAULT_GEMINI_OPENINGS_PROMPT = (
+    "This image is a floor plan. Detect only architectural openings that are explicitly labeled as "
+    "\"Door\", \"Sliding Door\", or \"Window\" in the room/wall context. "
+    "Return tight bounding boxes around ONLY the clear opening (the gap where wall is absent and people pass through), "
+    "not around text labels. "
+    "For hinged doors: box only the doorway gap at the wall break (swing arc may be included only if it lies inside the gap). "
+    "For sliding doors: box only the wall-break opening segment; DO NOT include the sliding panel storage/pocket region, "
+    "door leaf parked area, or rail extension beyond the wall-break gap. "
+    "Do NOT detect furniture doors (e.g., storage/cabinet/closet doors). "
+    "Return a JSON list where each entry has keys \"label\" and \"box_2d\". "
+    "Use labels from: \"door\", \"sliding_door\", \"window\". "
+    "Do not include furniture, room areas, walls, or other non-opening elements."
+)
 
 
 def _get_usage_value(usage: Any, key: str, default: Any = None) -> Any:
@@ -132,13 +163,17 @@ def _call_responses(
     text_verbosity: str,
     max_output_tokens: int,
 ) -> Tuple[str, Dict[str, int], str]:
+    effort = str(reasoning_effort or "").strip().lower()
+    if effort in {"middle", "mid"}:
+        effort = "medium"
+
     kwargs: Dict[str, Any] = {
         "model": model,
         "input": _build_responses_input(prompt_text, image_base64, image_mime, image_detail),
         "max_output_tokens": int(max_output_tokens),
     }
-    if reasoning_effort:
-        kwargs["reasoning"] = {"effort": reasoning_effort}
+    if effort:
+        kwargs["reasoning"] = {"effort": effort}
     if text_verbosity:
         kwargs["text"] = {"verbosity": text_verbosity}
 
@@ -152,8 +187,242 @@ def _call_responses(
     return output_text, usage, model_used
 
 
+def _load_json_file(path: pathlib.Path) -> Dict[str, Any]:
+    raw = read_text(path)
+    parsed = json.loads(raw)
+    if not isinstance(parsed, dict):
+        return {"data": parsed}
+    return parsed
+
+
+def _collect_step1_category_counts(step1_json: Dict[str, Any]) -> Dict[str, int]:
+    objects = step1_json.get("objects")
+    if not isinstance(objects, list):
+        return {}
+
+    counts: Counter[str] = Counter()
+    for obj in objects:
+        if not isinstance(obj, dict):
+            continue
+        category = str(obj.get("category") or "").strip().lower()
+        if not category:
+            continue
+        if category in {"floor", "wall", "door", "window"}:
+            continue
+        counts[category] += 1
+
+    return {k: int(v) for k, v in sorted(counts.items(), key=lambda kv: kv[0])}
+
+
+def _build_default_gemini_target_prompt(step1_category_counts: Dict[str, int]) -> str:
+    if not step1_category_counts:
+        return "items"
+    pairs = [f"{k} x{v}" for k, v in step1_category_counts.items()]
+    return "objects matching this inventory: " + ", ".join(pairs)
+
+
+def _is_room_inner_frame_category(category: str, label: str) -> bool:
+    c = str(category or "").strip().lower().replace("-", "_")
+    l = str(label or "").strip().lower()
+    label_raw = str(label or "")
+
+    explicit = {
+        "room_inner_frame",
+        "main_room_inner_frame",
+        "subroom_inner_frame",
+        "sub_room_inner_frame",
+        "inner_room_frame",
+    }
+    if c in explicit:
+        return True
+
+    if "inner_frame" in c and ("room" in c or "subroom" in c):
+        return True
+    if "room" in c and "inner" in c and ("frame" in c or "boundary" in c or "outline" in c):
+        return True
+    if "room" in l and "inner" in l and ("frame" in l or "boundary" in l or "outline" in l):
+        return True
+
+    jp_keywords = ("内枠", "室内枠", "部屋内枠", "主室内枠", "メイン内枠")
+    if any(k in label_raw for k in jp_keywords):
+        return True
+
+    return False
+
+
+def _extract_room_inner_frame_objects(spatial_json: Dict[str, Any]) -> List[Dict[str, Any]]:
+    objects = spatial_json.get("furniture_objects")
+    if not isinstance(objects, list):
+        return []
+
+    out: List[Dict[str, Any]] = []
+    for obj in objects:
+        if not isinstance(obj, dict):
+            continue
+        category = str(obj.get("category") or "")
+        label = str(obj.get("label") or "")
+        if not _is_room_inner_frame_category(category, label):
+            continue
+        out.append(obj)
+    return out
+
+
+def _is_opening_category(category: str, label: str) -> bool:
+    c = str(category or "").strip().lower().replace("-", "_")
+    l = str(label or "").strip().lower()
+    label_raw = str(label or "")
+
+    deny_en = {
+        "storage",
+        "cabinet",
+        "closet",
+        "cupboard",
+        "wardrobe",
+        "furniture",
+    }
+    deny_jp = ("収納", "キャビネット", "クローゼット", "戸棚", "家具")
+    if any(k in c for k in deny_en) or any(k in l for k in deny_en):
+        return False
+    if any(k in label_raw for k in deny_jp):
+        return False
+
+    explicit_category = {
+        "door",
+        "sliding_door",
+        "window",
+        "entrance_door",
+        "front_door",
+        "main_door",
+        "double_door",
+    }
+    if c in explicit_category:
+        return True
+
+    explicit_label = {
+        "door",
+        "sliding door",
+        "sliding_door",
+        "window",
+        "entrance door",
+        "front door",
+        "main door",
+        "double door",
+    }
+    if l in explicit_label:
+        return True
+
+    if label_raw in {"ドア", "引き戸", "窓"}:
+        return True
+
+    tokens = [t for t in re.split(r"[^a-z0-9]+", c) if t]
+    if "window" in tokens:
+        return True
+    if "door" in tokens:
+        if any(k in tokens for k in ("storage", "cabinet", "closet", "cupboard", "wardrobe")):
+            return False
+        if ("sliding" in tokens) or ("entrance" in tokens) or ("front" in tokens) or ("main" in tokens) or (len(tokens) == 1):
+            return True
+
+    return False
+
+
+def _extract_opening_objects(spatial_json: Dict[str, Any]) -> List[Dict[str, Any]]:
+    objects = spatial_json.get("furniture_objects")
+    if not isinstance(objects, list):
+        return []
+
+    out: List[Dict[str, Any]] = []
+    for obj in objects:
+        if not isinstance(obj, dict):
+            continue
+        category = str(obj.get("category") or "")
+        label = str(obj.get("label") or "")
+        if not _is_opening_category(category, label):
+            continue
+        out.append(obj)
+    return out
+
+
+def _run_gemini_spatial(
+    image_path: pathlib.Path,
+    out_dir: pathlib.Path,
+    output_stem: str,
+    gemini_api_key: Optional[str],
+    gemini_model: str,
+    gemini_task: str,
+    gemini_target_prompt: str,
+    gemini_label_language: str,
+    gemini_temperature: float,
+    gemini_thinking_budget: int,
+    gemini_max_items: int,
+    gemini_resize_max: int,
+    gemini_prompt_text: Optional[str],
+    gemini_include_non_furniture: bool,
+) -> Dict[str, Any]:
+    script_path = pathlib.Path(__file__).resolve().parent / "spatial_understanding_google.py"
+    if not script_path.exists():
+        raise FileNotFoundError(f"Gemini spatial script not found: {script_path}")
+
+    spatial_out_json = out_dir / f"{output_stem}.json"
+    cmd = [
+        sys.executable,
+        str(script_path),
+        "--image_path",
+        str(image_path),
+        "--out_json",
+        str(spatial_out_json),
+        "--task",
+        gemini_task,
+        "--model",
+        gemini_model,
+        "--target_prompt",
+        gemini_target_prompt,
+        "--label_language",
+        gemini_label_language,
+        "--temperature",
+        str(gemini_temperature),
+        "--thinking_budget",
+        str(gemini_thinking_budget),
+        "--max_items",
+        str(gemini_max_items),
+        "--resize_max",
+        str(gemini_resize_max),
+    ]
+
+    if gemini_prompt_text:
+        cmd.extend(["--prompt_text", gemini_prompt_text])
+    if gemini_include_non_furniture:
+        cmd.append("--include_non_furniture")
+
+    key = gemini_api_key or os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
+    if not key:
+        raise RuntimeError("Gemini enabled but GOOGLE_API_KEY/GEMINI_API_KEY is not set (or --gemini_api_key missing).")
+
+    env = os.environ.copy()
+    env["GOOGLE_API_KEY"] = key
+    subprocess.run(cmd, check=True, env=env)
+
+    manifest_path = spatial_out_json.with_name(f"{spatial_out_json.stem}_manifest.json")
+    raw_response_path = spatial_out_json.with_name(f"{spatial_out_json.stem}_raw_response.json")
+    plot_path = spatial_out_json.with_name(f"{spatial_out_json.stem}_plot.png")
+
+    spatial_json = _load_json_file(spatial_out_json)
+    manifest_json: Dict[str, Any] = _load_json_file(manifest_path) if manifest_path.exists() else {}
+
+    return {
+        "spatial_json": spatial_json,
+        "manifest_json": manifest_json,
+        "paths": {
+            "spatial_json": str(spatial_out_json),
+            "manifest_json": str(manifest_path),
+            "raw_response_json": str(raw_response_path),
+            "plot_png": str(plot_path),
+        },
+    }
+
+
 def build_arg_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Generate layout JSON (Step1/Step2) without Isaac/Omni")
+    parser = argparse.ArgumentParser(description="Generate layout JSON (Step1 + optional Gemini + Step2) without Isaac/Omni")
     parser.add_argument("--image_path", required=True)
     parser.add_argument("--dimensions_path", required=True)
     parser.add_argument("--prompt1_path", default=None)
@@ -169,6 +438,21 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument("--image_detail", default=DEFAULT_IMAGE_DETAIL)
     parser.add_argument("--step2_text_only", action="store_true")
     parser.add_argument("--api_key", default=None)
+
+    parser.add_argument("--enable_gemini_spatial", action="store_true")
+    parser.add_argument("--gemini_api_key", default=None)
+    parser.add_argument("--gemini_model", default=DEFAULT_GEMINI_MODEL)
+    parser.add_argument("--gemini_task", default=DEFAULT_GEMINI_TASK, choices=["boxes", "masks"])
+    parser.add_argument("--gemini_target_prompt", default=None)
+    parser.add_argument("--gemini_prompt_text", default=None)
+    parser.add_argument("--gemini_label_language", default=DEFAULT_GEMINI_LABEL_LANGUAGE)
+    parser.add_argument("--gemini_temperature", type=float, default=DEFAULT_GEMINI_TEMPERATURE)
+    parser.add_argument("--gemini_thinking_budget", type=int, default=DEFAULT_GEMINI_THINKING_BUDGET)
+    parser.add_argument("--gemini_max_items", type=int, default=DEFAULT_GEMINI_MAX_ITEMS)
+    parser.add_argument("--gemini_resize_max", type=int, default=DEFAULT_GEMINI_RESIZE_MAX)
+    parser.add_argument("--gemini_include_non_furniture", action="store_true")
+    parser.add_argument("--enable_gemini_openings", action="store_true")
+    parser.add_argument("--gemini_openings_prompt_text", default=None)
     return parser
 
 
@@ -180,8 +464,8 @@ def main() -> None:
     repo_root = pathlib.Path(__file__).resolve().parents[2]
     image_path = pathlib.Path(args.image_path)
     dimensions_path = pathlib.Path(args.dimensions_path)
-    prompt1_path = pathlib.Path(args.prompt1_path) if args.prompt1_path else (repo_root / "prompts" / "prompt_step1_universal_v7.txt")
-    prompt2_path = pathlib.Path(args.prompt2_path) if args.prompt2_path else (repo_root / "prompts" / "prompt_step2_universal_v7.txt")
+    prompt1_path = pathlib.Path(args.prompt1_path) if args.prompt1_path else (repo_root / "prompts" / "prompt_1_universal_v4_posfix2_gemini_bridge_v1.txt")
+    prompt2_path = pathlib.Path(args.prompt2_path) if args.prompt2_path else (repo_root / "prompts" / "prompt_2_universal_v4_posfix2_gemini_bridge_v1.txt")
     out_json = pathlib.Path(args.out_json)
     out_dir = pathlib.Path(args.out_dir) if args.out_dir else out_json.parent
 
@@ -231,11 +515,158 @@ def main() -> None:
     write_json(out_dir / "step1_output_raw.json", {"text": step1_text})
     write_json(out_dir / "step1_output_parsed.json", step1_json)
 
+    gemini_details: Dict[str, Any] = {"enabled": bool(args.enable_gemini_spatial)}
+    gemini_spatial_json: Optional[Dict[str, Any]] = None
+
+    if args.enable_gemini_spatial:
+        step1_category_counts = _collect_step1_category_counts(step1_json)
+        gemini_target_prompt = args.gemini_target_prompt or _build_default_gemini_target_prompt(step1_category_counts)
+
+        gemini_result = _run_gemini_spatial(
+            image_path=image_path,
+            out_dir=out_dir,
+            output_stem="gemini_spatial_output",
+            gemini_api_key=args.gemini_api_key,
+            gemini_model=args.gemini_model,
+            gemini_task=args.gemini_task,
+            gemini_target_prompt=gemini_target_prompt,
+            gemini_label_language=args.gemini_label_language,
+            gemini_temperature=args.gemini_temperature,
+            gemini_thinking_budget=args.gemini_thinking_budget,
+            gemini_max_items=args.gemini_max_items,
+            gemini_resize_max=args.gemini_resize_max,
+            gemini_prompt_text=args.gemini_prompt_text,
+            gemini_include_non_furniture=bool(args.gemini_include_non_furniture),
+        )
+        gemini_spatial_json = gemini_result["spatial_json"]
+        room_inner_frame_result = _run_gemini_spatial(
+            image_path=image_path,
+            out_dir=out_dir,
+            output_stem="gemini_room_inner_frame_output",
+            gemini_api_key=args.gemini_api_key,
+            gemini_model=args.gemini_model,
+            gemini_task="masks",
+            gemini_target_prompt="items",
+            gemini_label_language="English",
+            gemini_temperature=args.gemini_temperature,
+            gemini_thinking_budget=args.gemini_thinking_budget,
+            gemini_max_items=args.gemini_max_items,
+            gemini_resize_max=args.gemini_resize_max,
+            gemini_prompt_text=DEFAULT_GEMINI_ROOM_INNER_FRAME_PROMPT,
+            gemini_include_non_furniture=True,
+        )
+        room_inner_frame_json = room_inner_frame_result["spatial_json"]
+        room_inner_frame_objects = _extract_room_inner_frame_objects(room_inner_frame_json)
+        opening_objects: List[Dict[str, Any]] = []
+        openings_details: Dict[str, Any] = {"enabled": bool(args.enable_gemini_openings)}
+
+        if args.enable_gemini_openings:
+            openings_prompt = args.gemini_openings_prompt_text or DEFAULT_GEMINI_OPENINGS_PROMPT
+            openings_result = _run_gemini_spatial(
+                image_path=image_path,
+                out_dir=out_dir,
+                output_stem="gemini_openings_output",
+                gemini_api_key=args.gemini_api_key,
+                gemini_model=args.gemini_model,
+                gemini_task="boxes",
+                gemini_target_prompt="doors, sliding doors, windows",
+                gemini_label_language="English",
+                gemini_temperature=args.gemini_temperature,
+                gemini_thinking_budget=args.gemini_thinking_budget,
+                gemini_max_items=args.gemini_max_items,
+                gemini_resize_max=args.gemini_resize_max,
+                gemini_prompt_text=openings_prompt,
+                gemini_include_non_furniture=True,
+            )
+            opening_json = openings_result["spatial_json"]
+            opening_objects = _extract_opening_objects(opening_json)
+            openings_details = {
+                "enabled": True,
+                "task": "boxes",
+                "target_prompt": "doors, sliding doors, windows",
+                "label_language": "English",
+                "temperature": float(args.gemini_temperature),
+                "thinking_budget": int(args.gemini_thinking_budget),
+                "max_items": int(args.gemini_max_items),
+                "resize_max": int(args.gemini_resize_max),
+                "prompt_text": openings_prompt,
+                "outputs": openings_result["paths"],
+                "manifest": openings_result["manifest_json"],
+                "object_count": len(opening_objects),
+            }
+
+        gemini_details = {
+            "enabled": True,
+            "model": args.gemini_model,
+            "task": args.gemini_task,
+            "target_prompt": gemini_target_prompt,
+            "label_language": args.gemini_label_language,
+            "temperature": float(args.gemini_temperature),
+            "thinking_budget": int(args.gemini_thinking_budget),
+            "max_items": int(args.gemini_max_items),
+            "resize_max": int(args.gemini_resize_max),
+            "include_non_furniture": bool(args.gemini_include_non_furniture),
+            "step1_category_counts": step1_category_counts,
+            "outputs": gemini_result["paths"],
+            "manifest": gemini_result["manifest_json"],
+            "room_inner_frame": {
+                "task": "masks",
+                "target_prompt": "items",
+                "label_language": "English",
+                "temperature": float(args.gemini_temperature),
+                "thinking_budget": int(args.gemini_thinking_budget),
+                "max_items": int(args.gemini_max_items),
+                "resize_max": int(args.gemini_resize_max),
+                "prompt_text": DEFAULT_GEMINI_ROOM_INNER_FRAME_PROMPT,
+                "outputs": room_inner_frame_result["paths"],
+                "manifest": room_inner_frame_result["manifest_json"],
+                "object_count": len(room_inner_frame_objects),
+            },
+            "openings": openings_details,
+        }
+    else:
+        room_inner_frame_objects = []
+        opening_objects = []
+
     step2_prompt_parts = [
         prompt2_text,
         "\n\nSTEP1_JSON:\n",
         json.dumps(step1_json, ensure_ascii=False, indent=2),
     ]
+
+    if gemini_spatial_json is not None:
+        step2_prompt_parts.extend(
+            [
+                "\n\nGEMINI_SPATIAL_UNDERSTANDING_JSON:\n",
+                json.dumps(gemini_spatial_json, ensure_ascii=False, indent=2),
+                "\n\nGEMINI_INTEGRATION_POLICY:\n"
+                "- Keep object inventory (category/count) and semantic intent from STEP1_JSON.\n"
+                "- Use GEMINI furniture_objects center/size hints as primary evidence for position/size.\n"
+                "- If Gemini misses an object, infer it from STEP1_JSON and LAYOUT_HINTS.\n"
+                "- Preserve valid room geometry/openings and output schema constraints.\n",
+            ]
+        )
+    if room_inner_frame_objects:
+        step2_prompt_parts.extend(
+            [
+                "\n\nGEMINI_ROOM_INNER_FRAME_JSON:\n",
+                json.dumps({"furniture_objects": room_inner_frame_objects}, ensure_ascii=False, indent=2),
+                "\n\nGEMINI_ROOM_POLICY:\n"
+                "- Use room_inner_frame/subroom_inner_frame as primary evidence for room inside boundaries.\n"
+                "- Treat these boxes as interior envelopes (inside face of walls), not outer wall thickness.\n",
+            ]
+        )
+    if opening_objects:
+        step2_prompt_parts.extend(
+            [
+                "\n\nGEMINI_OPENINGS_JSON:\n",
+                json.dumps({"furniture_objects": opening_objects}, ensure_ascii=False, indent=2),
+                "\n\nGEMINI_OPENINGS_POLICY:\n"
+                "- Use Gemini door/window detections as primary evidence for opening positions.\n"
+                "- Prefer opening centers and extents from GEMINI_OPENINGS_JSON when defining wall openings.\n",
+            ]
+        )
+
     if not args.step2_text_only:
         step2_prompt_parts.extend(["\n\nLAYOUT_HINTS:\n", dimensions_text])
     step2_prompt = "".join(step2_prompt_parts)
@@ -262,6 +693,7 @@ def main() -> None:
         "model_requested": args.model,
         "model_used": {"step1": step1_model, "step2": step2_model},
         "step2_text_only": bool(args.step2_text_only),
+        "gemini_spatial": gemini_details,
         "inputs": {
             "image_path": str(image_path),
             "dimensions_path": str(dimensions_path),
@@ -283,11 +715,27 @@ def main() -> None:
             "step1_raw": str(out_dir / "step1_output_raw.json"),
             "step1_parsed": str(out_dir / "step1_output_parsed.json"),
             "step2_raw": str(out_dir / "step2_output_raw.json"),
+            "gemini_spatial_json": gemini_details.get("outputs", {}).get("spatial_json") if gemini_details.get("enabled") else None,
+            "gemini_plot_png": gemini_details.get("outputs", {}).get("plot_png") if gemini_details.get("enabled") else None,
+            "gemini_room_inner_frame_json": gemini_details.get("room_inner_frame", {}).get("outputs", {}).get("spatial_json") if gemini_details.get("enabled") else None,
+            "gemini_room_inner_frame_plot_png": gemini_details.get("room_inner_frame", {}).get("outputs", {}).get("plot_png") if gemini_details.get("enabled") else None,
+            "gemini_openings_json": gemini_details.get("openings", {}).get("outputs", {}).get("spatial_json") if gemini_details.get("enabled") else None,
+            "gemini_openings_plot_png": gemini_details.get("openings", {}).get("outputs", {}).get("plot_png") if gemini_details.get("enabled") else None,
         },
     }
     write_json(out_dir / "generation_manifest.json", run_manifest)
 
-    print(json.dumps({"layout_json": str(out_json), "generation_manifest": str(out_dir / "generation_manifest.json")}, ensure_ascii=False, indent=2))
+    print(
+        json.dumps(
+            {
+                "layout_json": str(out_json),
+                "generation_manifest": str(out_dir / "generation_manifest.json"),
+                "gemini_enabled": bool(args.enable_gemini_spatial),
+            },
+            ensure_ascii=False,
+            indent=2,
+        )
+    )
 
 
 if __name__ == "__main__":

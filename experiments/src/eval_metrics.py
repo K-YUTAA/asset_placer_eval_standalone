@@ -1288,7 +1288,7 @@ def evaluate_layout(
 
     entry_cfg = config.get("entry_observability")
     entry_cfg = entry_cfg if isinstance(entry_cfg, dict) else {}
-    entry_enabled = bool(entry_cfg.get("enabled", False))
+    entry_enabled = True
     entry_mode = str(entry_cfg.get("mode") or "both").strip().lower()
     if entry_mode not in {"first_hit", "surface", "both"}:
         entry_mode = "both"

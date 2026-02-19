@@ -16,11 +16,26 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument("--prompt1_path", default=None)
     parser.add_argument("--prompt2_path", default=None)
     parser.add_argument("--model", default="gpt-5.2")
-    parser.add_argument("--reasoning_effort", default="high")
+    parser.add_argument("--reasoning_effort", default="medium")
     parser.add_argument("--text_verbosity", default="high")
     parser.add_argument("--max_output_tokens", type=int, default=32000)
     parser.add_argument("--image_detail", default="high")
     parser.add_argument("--step2_text_only", action="store_true")
+
+    parser.add_argument("--enable_gemini_spatial", action="store_true")
+    parser.add_argument("--gemini_api_key", default=None)
+    parser.add_argument("--gemini_model", default="gemini-2.5-flash")
+    parser.add_argument("--gemini_task", choices=["boxes", "masks"], default="boxes")
+    parser.add_argument("--gemini_target_prompt", default=None)
+    parser.add_argument("--gemini_prompt_text", default=None)
+    parser.add_argument("--gemini_label_language", default="English")
+    parser.add_argument("--gemini_temperature", type=float, default=0.6)
+    parser.add_argument("--gemini_thinking_budget", type=int, default=0)
+    parser.add_argument("--gemini_max_items", type=int, default=20)
+    parser.add_argument("--gemini_resize_max", type=int, default=640)
+    parser.add_argument("--gemini_include_non_furniture", action="store_true")
+    parser.add_argument("--enable_gemini_openings", action="store_true")
+    parser.add_argument("--gemini_openings_prompt_text", default=None)
 
     parser.add_argument("--bg_image", default=None, help="Optional. If set, also generate plot_with_bg.png")
     parser.add_argument("--bg_crop_mode", default="none", choices=["none", "beige", "nonwhite"])
@@ -67,6 +82,28 @@ def main() -> None:
         gen_cmd.extend(["--prompt2_path", args.prompt2_path])
     if args.step2_text_only:
         gen_cmd.append("--step2_text_only")
+
+    if args.enable_gemini_spatial:
+        gen_cmd.append("--enable_gemini_spatial")
+        gen_cmd.extend(["--gemini_model", args.gemini_model])
+        gen_cmd.extend(["--gemini_task", args.gemini_task])
+        gen_cmd.extend(["--gemini_label_language", args.gemini_label_language])
+        gen_cmd.extend(["--gemini_temperature", str(args.gemini_temperature)])
+        gen_cmd.extend(["--gemini_thinking_budget", str(args.gemini_thinking_budget)])
+        gen_cmd.extend(["--gemini_max_items", str(args.gemini_max_items)])
+        gen_cmd.extend(["--gemini_resize_max", str(args.gemini_resize_max)])
+        if args.gemini_api_key:
+            gen_cmd.extend(["--gemini_api_key", args.gemini_api_key])
+        if args.gemini_target_prompt:
+            gen_cmd.extend(["--gemini_target_prompt", args.gemini_target_prompt])
+        if args.gemini_prompt_text:
+            gen_cmd.extend(["--gemini_prompt_text", args.gemini_prompt_text])
+        if args.gemini_include_non_furniture:
+            gen_cmd.append("--gemini_include_non_furniture")
+        if args.enable_gemini_openings:
+            gen_cmd.append("--enable_gemini_openings")
+        if args.gemini_openings_prompt_text:
+            gen_cmd.extend(["--gemini_openings_prompt_text", args.gemini_openings_prompt_text])
 
     subprocess.run(gen_cmd, check=True)
 
