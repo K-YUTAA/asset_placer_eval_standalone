@@ -25,7 +25,7 @@
   "tau_Delta": 0.15,
   "lambda_rot": 0.50,
   "entry_observability": {
-    "enabled": false,
+    "enabled": true,
     "mode": "both",
     "exclude_categories": ["floor", "door", "window"],
     "target_categories": [],
