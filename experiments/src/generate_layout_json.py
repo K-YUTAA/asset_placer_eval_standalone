@@ -6,9 +6,12 @@ import json
 import mimetypes
 import os
 import pathlib
+import re
 import subprocess
 import sys
 import time
+import urllib.error
+import urllib.request
 from collections import Counter
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -16,6 +19,7 @@ from dotenv import load_dotenv
 from openai import OpenAI
 
 from layout_tools import extract_json_payload, read_text, write_json
+from step2_rule_based import build_layout_rule_based
 
 DEFAULT_MODEL = "gpt-5.2"
 DEFAULT_REASONING_EFFORT = "medium"
@@ -50,6 +54,8 @@ DEFAULT_GEMINI_OPENINGS_PROMPT = (
     "Use labels from: \"door\", \"sliding_door\", \"window\". "
     "Do not include furniture, room areas, walls, or other non-opening elements."
 )
+DEFAULT_STEP1_PROVIDER = "openai"
+DEFAULT_STEP2_PROVIDER = "openai"
 
 
 def _get_usage_value(usage: Any, key: str, default: Any = None) -> Any:
@@ -105,6 +111,118 @@ def _extract_response_text(response: Any) -> str:
             return "".join(chunks)
 
     return ""
+
+
+def _extract_gemini_response_text(response: Dict[str, Any]) -> str:
+    candidates = response.get("candidates")
+    if not isinstance(candidates, list):
+        raise RuntimeError(f"Unexpected Gemini response: no candidates field. response={response}")
+
+    for cand in candidates:
+        if not isinstance(cand, dict):
+            continue
+        content = cand.get("content")
+        if not isinstance(content, dict):
+            continue
+        parts = content.get("parts")
+        if not isinstance(parts, list):
+            continue
+        chunks: List[str] = []
+        for part in parts:
+            if isinstance(part, dict) and isinstance(part.get("text"), str):
+                chunks.append(part["text"])
+        merged = "".join(chunks).strip()
+        if merged:
+            return merged
+
+    prompt_feedback = response.get("promptFeedback") or response.get("prompt_feedback")
+    raise RuntimeError(f"No text in Gemini candidates. promptFeedback={prompt_feedback}")
+
+
+def _gemini_usage_tokens(response: Dict[str, Any]) -> Dict[str, int]:
+    usage = response.get("usageMetadata") or response.get("usage_metadata") or {}
+    input_tokens = int(usage.get("promptTokenCount") or 0)
+    output_tokens = int(usage.get("candidatesTokenCount") or 0)
+    total_tokens = int(usage.get("totalTokenCount") or (input_tokens + output_tokens))
+    return {
+        "input_tokens": input_tokens,
+        "output_tokens": output_tokens,
+        "total_tokens": total_tokens,
+    }
+
+
+def _call_gemini_generate_content(
+    *,
+    model: str,
+    prompt_text: str,
+    image_base64: Optional[str],
+    image_mime: str,
+    max_output_tokens: int,
+    temperature: float,
+    thinking_budget: int,
+    gemini_api_key: Optional[str],
+) -> Tuple[str, Dict[str, int], str]:
+    key = gemini_api_key or os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
+    if not key:
+        raise RuntimeError("Gemini LLM call requested but GOOGLE_API_KEY/GEMINI_API_KEY is not set (or --gemini_api_key missing).")
+
+    endpoint = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
+    parts: List[Dict[str, Any]] = []
+    if image_base64:
+        parts.append(
+            {
+                "inline_data": {
+                    "mime_type": image_mime,
+                    "data": image_base64,
+                }
+            }
+        )
+    parts.append({"text": prompt_text})
+
+    generation_config: Dict[str, Any] = {
+        "temperature": float(temperature),
+        "maxOutputTokens": int(max_output_tokens),
+    }
+    if "gemini-2.0-flash" not in str(model):
+        generation_config["thinkingConfig"] = {"thinkingBudget": int(thinking_budget)}
+
+    payload: Dict[str, Any] = {
+        "contents": [
+            {
+                "role": "user",
+                "parts": parts,
+            }
+        ],
+        "generationConfig": generation_config,
+    }
+
+    req = urllib.request.Request(
+        url=endpoint,
+        data=json.dumps(payload, ensure_ascii=False).encode("utf-8"),
+        method="POST",
+        headers={
+            "Content-Type": "application/json",
+            "x-goog-api-key": key,
+        },
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=180) as resp:
+            raw = resp.read().decode("utf-8")
+    except urllib.error.HTTPError as exc:
+        err = exc.read().decode("utf-8", errors="replace")
+        raise RuntimeError(f"Gemini API HTTP {exc.code}: {err}") from exc
+    except urllib.error.URLError as exc:
+        raise RuntimeError(f"Gemini request failed: {exc}") from exc
+
+    try:
+        parsed = json.loads(raw)
+    except json.JSONDecodeError as exc:
+        raise RuntimeError(f"Gemini response is not JSON: {raw[:500]}") from exc
+
+    output_text = _extract_gemini_response_text(parsed)
+    usage = _gemini_usage_tokens(parsed)
+    model_used = str(parsed.get("modelVersion") or model)
+    return output_text, usage, model_used
 
 
 def _encode_image_base64(image_path: pathlib.Path) -> Tuple[str, str]:
@@ -511,6 +629,9 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument("--max_output_tokens", type=int, default=DEFAULT_MAX_OUTPUT_TOKENS)
     parser.add_argument("--image_detail", default=DEFAULT_IMAGE_DETAIL)
     parser.add_argument("--step2_text_only", action="store_true")
+    parser.add_argument("--step2_mode", default="llm", choices=["llm", "rule"])
+    parser.add_argument("--step1_provider", default=DEFAULT_STEP1_PROVIDER, choices=["openai", "gemini"])
+    parser.add_argument("--step2_provider", default=DEFAULT_STEP2_PROVIDER, choices=["openai", "gemini"])
     parser.add_argument("--api_key", default=None)
 
     parser.add_argument("--enable_gemini_spatial", action="store_true")
@@ -552,18 +673,26 @@ def main() -> None:
         raise FileNotFoundError(f"dimensions file not found: {dimensions_path}")
     if not prompt1_path.exists():
         raise FileNotFoundError(f"prompt1 not found: {prompt1_path}")
-    if not prompt2_path.exists():
+    if args.step2_mode == "llm" and not prompt2_path.exists():
         raise FileNotFoundError(f"prompt2 not found: {prompt2_path}")
 
     dimensions_text = read_text(dimensions_path)
     prompt1_text = read_text(prompt1_path)
-    prompt2_text = read_text(prompt2_path)
+    prompt2_text = read_text(prompt2_path) if args.step2_mode == "llm" else ""
 
     image_base64, image_mime = _encode_image_base64(image_path)
-    api_key = args.api_key or os.getenv("OPENAI_API_KEY")
-    if not api_key:
-        raise RuntimeError("OPENAI_API_KEY is not set. Use env var or --api_key.")
-    client = OpenAI(api_key=api_key)
+    step1_provider = str(args.step1_provider).strip().lower()
+    step2_provider = str(args.step2_provider).strip().lower()
+
+    openai_needed = (not args.analysis_input and step1_provider == "openai") or (
+        args.step2_mode == "llm" and step2_provider == "openai"
+    )
+    client: Optional[OpenAI] = None
+    if openai_needed:
+        api_key = args.api_key or os.getenv("OPENAI_API_KEY")
+        if not api_key:
+            raise RuntimeError("OPENAI_API_KEY is not set. Use env var or --api_key.")
+        client = OpenAI(api_key=api_key)
 
     t0 = time.perf_counter()
     step1_usage = {"input_tokens": 0, "output_tokens": 0, "total_tokens": 0}
@@ -573,17 +702,31 @@ def main() -> None:
         step1_text = read_text(pathlib.Path(args.analysis_input))
     else:
         step1_prompt = f"{prompt1_text}\n\nLAYOUT_HINTS:\n{dimensions_text}"
-        step1_text, step1_usage, step1_model = _call_responses(
-            client=client,
-            model=args.model,
-            prompt_text=step1_prompt,
-            image_base64=image_base64,
-            image_mime=image_mime,
-            image_detail=args.image_detail,
-            reasoning_effort=args.reasoning_effort,
-            text_verbosity=args.text_verbosity,
-            max_output_tokens=args.max_output_tokens,
-        )
+        if step1_provider == "gemini":
+            step1_text, step1_usage, step1_model = _call_gemini_generate_content(
+                model=args.gemini_model,
+                prompt_text=step1_prompt,
+                image_base64=image_base64,
+                image_mime=image_mime,
+                max_output_tokens=args.max_output_tokens,
+                temperature=args.gemini_temperature,
+                thinking_budget=args.gemini_thinking_budget,
+                gemini_api_key=args.gemini_api_key,
+            )
+        else:
+            if client is None:
+                raise RuntimeError("OpenAI client is not initialized for step1.")
+            step1_text, step1_usage, step1_model = _call_responses(
+                client=client,
+                model=args.model,
+                prompt_text=step1_prompt,
+                image_base64=image_base64,
+                image_mime=image_mime,
+                image_detail=args.image_detail,
+                reasoning_effort=args.reasoning_effort,
+                text_verbosity=args.text_verbosity,
+                max_output_tokens=args.max_output_tokens,
+            )
 
     step1_json = extract_json_payload(step1_text)
     write_json(out_dir / "step1_output_raw.json", {"text": step1_text})
@@ -708,74 +851,101 @@ def main() -> None:
         main_room_inner_boundary_hint = None
         opening_objects = []
 
-    step2_prompt_parts = [
-        prompt2_text,
-        "\n\nSTEP1_JSON:\n",
-        json.dumps(step1_json, ensure_ascii=False, indent=2),
-    ]
-
-    if gemini_spatial_json is not None:
-        step2_prompt_parts.extend(
-            [
-                "\n\nGEMINI_SPATIAL_UNDERSTANDING_JSON:\n",
-                json.dumps(gemini_spatial_json, ensure_ascii=False, indent=2),
-                "\n\nGEMINI_INTEGRATION_POLICY:\n"
-                "- Keep object inventory (category/count) and semantic intent from STEP1_JSON.\n"
-                "- Use GEMINI furniture_objects center/size hints as primary evidence for position/size.\n"
-                "- If Gemini misses an object, infer it from STEP1_JSON and LAYOUT_HINTS.\n"
-                "- Preserve valid room geometry/openings and output schema constraints.\n",
-            ]
+    if args.step2_mode == "rule":
+        final_json = build_layout_rule_based(
+            step1_json=step1_json,
+            gemini_spatial_json=gemini_spatial_json,
+            room_inner_frame_objects=room_inner_frame_objects,
+            opening_objects=opening_objects,
+            main_room_inner_boundary_hint=main_room_inner_boundary_hint,
         )
-    if room_inner_frame_objects:
-        step2_prompt_parts.extend(
-            [
-                "\n\nGEMINI_ROOM_INNER_FRAME_JSON:\n",
-                json.dumps({"furniture_objects": room_inner_frame_objects}, ensure_ascii=False, indent=2),
-                "\n\nGEMINI_ROOM_POLICY:\n"
-                "- Use room_inner_frame/subroom_inner_frame as primary evidence for room inside boundaries.\n"
-                "- Treat these boxes as interior envelopes (inside face of walls), not outer wall thickness.\n",
-            ]
-        )
-    if main_room_inner_boundary_hint is not None:
-        step2_prompt_parts.extend(
-            [
-                "\n\nGEMINI_MAIN_ROOM_INNER_BOUNDARY_WORLD:\n",
-                json.dumps(main_room_inner_boundary_hint, ensure_ascii=False, indent=2),
-                "\n\nGEMINI_OUTER_BOUNDARY_POLICY:\n"
-                "- Set final outer_polygon to GEMINI_MAIN_ROOM_INNER_BOUNDARY_WORLD.polygon exactly.\n"
-                "- Treat this as the room inner wall line (walkable boundary), not wall outer face.\n"
-                "- If STEP1 outer_polygon conflicts with this inner boundary, prioritize GEMINI_MAIN_ROOM_INNER_BOUNDARY_WORLD.\n",
-            ]
-        )
-    if opening_objects:
-        step2_prompt_parts.extend(
-            [
-                "\n\nGEMINI_OPENINGS_JSON:\n",
-                json.dumps({"furniture_objects": opening_objects}, ensure_ascii=False, indent=2),
-                "\n\nGEMINI_OPENINGS_POLICY:\n"
-                "- Use Gemini door/window detections as primary evidence for opening positions.\n"
-                "- Prefer opening centers and extents from GEMINI_OPENINGS_JSON when defining wall openings.\n",
-            ]
-        )
+        step2_text = json.dumps(final_json, ensure_ascii=False, indent=2)
+        step2_usage = {"input_tokens": 0, "output_tokens": 0, "total_tokens": 0}
+        step2_model = "rule_based_step2_v1"
+        write_json(out_dir / "step2_output_raw.json", {"mode": "rule", "text": step2_text})
+    else:
+        step2_prompt_parts = [
+            prompt2_text,
+            "\n\nSTEP1_JSON:\n",
+            json.dumps(step1_json, ensure_ascii=False, indent=2),
+        ]
 
-    if not args.step2_text_only:
-        step2_prompt_parts.extend(["\n\nLAYOUT_HINTS:\n", dimensions_text])
-    step2_prompt = "".join(step2_prompt_parts)
+        if gemini_spatial_json is not None:
+            step2_prompt_parts.extend(
+                [
+                    "\n\nGEMINI_SPATIAL_UNDERSTANDING_JSON:\n",
+                    json.dumps(gemini_spatial_json, ensure_ascii=False, indent=2),
+                    "\n\nGEMINI_INTEGRATION_POLICY:\n"
+                    "- Keep object inventory (category/count) and semantic intent from STEP1_JSON.\n"
+                    "- Use GEMINI furniture_objects center/size hints as primary evidence for position/size.\n"
+                    "- If Gemini misses an object, infer it from STEP1_JSON and LAYOUT_HINTS.\n"
+                    "- Preserve valid room geometry/openings and output schema constraints.\n",
+                ]
+            )
+        if room_inner_frame_objects:
+            step2_prompt_parts.extend(
+                [
+                    "\n\nGEMINI_ROOM_INNER_FRAME_JSON:\n",
+                    json.dumps({"furniture_objects": room_inner_frame_objects}, ensure_ascii=False, indent=2),
+                    "\n\nGEMINI_ROOM_POLICY:\n"
+                    "- Use room_inner_frame/subroom_inner_frame as primary evidence for room inside boundaries.\n"
+                    "- Treat these boxes as interior envelopes (inside face of walls), not outer wall thickness.\n",
+                ]
+            )
+        if main_room_inner_boundary_hint is not None:
+            step2_prompt_parts.extend(
+                [
+                    "\n\nGEMINI_MAIN_ROOM_INNER_BOUNDARY_WORLD:\n",
+                    json.dumps(main_room_inner_boundary_hint, ensure_ascii=False, indent=2),
+                    "\n\nGEMINI_OUTER_BOUNDARY_POLICY:\n"
+                    "- Set final outer_polygon to GEMINI_MAIN_ROOM_INNER_BOUNDARY_WORLD.polygon exactly.\n"
+                    "- Treat this as the room inner wall line (walkable boundary), not wall outer face.\n"
+                    "- If STEP1 outer_polygon conflicts with this inner boundary, prioritize GEMINI_MAIN_ROOM_INNER_BOUNDARY_WORLD.\n",
+                ]
+            )
+        if opening_objects:
+            step2_prompt_parts.extend(
+                [
+                    "\n\nGEMINI_OPENINGS_JSON:\n",
+                    json.dumps({"furniture_objects": opening_objects}, ensure_ascii=False, indent=2),
+                    "\n\nGEMINI_OPENINGS_POLICY:\n"
+                    "- Use Gemini door/window detections as primary evidence for opening positions.\n"
+                    "- Prefer opening centers and extents from GEMINI_OPENINGS_JSON when defining wall openings.\n",
+                ]
+            )
 
-    step2_text, step2_usage, step2_model = _call_responses(
-        client=client,
-        model=args.model,
-        prompt_text=step2_prompt,
-        image_base64=None if args.step2_text_only else image_base64,
-        image_mime=image_mime,
-        image_detail=args.image_detail,
-        reasoning_effort=args.reasoning_effort,
-        text_verbosity=args.text_verbosity,
-        max_output_tokens=args.max_output_tokens,
-    )
+        if not args.step2_text_only:
+            step2_prompt_parts.extend(["\n\nLAYOUT_HINTS:\n", dimensions_text])
+        step2_prompt = "".join(step2_prompt_parts)
 
-    final_json = extract_json_payload(step2_text)
-    write_json(out_dir / "step2_output_raw.json", {"text": step2_text})
+        if step2_provider == "gemini":
+            step2_text, step2_usage, step2_model = _call_gemini_generate_content(
+                model=args.gemini_model,
+                prompt_text=step2_prompt,
+                image_base64=None if args.step2_text_only else image_base64,
+                image_mime=image_mime,
+                max_output_tokens=args.max_output_tokens,
+                temperature=args.gemini_temperature,
+                thinking_budget=args.gemini_thinking_budget,
+                gemini_api_key=args.gemini_api_key,
+            )
+        else:
+            if client is None:
+                raise RuntimeError("OpenAI client is not initialized for step2.")
+            step2_text, step2_usage, step2_model = _call_responses(
+                client=client,
+                model=args.model,
+                prompt_text=step2_prompt,
+                image_base64=None if args.step2_text_only else image_base64,
+                image_mime=image_mime,
+                image_detail=args.image_detail,
+                reasoning_effort=args.reasoning_effort,
+                text_verbosity=args.text_verbosity,
+                max_output_tokens=args.max_output_tokens,
+            )
+        final_json = extract_json_payload(step2_text)
+        write_json(out_dir / "step2_output_raw.json", {"mode": "llm", "text": step2_text})
+
     write_json(out_json, final_json)
 
     runtime_sec = time.perf_counter() - t0
@@ -783,6 +953,11 @@ def main() -> None:
         "runtime_sec": runtime_sec,
         "model_requested": args.model,
         "model_used": {"step1": step1_model, "step2": step2_model},
+        "llm_provider": {
+            "step1": "cached" if args.analysis_input else step1_provider,
+            "step2": ("rule" if args.step2_mode == "rule" else step2_provider),
+        },
+        "step2_mode": args.step2_mode,
         "step2_text_only": bool(args.step2_text_only),
         "gemini_spatial": gemini_details,
         "inputs": {

@@ -24,6 +24,8 @@ Object rules:
 - Include major furniture and fixtures.
 - Keep category names concise snake_case (bed, chair, tv, sink, toilet, storage, sofa, table, cabinet, etc.).
 - Estimate functional front direction as front_hint in {0,90,180,270} when possible, otherwise null.
+- Generate a generic English asset retrieval prompt per object as search_prompt.
+- search_prompt must describe object type/style/material only (no coordinates, no relative position words like left/right/top/bottom).
 - Provide bbox for each object as [xmin, ymin, xmax, ymax] in world meters.
 - dx, dy are world footprint extents along X and Y.
 
@@ -90,6 +92,7 @@ Required JSON schema:
     {
       "object_id": string,
       "category": string,
+      "search_prompt": string,
       "cx": number,
       "cy": number,
       "dx": number,

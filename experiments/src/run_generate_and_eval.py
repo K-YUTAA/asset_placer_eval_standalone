@@ -21,6 +21,9 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument("--max_output_tokens", type=int, default=32000)
     parser.add_argument("--image_detail", default="high")
     parser.add_argument("--step2_text_only", action="store_true")
+    parser.add_argument("--step2_mode", default="llm", choices=["llm", "rule"])
+    parser.add_argument("--step1_provider", default="openai", choices=["openai", "gemini"])
+    parser.add_argument("--step2_provider", default="openai", choices=["openai", "gemini"])
 
     parser.add_argument("--enable_gemini_spatial", action="store_true")
     parser.add_argument("--gemini_api_key", default=None)
@@ -75,6 +78,12 @@ def main() -> None:
         str(args.max_output_tokens),
         "--image_detail",
         args.image_detail,
+        "--step2_mode",
+        args.step2_mode,
+        "--step1_provider",
+        args.step1_provider,
+        "--step2_provider",
+        args.step2_provider,
     ]
     if args.prompt1_path:
         gen_cmd.extend(["--prompt1_path", args.prompt1_path])
