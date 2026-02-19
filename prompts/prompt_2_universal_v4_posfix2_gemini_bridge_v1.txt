@@ -27,6 +27,7 @@ Authority and merge policy:
 1) Geometry and room topology:
 - Use STEP1_JSON + LAYOUT_HINTS as primary.
 - Preserve room polygons/openings and area size constraints.
+- If GEMINI main-room inner-boundary hint is provided, use it as authoritative for final outer_polygon (inner wall line).
 
 2) Object inventory (category/count):
 - STEP1_JSON is authoritative for which objects must exist.

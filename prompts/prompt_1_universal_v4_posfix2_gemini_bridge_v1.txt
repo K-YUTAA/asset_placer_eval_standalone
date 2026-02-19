@@ -27,6 +27,27 @@ Object rules:
 - Provide bbox for each object as [xmin, ymin, xmax, ymax] in world meters.
 - dx, dy are world footprint extents along X and Y.
 
+Functional front convention (CRITICAL for front_hint):
+- 0: faces +Y (toward top of image)
+- 90: faces +X (toward right)
+- 180: faces -Y (toward bottom)
+- 270: faces -X (toward left)
+
+Functional front cues by category:
+- bed: direction from headboard to foot side.
+- chair/sofa: direction a seated person would face.
+- tv/monitor: screen facing direction.
+- cabinet/storage/wardrobe/drawer: opening/handle side direction.
+- sink: faucet/user standing side direction.
+- toilet: seated facing direction.
+- door/sliding_door: opening direction into usable room side; if ambiguous, face larger adjacent space.
+
+Front-hint estimation procedure:
+1) Prefer geometric/symbolic cues (headboard, faucet, handle, hinge/swing, panel opening side).
+2) Do NOT infer front from overlaid text orientation alone.
+3) If cues are weak, infer from wall adjacency and reachable free space in front of the object.
+4) If still ambiguous, set front_hint=null (do not guess randomly).
+
 Opening rules:
 - Include all visible doors/windows.
 - Opening center is on wall edge.

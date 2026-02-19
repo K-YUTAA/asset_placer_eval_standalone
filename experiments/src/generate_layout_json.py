@@ -267,6 +267,80 @@ def _extract_room_inner_frame_objects(spatial_json: Dict[str, Any]) -> List[Dict
     return out
 
 
+def _build_main_room_inner_boundary_hint(
+    step1_json: Dict[str, Any],
+    room_inner_frame_objects: List[Dict[str, Any]],
+) -> Optional[Dict[str, Any]]:
+    try:
+        area_x = float(step1_json.get("area_size_X"))
+        area_y = float(step1_json.get("area_size_Y"))
+    except (TypeError, ValueError):
+        return None
+
+    if area_x <= 0.0 or area_y <= 0.0:
+        return None
+
+    best: Optional[Dict[str, Any]] = None
+    best_area = -1.0
+
+    for obj in room_inner_frame_objects:
+        if not isinstance(obj, dict):
+            continue
+        category = str(obj.get("category") or "").strip().lower().replace("-", "_")
+        label = str(obj.get("label") or "").strip().lower()
+        if "subroom" in category or "sub room" in label:
+            continue
+
+        box_norm = obj.get("box_2d_norm")
+        if not isinstance(box_norm, list) or len(box_norm) < 4:
+            continue
+
+        try:
+            nymin = float(box_norm[0])
+            nxmin = float(box_norm[1])
+            nymax = float(box_norm[2])
+            nxmax = float(box_norm[3])
+        except (TypeError, ValueError):
+            continue
+
+        xmin_w = max(0.0, min(1.0, nxmin)) * area_x
+        xmax_w = max(0.0, min(1.0, nxmax)) * area_x
+        ymax_w = (1.0 - max(0.0, min(1.0, nymin))) * area_y
+        ymin_w = (1.0 - max(0.0, min(1.0, nymax))) * area_y
+
+        if xmax_w < xmin_w:
+            xmin_w, xmax_w = xmax_w, xmin_w
+        if ymax_w < ymin_w:
+            ymin_w, ymax_w = ymax_w, ymin_w
+
+        w = xmax_w - xmin_w
+        h = ymax_w - ymin_w
+        if w <= 0.0 or h <= 0.0:
+            continue
+
+        area = w * h
+        if area <= best_area:
+            continue
+
+        polygon = [
+            {"X": round(xmin_w, 3), "Y": round(ymin_w, 3)},
+            {"X": round(xmax_w, 3), "Y": round(ymin_w, 3)},
+            {"X": round(xmax_w, 3), "Y": round(ymax_w, 3)},
+            {"X": round(xmin_w, 3), "Y": round(ymax_w, 3)},
+        ]
+
+        best = {
+            "source_object_id": str(obj.get("id") or ""),
+            "box_world": [round(xmin_w, 3), round(ymin_w, 3), round(xmax_w, 3), round(ymax_w, 3)],
+            "width_world": round(w, 3),
+            "height_world": round(h, 3),
+            "polygon": polygon,
+        }
+        best_area = area
+
+    return best
+
+
 def _is_opening_category(category: str, label: str) -> bool:
     c = str(category or "").strip().lower().replace("-", "_")
     l = str(label or "").strip().lower()
@@ -557,6 +631,10 @@ def main() -> None:
         )
         room_inner_frame_json = room_inner_frame_result["spatial_json"]
         room_inner_frame_objects = _extract_room_inner_frame_objects(room_inner_frame_json)
+        main_room_inner_boundary_hint = _build_main_room_inner_boundary_hint(
+            step1_json=step1_json,
+            room_inner_frame_objects=room_inner_frame_objects,
+        )
         opening_objects: List[Dict[str, Any]] = []
         openings_details: Dict[str, Any] = {"enabled": bool(args.enable_gemini_openings)}
 
@@ -621,11 +699,13 @@ def main() -> None:
                 "outputs": room_inner_frame_result["paths"],
                 "manifest": room_inner_frame_result["manifest_json"],
                 "object_count": len(room_inner_frame_objects),
+                "main_room_inner_boundary_hint": main_room_inner_boundary_hint,
             },
             "openings": openings_details,
         }
     else:
         room_inner_frame_objects = []
+        main_room_inner_boundary_hint = None
         opening_objects = []
 
     step2_prompt_parts = [
@@ -654,6 +734,17 @@ def main() -> None:
                 "\n\nGEMINI_ROOM_POLICY:\n"
                 "- Use room_inner_frame/subroom_inner_frame as primary evidence for room inside boundaries.\n"
                 "- Treat these boxes as interior envelopes (inside face of walls), not outer wall thickness.\n",
+            ]
+        )
+    if main_room_inner_boundary_hint is not None:
+        step2_prompt_parts.extend(
+            [
+                "\n\nGEMINI_MAIN_ROOM_INNER_BOUNDARY_WORLD:\n",
+                json.dumps(main_room_inner_boundary_hint, ensure_ascii=False, indent=2),
+                "\n\nGEMINI_OUTER_BOUNDARY_POLICY:\n"
+                "- Set final outer_polygon to GEMINI_MAIN_ROOM_INNER_BOUNDARY_WORLD.polygon exactly.\n"
+                "- Treat this as the room inner wall line (walkable boundary), not wall outer face.\n"
+                "- If STEP1 outer_polygon conflicts with this inner boundary, prioritize GEMINI_MAIN_ROOM_INNER_BOUNDARY_WORLD.\n",
             ]
         )
     if opening_objects:
