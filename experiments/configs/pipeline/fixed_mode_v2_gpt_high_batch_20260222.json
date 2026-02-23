@@ -28,6 +28,9 @@
     "plot_args": {
       "enabled": true,
       "bg_crop_mode": "none"
+    },
+    "summary_args": {
+      "enabled": true
     }
   },
   "cases": [

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import os
 import pathlib
 import shlex
@@ -108,6 +109,13 @@ def _assert_paths_exist(paths: Sequence[pathlib.Path], *, stage: str) -> None:
         raise FileNotFoundError(f"stage={stage}: expected output file(s) missing: {missing}")
 
 
+def _as_float(value: Any, default: float = 0.0) -> float:
+    try:
+        return float(value)
+    except Exception:
+        return default
+
+
 def _normalize_env(raw: Any) -> Dict[str, str]:
     if not isinstance(raw, dict):
         return {}
@@ -117,6 +125,146 @@ def _normalize_env(raw: Any) -> Dict[str, str]:
         if not k or value is None:
             continue
         out[k] = str(value)
+    return out
+
+
+def _build_batch_summary_png(
+    *,
+    case_dirs: List[pathlib.Path],
+    run_root: pathlib.Path,
+    image_relpath: str,
+    out_name: str,
+    title: str,
+    include_metrics: bool = False,
+) -> Optional[str]:
+    if not case_dirs:
+        return None
+    try:
+        from PIL import Image  # type: ignore
+        import matplotlib.pyplot as plt  # type: ignore
+    except Exception as exc:  # noqa: BLE001
+        print(f"[summary:{out_name}] skipped: failed to import plotting deps: {exc}")
+        return None
+
+    cols = 3
+    rows = max(1, int(math.ceil(len(case_dirs) / float(cols))))
+    fig, axes = plt.subplots(rows, cols, figsize=(7.2 * cols, 5.4 * rows), dpi=160)
+    try:
+        flat_axes = list(axes.reshape(-1))
+    except Exception:
+        flat_axes = [axes]
+
+    for idx, ax in enumerate(flat_axes):
+        if idx >= len(case_dirs):
+            ax.axis("off")
+            continue
+        case_dir = case_dirs[idx]
+        img_path = case_dir / image_relpath
+        if img_path.exists():
+            try:
+                img = Image.open(img_path).convert("RGB")
+                ax.imshow(img)
+            except Exception:  # noqa: BLE001
+                ax.text(0.5, 0.5, "invalid image", ha="center", va="center", fontsize=12)
+        else:
+            ax.text(0.5, 0.5, "missing", ha="center", va="center", fontsize=12)
+        ax.axis("off")
+
+        subtitle = ""
+        if include_metrics:
+            metrics_path = case_dir / "metrics.json"
+            if metrics_path.exists():
+                try:
+                    metrics = _load_json(metrics_path)
+                    subtitle = (
+                        f"C_vis={_as_float(metrics.get('C_vis'), 0.0):.4f}  "
+                        f"R_reach={_as_float(metrics.get('R_reach'), 0.0):.4f}  "
+                        f"clr_min={_as_float(metrics.get('clr_min'), 0.0):.4f}"
+                    )
+                except Exception:  # noqa: BLE001
+                    subtitle = ""
+        if subtitle:
+            ax.set_title(f"{case_dir.name}\n{subtitle}", fontsize=10)
+        else:
+            ax.set_title(case_dir.name, fontsize=10)
+
+    fig.suptitle(title, fontsize=14)
+    fig.tight_layout(rect=[0, 0, 1, 0.965])
+    out_path = run_root / out_name
+    fig.savefig(out_path)
+    plt.close(fig)
+    print(f"[summary:{out_name}] saved: {out_path}")
+    return str(out_path)
+
+
+def _generate_default_batch_summaries(
+    *,
+    results: List[Dict[str, Any]],
+    run_root: pathlib.Path,
+) -> Dict[str, str]:
+    case_dirs: List[pathlib.Path] = []
+    for r in results:
+        if str(r.get("status")) != "ok":
+            continue
+        out_dir = r.get("out_dir")
+        if not out_dir:
+            continue
+        p = pathlib.Path(str(out_dir))
+        if p.exists():
+            case_dirs.append(p)
+    if not case_dirs:
+        return {}
+
+    specs = [
+        {
+            "image_relpath": "plot_with_bg.png",
+            "out_name": "plot_with_bg_batch_summary.png",
+            "title": f"Batch plot_with_bg summary ({len(case_dirs)} cases)",
+            "include_metrics": True,
+            "key": "plot_with_bg_batch_summary",
+        },
+        {
+            "image_relpath": "debug/c_vis_area.png",
+            "out_name": "c_vis_area_batch_summary.png",
+            "title": f"Batch c_vis_area summary ({len(case_dirs)} cases)",
+            "include_metrics": False,
+            "key": "c_vis_area_batch_summary",
+        },
+        {
+            "image_relpath": "debug/c_vis_start_area.png",
+            "out_name": "c_vis_start_area_batch_summary.png",
+            "title": f"Batch c_vis_start_area summary ({len(case_dirs)} cases)",
+            "include_metrics": False,
+            "key": "c_vis_start_area_batch_summary",
+        },
+        {
+            "image_relpath": "debug/c_vis_objects_area.png",
+            "out_name": "c_vis_objects_area_batch_summary.png",
+            "title": f"Batch c_vis_objects_area summary ({len(case_dirs)} cases)",
+            "include_metrics": False,
+            "key": "c_vis_objects_area_batch_summary",
+        },
+        {
+            "image_relpath": "debug/c_vis_start_objects_area.png",
+            "out_name": "c_vis_start_objects_area_batch_summary.png",
+            "title": f"Batch c_vis_start_objects_area summary ({len(case_dirs)} cases)",
+            "include_metrics": False,
+            "key": "c_vis_start_objects_area_batch_summary",
+        },
+    ]
+
+    out: Dict[str, str] = {}
+    for spec in specs:
+        saved = _build_batch_summary_png(
+            case_dirs=case_dirs,
+            run_root=run_root,
+            image_relpath=str(spec["image_relpath"]),
+            out_name=str(spec["out_name"]),
+            title=str(spec["title"]),
+            include_metrics=bool(spec["include_metrics"]),
+        )
+        if saved:
+            out[str(spec["key"])] = saved
     return out
 
 
@@ -302,6 +450,7 @@ def main() -> None:
     if default_eval_args.get("config"):
         default_eval_args["config"] = _to_abs(repo_root, default_eval_args["config"])
     default_plot_args = defaults.get("plot_args") or {"enabled": True, "bg_crop_mode": "none"}
+    default_summary_args = defaults.get("summary_args") or {"enabled": True}
     default_env = _normalize_env(defaults.get("env"))
 
     cases = cfg.get("cases")
@@ -356,6 +505,10 @@ def main() -> None:
             if not continue_on_error:
                 break
 
+    summary_images: Dict[str, str] = {}
+    if _as_bool(default_summary_args.get("enabled"), True):
+        summary_images = _generate_default_batch_summaries(results=results, run_root=run_root)
+
     summary = {
         "config_path": str(config_path),
         "run_root": str(run_root),
@@ -365,6 +518,7 @@ def main() -> None:
         "case_count_requested": len(selected_cases),
         "case_count_completed": sum(1 for r in results if r.get("status") == "ok"),
         "case_count_failed": sum(1 for r in results if r.get("status") != "ok"),
+        "summary_images": summary_images,
         "results": results,
     }
     summary_path = run_root / "batch_manifest.json"

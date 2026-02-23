@@ -81,6 +81,11 @@
   - `metrics.json`
   - `debug/*`
   - `plot_with_bg.png`
+  - `plot_with_bg_batch_summary.png`
+  - `c_vis_area_batch_summary.png`
+  - `c_vis_start_area_batch_summary.png`
+  - `c_vis_objects_area_batch_summary.png`
+  - `c_vis_start_objects_area_batch_summary.png`
 
 ## 実行コマンド
 ```bash

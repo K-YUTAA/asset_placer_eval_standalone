@@ -23,3 +23,12 @@
 - For JSON batch runner (`experiments/src/run_pipeline_from_json.py`), ensure `defaults.python_exec` points to `.venv/bin/python`.
 - If a run fails before any API call due to environment/module error, fixing environment and retrying is allowed.
 - If a run reaches API call stage, do not rerun unless the user explicitly requests it.
+
+## Git workflow policy (single-user repo)
+
+- This repository is operated by a single user.
+- Preferred integration flow:
+  1. Create/update feature branch locally.
+  2. Merge into `main` locally.
+  3. Push `main` to `origin`.
+- Pull requests are optional and should not be required for normal integration.
