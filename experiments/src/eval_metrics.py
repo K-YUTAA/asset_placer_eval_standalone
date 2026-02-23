@@ -1513,7 +1513,26 @@ def evaluate_layout(
     tau_v = as_float(config.get("tau_V"), 0.40)
     tau_delta = as_float(config.get("tau_Delta"), 0.15)
 
-    adopt = int(reach_rate >= tau_r and clr_min >= tau_clr and c_vis >= tau_v and delta_layout <= tau_delta)
+    adopt_core = int(reach_rate >= tau_r and clr_min >= tau_clr and c_vis >= tau_v and delta_layout <= tau_delta)
+
+    adopt_cfg = config.get("adopt") if isinstance(config.get("adopt"), dict) else {}
+    entry_gate_cfg = adopt_cfg.get("entry_gate") if isinstance(adopt_cfg.get("entry_gate"), dict) else {}
+    entry_gate_enabled = bool(entry_gate_cfg.get("enabled", False))
+    entry_gate_metric = str(entry_gate_cfg.get("metric") or "OOE_R_rec_entry_surf")
+    entry_gate_min = as_float(entry_gate_cfg.get("min_value"), 0.0)
+
+    entry_metric_values = {
+        "C_vis_start": c_vis_start,
+        "OOE_C_obj_entry_hit": ooe_c_hit,
+        "OOE_R_rec_entry_hit": ooe_r_hit,
+        "OOE_C_obj_entry_surf": ooe_c_surf,
+        "OOE_R_rec_entry_surf": ooe_r_surf,
+    }
+    entry_gate_value = as_float(entry_metric_values.get(entry_gate_metric), 0.0)
+
+    entry_gate_ok = (not entry_gate_enabled) or (entry_gate_value >= entry_gate_min)
+    adopt_entry = int(adopt_core and entry_gate_ok)
+    adopt = adopt_entry
 
     valid_start = free_mask[start[1]][start[0]] if 0 <= start[1] < ny and 0 <= start[0] < nx else False
     valid_goal = free_mask[goal[1]][goal[0]] if 0 <= goal[1] < ny and 0 <= goal[0] < nx else False
@@ -1527,6 +1546,12 @@ def evaluate_layout(
         "clr_min": max(0.0, clr_min),
         "Delta_layout": delta_layout,
         "Adopt": adopt,
+        "Adopt_core": adopt_core,
+        "Adopt_entry": adopt_entry,
+        "Adopt_entry_gate_enabled": int(entry_gate_enabled),
+        "Adopt_entry_metric": entry_gate_metric,
+        "Adopt_entry_metric_value": entry_gate_value,
+        "Adopt_entry_min_value": entry_gate_min,
         "validity": validity,
         "runtime_sec": runtime_sec,
         "C_vis_start": c_vis_start,
@@ -1561,6 +1586,15 @@ def evaluate_layout(
         "visible_objects_start": visible_objects_start,
         "visible_object_summary": visible_object_summary,
         "distance_to_occ": dist_to_occ,
+    }
+    debug["adopt"] = {
+        "core": adopt_core,
+        "entry": adopt_entry,
+        "entry_gate_enabled": int(entry_gate_enabled),
+        "entry_metric": entry_gate_metric,
+        "entry_metric_value": entry_gate_value,
+        "entry_metric_threshold": entry_gate_min,
+        "entry_gate_ok": int(entry_gate_ok),
     }
     if task_points_debug is not None:
         debug["task_points"] = task_points_debug
