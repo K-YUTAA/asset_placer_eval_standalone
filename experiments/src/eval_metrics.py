@@ -165,6 +165,49 @@ def _normalize_room_poly(room: Dict[str, Any]) -> List[Tuple[float, float]]:
     return points
 
 
+def _normalize_poly_points(raw_poly: Any) -> List[Tuple[float, float]]:
+    points: List[Tuple[float, float]] = []
+    if not isinstance(raw_poly, list):
+        return points
+    for p in raw_poly:
+        if isinstance(p, dict):
+            points.append((as_float(p.get("X", p.get("x", 0.0)), 0.0), as_float(p.get("Y", p.get("y", 0.0)), 0.0)))
+        elif isinstance(p, (list, tuple)) and len(p) >= 2:
+            points.append((as_float(p[0], 0.0), as_float(p[1], 0.0)))
+    return points
+
+
+def _polygon_area_abs(poly: List[Tuple[float, float]]) -> float:
+    n = len(poly)
+    if n < 3:
+        return 0.0
+    area2 = 0.0
+    for i in range(n):
+        x0, y0 = poly[i]
+        x1, y1 = poly[(i + 1) % n]
+        area2 += x0 * y1 - x1 * y0
+    return abs(0.5 * area2)
+
+
+def _segment_on_outer_boundary(
+    p0: Tuple[float, float],
+    p1: Tuple[float, float],
+    outer_segments: List[Tuple[Tuple[float, float], Tuple[float, float]]],
+    tol: float,
+) -> bool:
+    seg_len = math.hypot(p1[0] - p0[0], p1[1] - p0[1])
+    if seg_len <= tol:
+        return True
+    for q0, q1 in outer_segments:
+        overlap = _segment_overlap_collinear(p0, p1, q0, q1, tol)
+        if overlap is None:
+            continue
+        _, _, ov_len = overlap
+        if ov_len >= seg_len - tol:
+            return True
+    return False
+
+
 def _segment_overlap_collinear(
     a0: Tuple[float, float],
     a1: Tuple[float, float],
@@ -375,6 +418,53 @@ def _apply_internal_room_walls(
             p0 = (seg_p0[0] + ux * t0, seg_p0[1] + uy * t0)
             p1 = (seg_p0[0] + ux * t1, seg_p0[1] + uy * t1)
             _mark_wall_segment_cells(occ, room_mask, bounds, resolution, p0, p1)
+
+    # Fallback for overlapping-room representation:
+    # when main room covers whole area and subrooms overlap inside it,
+    # shared-segment logic misses interior partition edges.
+    room_polys = [_normalize_room_poly(room) for room in rooms]
+    room_areas = [_polygon_area_abs(poly) for poly in room_polys]
+    if not room_areas:
+        return
+    main_idx = max(range(len(room_areas)), key=lambda i: room_areas[i])
+
+    outer_poly = _normalize_poly_points(((layout.get("room") or {}).get("boundary_poly_xy")))
+    outer_segments: List[Tuple[Tuple[float, float], Tuple[float, float]]] = []
+    if len(outer_poly) >= 3:
+        for i in range(len(outer_poly)):
+            outer_segments.append((outer_poly[i], outer_poly[(i + 1) % len(outer_poly)]))
+
+    for room_idx, room in enumerate(rooms):
+        if room_idx == main_idx:
+            continue
+        poly = room_polys[room_idx]
+        n = len(poly)
+        if n < 3:
+            continue
+        for i in range(n):
+            seg_p0 = poly[i]
+            seg_p1 = poly[(i + 1) % n]
+            seg_len = math.hypot(seg_p1[0] - seg_p0[0], seg_p1[1] - seg_p0[1])
+            if seg_len <= tol:
+                continue
+            if outer_segments and _segment_on_outer_boundary(seg_p0, seg_p1, outer_segments, tol):
+                continue
+            opening_intervals = _opening_intervals_on_segment(
+                seg_p0=seg_p0,
+                seg_p1=seg_p1,
+                seg_len=seg_len,
+                room_entries=[(room_idx, room)],
+                resolution=resolution,
+            )
+            wall_ranges = _subtract_intervals(0.0, seg_len, opening_intervals, tol)
+            if not wall_ranges:
+                continue
+            ux = (seg_p1[0] - seg_p0[0]) / max(seg_len, 1e-9)
+            uy = (seg_p1[1] - seg_p0[1]) / max(seg_len, 1e-9)
+            for t0, t1 in wall_ranges:
+                p0 = (seg_p0[0] + ux * t0, seg_p0[1] + uy * t0)
+                p1 = (seg_p0[0] + ux * t1, seg_p0[1] + uy * t1)
+                _mark_wall_segment_cells(occ, room_mask, bounds, resolution, p0, p1)
 
 
 def _inflate_occupancy(occ: Grid, radius_cells: int) -> Grid:

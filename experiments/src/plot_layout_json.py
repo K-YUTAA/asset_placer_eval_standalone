@@ -123,7 +123,55 @@ def _background_mask(arr: Any, crop_mode: str) -> Any:
     return (r < 245) | (g < 245) | (b < 245)
 
 
-def _load_background_image(path: pathlib.Path, crop_mode: str, flip_ud: bool):
+def _is_main_room_inner_frame(category: str, label: str) -> bool:
+    c = str(category or "").strip().lower().replace("-", "_")
+    l = str(label or "").strip().lower()
+    if "subroom" in c or "sub_room" in c or "subroom" in l or "sub room" in l:
+        return False
+    return c == "room_inner_frame" or l == "room_inner_frame" or ("room" in c and "inner" in c and "frame" in c)
+
+
+def _extract_inner_frame_box_px(inner_frame_json: Optional[Dict[str, Any]]) -> Optional[Tuple[int, int, int, int]]:
+    if not isinstance(inner_frame_json, dict):
+        return None
+    objs = inner_frame_json.get("furniture_objects")
+    if not isinstance(objs, list):
+        return None
+
+    best: Optional[Tuple[int, int, int, int]] = None
+    best_area = -1.0
+    for obj in objs:
+        if not isinstance(obj, dict):
+            continue
+        if not _is_main_room_inner_frame(str(obj.get("category") or ""), str(obj.get("label") or "")):
+            continue
+        box = obj.get("box_2d_px")
+        if not (isinstance(box, list) and len(box) >= 4):
+            continue
+        try:
+            x0 = int(round(float(box[0])))
+            y0 = int(round(float(box[1])))
+            x1 = int(round(float(box[2])))
+            y1 = int(round(float(box[3])))
+        except (TypeError, ValueError):
+            continue
+        if x1 < x0:
+            x0, x1 = x1, x0
+        if y1 < y0:
+            y0, y1 = y1, y0
+        area = float(max(0, x1 - x0) * max(0, y1 - y0))
+        if area > best_area:
+            best = (x0, y0, x1, y1)
+            best_area = area
+    return best
+
+
+def _load_background_image(
+    path: pathlib.Path,
+    crop_mode: str,
+    flip_ud: bool,
+    inner_frame_box_px: Optional[Tuple[int, int, int, int]] = None,
+):
     try:
         import numpy as np
         import cv2
@@ -137,26 +185,35 @@ def _load_background_image(path: pathlib.Path, crop_mode: str, flip_ud: bool):
 
     img = Image.open(path).convert("RGB")
     arr = np.array(img)
-    mask = _background_mask(arr, crop_mode)
-    if mask is not None:
-        # Use largest connected mask area to avoid loose pixels at the border.
-        labels_n, labels, stats, _ = cv2.connectedComponentsWithStats(mask.astype(np.uint8), connectivity=8)
-        if labels_n > 1:
-            areas = stats[1:, cv2.CC_STAT_AREA]
-            best = 1 + int(np.argmax(areas))
-            x_min = int(stats[best, cv2.CC_STAT_LEFT])
-            y_min = int(stats[best, cv2.CC_STAT_TOP])
-            w = int(stats[best, cv2.CC_STAT_WIDTH])
-            h = int(stats[best, cv2.CC_STAT_HEIGHT])
-            x_max = x_min + w - 1
-            y_max = y_min + h - 1
-            arr = arr[y_min : y_max + 1, x_min : x_max + 1, :]
-        else:
-            ys, xs = np.where(mask)
-            if len(xs) > 0 and len(ys) > 0:
-                x_min, x_max = int(xs.min()), int(xs.max())
-                y_min, y_max = int(ys.min()), int(ys.max())
+    if inner_frame_box_px is not None:
+        h, w = arr.shape[0], arr.shape[1]
+        x0, y0, x1, y1 = inner_frame_box_px
+        x0 = max(0, min(w - 1, int(x0)))
+        y0 = max(0, min(h - 1, int(y0)))
+        x1 = max(x0 + 1, min(w, int(x1)))
+        y1 = max(y0 + 1, min(h, int(y1)))
+        arr = arr[y0:y1, x0:x1, :]
+    else:
+        mask = _background_mask(arr, crop_mode)
+        if mask is not None:
+            # Use largest connected mask area to avoid loose pixels at the border.
+            labels_n, labels, stats, _ = cv2.connectedComponentsWithStats(mask.astype(np.uint8), connectivity=8)
+            if labels_n > 1:
+                areas = stats[1:, cv2.CC_STAT_AREA]
+                best = 1 + int(np.argmax(areas))
+                x_min = int(stats[best, cv2.CC_STAT_LEFT])
+                y_min = int(stats[best, cv2.CC_STAT_TOP])
+                w = int(stats[best, cv2.CC_STAT_WIDTH])
+                h = int(stats[best, cv2.CC_STAT_HEIGHT])
+                x_max = x_min + w - 1
+                y_max = y_min + h - 1
                 arr = arr[y_min : y_max + 1, x_min : x_max + 1, :]
+            else:
+                ys, xs = np.where(mask)
+                if len(xs) > 0 and len(ys) > 0:
+                    x_min, x_max = int(xs.min()), int(xs.max())
+                    y_min, y_max = int(ys.min()), int(ys.max())
+                    arr = arr[y_min : y_max + 1, x_min : x_max + 1, :]
     if flip_ud:
         arr = np.flipud(arr)
     return arr
@@ -377,6 +434,11 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument("--metrics_json", default=None, help="Optional metrics.json path for in-figure metric overlay")
     parser.add_argument("--task_points_json", default=None, help="Optional task_points.json path for anchor overlay (s0,s,t,c,g_bed)")
     parser.add_argument("--path_json", default=None, help="Optional path_cells.json path for A* path overlay")
+    parser.add_argument(
+        "--bg_inner_frame_json",
+        default=None,
+        help="Optional Gemini room-inner-frame JSON. If set, background is cropped to main room inner frame box_2d_px.",
+    )
     return parser
 
 
@@ -414,10 +476,13 @@ def main() -> None:
     room_polys = _extract_rooms(raw_layout)
 
     if args.bg_image:
+        inner_frame_json = _load_json_optional(args.bg_inner_frame_json)
+        inner_frame_box_px = _extract_inner_frame_box_px(inner_frame_json)
         bg = _load_background_image(
             pathlib.Path(args.bg_image),
             crop_mode=args.bg_crop_mode,
             flip_ud=(not args.bg_no_flip),
+            inner_frame_box_px=inner_frame_box_px,
         )
         area_x = as_float(raw_layout.get("area_size_X"), 0.0)
         area_y = as_float(raw_layout.get("area_size_Y"), 0.0)
