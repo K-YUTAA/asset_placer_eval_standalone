@@ -68,6 +68,44 @@ def _obj_text(obj: Dict[str, Any]) -> str:
     return f"{obj.get('id','')} {obj.get('category','')} {obj.get('asset_query','')}".lower()
 
 
+def _room_bbox_xy(layout: Dict[str, Any]) -> Optional[Tuple[float, float, float, float]]:
+    room = layout.get("room")
+    if not isinstance(room, dict):
+        return None
+    poly = room.get("boundary_poly_xy")
+    if not isinstance(poly, list) or not poly:
+        return None
+
+    xs: List[float] = []
+    ys: List[float] = []
+    for p in poly:
+        if isinstance(p, (list, tuple)) and len(p) >= 2:
+            xs.append(as_float(p[0], 0.0))
+            ys.append(as_float(p[1], 0.0))
+    if not xs or not ys:
+        return None
+    return (min(xs), min(ys), max(xs), max(ys))
+
+
+def _door_center_xy(obj: Dict[str, Any]) -> Tuple[float, float]:
+    pose = obj.get("pose_xyz_yaw") or [0.0, 0.0, 0.0, 0.0]
+    x = as_float(pose[0] if len(pose) > 0 else 0.0, 0.0)
+    y = as_float(pose[1] if len(pose) > 1 else 0.0, 0.0)
+    return x, y
+
+
+def _is_outer_door_candidate(
+    obj: Dict[str, Any],
+    room_bbox: Tuple[float, float, float, float],
+    max_dist_m: float,
+) -> bool:
+    min_x, min_y, max_x, max_y = room_bbox
+    x, y = _door_center_xy(obj)
+    d = min(abs(x - min_x), abs(max_x - x), abs(y - min_y), abs(max_y - y))
+    thr = max(0.05, float(max_dist_m))
+    return d <= thr
+
+
 def _select_object(
     candidates: List[Dict[str, Any]],
     strategy: str,
@@ -143,12 +181,28 @@ def _snap_cell_to_free(cell: Cell, free_mask: Grid, max_radius_cells: int) -> Tu
 
 def _resolve_door(layout: Dict[str, Any], start_spec: Dict[str, Any], room_centroid: Tuple[float, float]) -> Optional[Dict[str, Any]]:
     objects = [o for o in layout.get("objects", []) if isinstance(o, dict)]
-    doors = [o for o in objects if "door" in _obj_text(o)]
+    doors_all = [o for o in objects if "door" in _obj_text(o)]
+    if not doors_all:
+        return None
 
-    # Prefer sliding door if available.
-    sliding = [o for o in doors if "sliding" in _obj_text(o)]
-    if sliding:
-        doors = sliding
+    room_bbox = _room_bbox_xy(layout)
+    prefer_outer = str(start_spec.get("prefer_outer_door", "true")).strip().lower() not in {"0", "false", "no"}
+    outer_max_dist_m = as_float(start_spec.get("outer_door_max_dist_m"), 0.35)
+
+    outer_doors: List[Dict[str, Any]] = []
+    if prefer_outer and room_bbox is not None:
+        outer_doors = [o for o in doors_all if _is_outer_door_candidate(o, room_bbox, outer_max_dist_m)]
+
+    sliding_outer = [o for o in outer_doors if "sliding" in _obj_text(o)]
+    sliding_all = [o for o in doors_all if "sliding" in _obj_text(o)]
+    if sliding_outer:
+        doors = sliding_outer
+    elif outer_doors:
+        doors = outer_doors
+    elif sliding_all:
+        doors = sliding_all
+    else:
+        doors = doors_all
 
     selector = start_spec.get("door_selector")
     strategy = ""

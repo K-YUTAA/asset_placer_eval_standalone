@@ -161,7 +161,7 @@ def _extract_rooms(raw: Dict[str, Any]) -> List[Dict[str, Any]]:
     return rooms
 
 
-def _map_extension_object(raw_obj: Dict[str, Any]) -> Dict[str, Any]:
+def _map_extension_object(raw_obj: Dict[str, Any], size_mode: str = "local") -> Dict[str, Any]:
     category = str(
         raw_obj.get("category")
         or raw_obj.get("object_category")
@@ -177,7 +177,9 @@ def _map_extension_object(raw_obj: Dict[str, Any]) -> Dict[str, Any]:
     x = as_float(raw_obj.get("X", raw_obj.get("x", 0.0)), 0.0)
     y = as_float(raw_obj.get("Y", raw_obj.get("y", 0.0)), 0.0)
     z = as_float(raw_obj.get("Z", raw_obj.get("z", 0.0)), 0.0)
-    yaw = yaw_to_rad(raw_obj.get("rotationZ", raw_obj.get("yaw", 0.0)))
+    yaw_raw = yaw_to_rad(raw_obj.get("rotationZ", raw_obj.get("yaw", 0.0)))
+    size_mode_norm = str(size_mode or "").strip().lower()
+    yaw = 0.0 if size_mode_norm == "world" else yaw_raw
 
     return {
         "id": raw_obj.get("id"),
@@ -187,6 +189,7 @@ def _map_extension_object(raw_obj: Dict[str, Any]) -> Dict[str, Any]:
         "scale": list(raw_obj.get("scale") or [1.0, 1.0, 1.0]),
         "size_lwh_m": [length, width, height],
         "pose_xyz_yaw": [x, y, z, yaw],
+        "functional_yaw_rad": yaw_raw,
         "movable": bool(raw_obj.get("movable", True)),
     }
 
@@ -241,6 +244,7 @@ def _normalize_ids(objects: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
 def normalize_layout(raw_layout: Dict[str, Any], layout_id: str | None = None, source: str = "v0") -> Dict[str, Any]:
     room = _build_room(raw_layout)
     rooms = _extract_rooms(raw_layout)
+    size_mode = str(raw_layout.get("size_mode") or "local")
 
     raw_objects: List[Dict[str, Any]] = []
     if isinstance(raw_layout.get("objects"), list):
@@ -253,7 +257,7 @@ def normalize_layout(raw_layout: Dict[str, Any], layout_id: str | None = None, s
         if "pose_xyz_yaw" in raw_obj or "size_lwh_m" in raw_obj:
             objects.append(_map_contract_object(raw_obj))
         else:
-            objects.append(_map_extension_object(raw_obj))
+            objects.append(_map_extension_object(raw_obj, size_mode=size_mode))
 
     objects = _normalize_ids(objects)
 

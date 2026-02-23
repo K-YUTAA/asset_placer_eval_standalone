@@ -1,0 +1,7 @@
+This image is a floor plan. Detect the shapes (outline lines) of the labeled furniture/equipment and return tight bounding boxes around the outer contour of each item.
+
+Important:
+Do NOT draw bounding boxes around printed text in the image (e.g., the words "Sink", "Storage" themselves).
+Use the text only to identify which furniture/equipment item it refers to, but the bounding box must enclose the drawn shape (the actual outline) of the item.
+Even if the label text overlaps the furniture, ignore the text and box only the outer contour of the shape.
+Do NOT include walls, windows, doors, or other architectural lines.

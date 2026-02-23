@@ -30,7 +30,7 @@ uv run python experiments/src/generate_layout_json.py \
 
 主なオプション:
 
-- `--prompt1_path`, `--prompt2_path`: デフォルトは `prompts/prompt_step*_universal_v7.txt`
+- `--prompt1_path`, `--prompt2_path`: デフォルトは `prompts/prompt_*_universal_v4_posfix2_gemini_bridge_v1.txt`
 - `--step2_text_only`: Step2 で画像 + dimensions を渡さない
 - `--analysis_input`: Step1 をスキップして既存の Step1 JSON/テキストを利用
 
@@ -76,3 +76,20 @@ uv run python experiments/src/run_generate_and_eval.py \
   --out_dir experiments/runs/demo_pipeline \
   --bg_image experiments/fixtures/sketches/example.png
 ```
+
+## 7. JSON設定での一括実行（推奨）
+
+最新運用では、生成・評価・可視化の設定を JSON に集約して実行します。
+
+```bash
+uv run python experiments/src/run_pipeline_from_json.py \
+  --config experiments/configs/pipeline/latest_design_v2_gpt_high.json
+```
+
+主要仕様:
+
+- `defaults.generation_args`: `generate_layout_json.py` のオプションを JSON で指定
+- `defaults.eval_args`: `eval_metrics.py` のオプションを JSON で指定
+- `defaults.plot_args`: `plot_layout_json.py` のオプションを JSON で指定
+- `defaults.env` / `cases[].env`: 実行時環境変数を JSON から注入可能
+- 各ステージ完了時に、期待出力ファイルの存在を必ず確認

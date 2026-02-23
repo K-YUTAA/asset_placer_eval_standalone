@@ -1,0 +1,11 @@
+This image is a floor plan. Detect only room inner boundary frames (inside face of walls).
+Return a JSON list where each entry has keys "label", "box_2d", and "mask".
+Use label "room_inner_frame" for exactly one global main interior envelope and "subroom_inner_frame" for each enclosed sub-room.
+The main room_inner_frame must be the largest axis-aligned rectangle that stays inside inner wall lines of the whole unit.
+Do NOT shrink the main room to avoid subrooms; subroom_inner_frame may be inside/overlap the main room rectangle.
+Each subroom_inner_frame must also be the largest axis-aligned rectangle inside that enclosed subroom, touching enclosing inner walls whenever possible.
+Each frame must be tight to inside wall lines with zero intentional padding (no inset and no expansion), and expanded maximally until any side would cross outside inner walls.
+Do not shrink any frame to avoid text labels; prioritize wall lines over text glyphs.
+The mask must represent interior floor area for that same rectangle.
+Do not include wall thickness, exterior space, furniture, text labels, doors, or windows.
+box_2d must be the tight rectangle of the returned mask.
