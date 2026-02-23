@@ -17,6 +17,29 @@ ARCH_CATEGORIES = {
     "subroom_inner_frame",
 }
 
+ROOM_LIKE_CATEGORY_TOKENS = {
+    "room",
+    "main_room",
+    "subroom",
+    "bedroom",
+    "living_room",
+    "dining_room",
+    "kitchen",
+    "bathroom",
+    "washroom",
+    "restroom",
+    "toilet_room",
+    "wc_room",
+    "walk_in_closet",
+    "closet_room",
+    "corridor",
+    "hallway",
+    "entry",
+    "entrance",
+    "genkan",
+    "studio",
+}
+
 DEFAULT_OBJECT_HEIGHT = {
     "bed": 0.55,
     "chair": 0.9,
@@ -70,6 +93,19 @@ def _canonical_category(raw: Any) -> str:
     if text == "tvcabinet":
         return "tv_cabinet"
     return text or "unknown"
+
+
+def _is_room_like_detection_token(raw: Any) -> bool:
+    token = _canonical_category(raw)
+    if not token or token == "toilet":
+        return False
+    if token in ROOM_LIKE_CATEGORY_TOKENS:
+        return True
+    if "walk_in_closet" in token:
+        return True
+    if token.startswith("room_") or token.endswith("_room"):
+        return True
+    return False
 
 
 def _normalize_angle(angle: Any) -> Optional[int]:
@@ -175,6 +211,17 @@ def _to_local_xy(x: float, y: float, tx: Dict[str, float]) -> Tuple[float, float
     return lx, ly
 
 
+def _rect_polygon_from_local_bbox(bbox_local: Dict[str, float]) -> List[Dict[str, float]]:
+    return _clean_polygon(
+        [
+            {"X": _r3(bbox_local["xmin"]), "Y": _r3(bbox_local["ymin"])},
+            {"X": _r3(bbox_local["xmax"]), "Y": _r3(bbox_local["ymin"])},
+            {"X": _r3(bbox_local["xmax"]), "Y": _r3(bbox_local["ymax"])},
+            {"X": _r3(bbox_local["xmin"]), "Y": _r3(bbox_local["ymax"])},
+        ]
+    )
+
+
 def _bbox_norm_to_world(box_norm: List[Any], area_x: float, area_y: float) -> Optional[Dict[str, float]]:
     if not isinstance(box_norm, list) or len(box_norm) < 4:
         return None
@@ -234,6 +281,261 @@ def _localize_bbox(bbox_world: Dict[str, float], tx: Dict[str, float]) -> Dict[s
     }
 
 
+def _extract_step1_rooms_local(
+    step1_json: Dict[str, Any],
+    tx: Dict[str, float],
+    outer_polygon: List[Dict[str, float]],
+) -> List[Dict[str, Any]]:
+    rooms_step1 = step1_json.get("rooms")
+    rooms_out: List[Dict[str, Any]] = []
+    if not isinstance(rooms_step1, list):
+        return rooms_out
+
+    for idx, room in enumerate(rooms_step1):
+        if not isinstance(room, dict):
+            continue
+        room_id = str(room.get("room_id") or f"room_{idx + 1}")
+        room_name = str(room.get("room_name") or room_id)
+        poly_src = room.get("room_polygon")
+        poly_local: List[Dict[str, float]] = []
+        if isinstance(poly_src, list):
+            for p in poly_src:
+                if not isinstance(p, dict):
+                    continue
+                x, y = _to_local_xy(_to_float(p.get("X")), _to_float(p.get("Y")), tx)
+                poly_local.append({"X": _r3(x), "Y": _r3(y)})
+        poly_local = _clean_polygon(poly_local)
+        if len(poly_local) < 3:
+            poly_local = outer_polygon.copy()
+        rooms_out.append({"room_id": room_id, "room_name": room_name, "room_polygon": poly_local, "openings": []})
+    return rooms_out
+
+
+def _build_rooms_from_gemini_inner_frames(
+    room_inner_frame_objects: Optional[List[Dict[str, Any]]],
+    step1_rooms_local: List[Dict[str, Any]],
+    tx: Dict[str, float],
+    base_area_x: float,
+    base_area_y: float,
+    area_x: float,
+    area_y: float,
+    obstacle_boxes_local: Optional[List[Dict[str, float]]],
+    outer_polygon: List[Dict[str, float]],
+) -> Optional[List[Dict[str, Any]]]:
+    if not isinstance(room_inner_frame_objects, list):
+        return None
+
+    parsed: List[Dict[str, Any]] = []
+    for obj in room_inner_frame_objects:
+        if not isinstance(obj, dict):
+            continue
+        category = _canonical_category(obj.get("category") or obj.get("label"))
+        if "inner_frame" not in category:
+            continue
+        bw = _bbox_norm_to_world(obj.get("box_2d_norm"), base_area_x, base_area_y)
+        if bw is None:
+            continue
+        bl = _localize_bbox(bw, tx)
+        if bl["dx"] <= 0.05 or bl["dy"] <= 0.05:
+            continue
+        parsed.append(
+            {
+                "category": category,
+                "bbox_local": bl,
+                "is_subroom": ("subroom" in category or "sub_room" in category),
+            }
+        )
+
+    if not parsed:
+        return None
+
+    main_template = None
+    if step1_rooms_local:
+        main_template = max(step1_rooms_local, key=lambda r: _polygon_area(r["room_polygon"]))
+
+    main_room_id = str(main_template["room_id"]) if isinstance(main_template, dict) else "room_1"
+    main_room_name = str(main_template["room_name"]) if isinstance(main_template, dict) else "room"
+
+    rooms_out: List[Dict[str, Any]] = [
+        {
+            "room_id": main_room_id,
+            "room_name": main_room_name,
+            "room_polygon": outer_polygon.copy(),
+            "openings": [],
+        }
+    ]
+    used_room_ids = {main_room_id}
+
+    subrooms = [p for p in parsed if bool(p.get("is_subroom"))]
+    subrooms.sort(key=lambda x: float(x["bbox_local"]["dx"] * x["bbox_local"]["dy"]), reverse=True)
+
+    for idx, sub in enumerate(subrooms):
+        b = dict(sub["bbox_local"])
+        b = _snap_subroom_bbox_to_main_if_near(
+            bbox_local=b,
+            area_x=area_x,
+            area_y=area_y,
+            obstacle_boxes_local=(obstacle_boxes_local or []),
+            snap_threshold=0.8,
+            max_snap_edges=2,
+        )
+        poly = _rect_polygon_from_local_bbox(b)
+        if len(poly) < 3:
+            continue
+
+        cx = float(b["cx"])
+        cy = float(b["cy"])
+        matched: Optional[Dict[str, Any]] = None
+        best_area = math.inf
+        for r in step1_rooms_local:
+            rid = str(r.get("room_id") or "")
+            if not rid or rid == main_room_id:
+                continue
+            if _point_in_polygon(cx, cy, r["room_polygon"]):
+                area = _polygon_area(r["room_polygon"])
+                if area < best_area:
+                    best_area = area
+                    matched = r
+
+        if matched is not None:
+            room_id = str(matched.get("room_id") or f"subroom_{idx + 1}")
+            room_name = str(matched.get("room_name") or room_id)
+        else:
+            room_id = f"subroom_{idx + 1}"
+            room_name = "subroom"
+
+        if room_id in used_room_ids:
+            room_id = f"{room_id}_{idx + 1}"
+        used_room_ids.add(room_id)
+
+        rooms_out.append(
+            {
+                "room_id": room_id,
+                "room_name": room_name,
+                "room_polygon": poly,
+                "openings": [],
+            }
+        )
+
+    return rooms_out if rooms_out else None
+
+
+def _collect_obstacle_boxes_local(
+    gemini_spatial_json: Optional[Dict[str, Any]],
+    tx: Dict[str, float],
+    base_area_x: float,
+    base_area_y: float,
+) -> List[Dict[str, float]]:
+    out: List[Dict[str, float]] = []
+    if not isinstance(gemini_spatial_json, dict):
+        return out
+    objects = gemini_spatial_json.get("furniture_objects")
+    if not isinstance(objects, list):
+        return out
+
+    for obj in objects:
+        if not isinstance(obj, dict):
+            continue
+        category = _canonical_category(obj.get("category") or obj.get("label"))
+        label_category = _canonical_category(obj.get("label"))
+        if not category or category in ARCH_CATEGORIES:
+            continue
+        if _is_room_like_detection_token(category) or _is_room_like_detection_token(label_category):
+            continue
+        bw = _bbox_norm_to_world(obj.get("box_2d_norm"), base_area_x, base_area_y)
+        if bw is None:
+            continue
+        bl = _localize_bbox(bw, tx)
+        if bl["dx"] <= 0.03 or bl["dy"] <= 0.03:
+            continue
+        out.append(bl)
+    return out
+
+
+def _rects_intersect(a: Dict[str, float], b: Dict[str, float], eps: float = 1e-6) -> bool:
+    return (
+        min(a["xmax"], b["xmax"]) - max(a["xmin"], b["xmin"]) > eps
+        and min(a["ymax"], b["ymax"]) - max(a["ymin"], b["ymin"]) > eps
+    )
+
+
+def _subroom_strip_blocked(
+    edge: str,
+    bbox_local: Dict[str, float],
+    area_x: float,
+    area_y: float,
+    obstacle_boxes_local: List[Dict[str, float]],
+) -> bool:
+    if edge == "left":
+        strip = {"xmin": 0.0, "xmax": bbox_local["xmin"], "ymin": bbox_local["ymin"], "ymax": bbox_local["ymax"]}
+    elif edge == "right":
+        strip = {"xmin": bbox_local["xmax"], "xmax": area_x, "ymin": bbox_local["ymin"], "ymax": bbox_local["ymax"]}
+    elif edge == "bottom":
+        strip = {"xmin": bbox_local["xmin"], "xmax": bbox_local["xmax"], "ymin": 0.0, "ymax": bbox_local["ymin"]}
+    elif edge == "top":
+        strip = {"xmin": bbox_local["xmin"], "xmax": bbox_local["xmax"], "ymin": bbox_local["ymax"], "ymax": area_y}
+    else:
+        return True
+
+    if (strip["xmax"] - strip["xmin"]) <= 0.015 or (strip["ymax"] - strip["ymin"]) <= 0.015:
+        return False
+
+    for ob in obstacle_boxes_local:
+        if _rects_intersect(strip, ob):
+            return True
+    return False
+
+
+def _snap_subroom_bbox_to_main_if_near(
+    bbox_local: Dict[str, float],
+    area_x: float,
+    area_y: float,
+    obstacle_boxes_local: List[Dict[str, float]],
+    snap_threshold: float = 0.14,
+    max_snap_edges: int = 2,
+) -> Dict[str, float]:
+    b = dict(bbox_local)
+    distances = [
+        ("left", float(b["xmin"])),
+        ("right", float(area_x - b["xmax"])),
+        ("bottom", float(b["ymin"])),
+        ("top", float(area_y - b["ymax"])),
+    ]
+    distances.sort(key=lambda kv: kv[1])
+
+    snapped = 0
+    for edge, dist in distances:
+        if snapped >= max_snap_edges:
+            break
+        if dist < 0.0 or dist > float(snap_threshold):
+            continue
+        if _subroom_strip_blocked(edge, b, area_x, area_y, obstacle_boxes_local):
+            continue
+        if edge == "left":
+            b["xmin"] = 0.0
+        elif edge == "right":
+            b["xmax"] = area_x
+        elif edge == "bottom":
+            b["ymin"] = 0.0
+        elif edge == "top":
+            b["ymax"] = area_y
+        snapped += 1
+
+    b["xmin"] = _clamp(float(b["xmin"]), 0.0, area_x)
+    b["xmax"] = _clamp(float(b["xmax"]), 0.0, area_x)
+    b["ymin"] = _clamp(float(b["ymin"]), 0.0, area_y)
+    b["ymax"] = _clamp(float(b["ymax"]), 0.0, area_y)
+    if b["xmax"] < b["xmin"]:
+        b["xmin"], b["xmax"] = b["xmax"], b["xmin"]
+    if b["ymax"] < b["ymin"]:
+        b["ymin"], b["ymax"] = b["ymax"], b["ymin"]
+    b["dx"] = max(0.0, b["xmax"] - b["xmin"])
+    b["dy"] = max(0.0, b["ymax"] - b["ymin"])
+    b["cx"] = (b["xmin"] + b["xmax"]) * 0.5
+    b["cy"] = (b["ymin"] + b["ymax"]) * 0.5
+    return b
+
+
 def _gemini_candidates_by_category(
     gemini_spatial_json: Optional[Dict[str, Any]],
     area_x: float,
@@ -250,7 +552,10 @@ def _gemini_candidates_by_category(
         if not isinstance(obj, dict):
             continue
         category = _canonical_category(obj.get("category") or obj.get("label"))
+        label_category = _canonical_category(obj.get("label"))
         if not category or category in ARCH_CATEGORIES:
+            continue
+        if _is_room_like_detection_token(category) or _is_room_like_detection_token(label_category):
             continue
         box_world = _bbox_norm_to_world(obj.get("box_2d_norm"), area_x, area_y)
         if box_world is None:
@@ -319,6 +624,7 @@ def _pick_best_candidate(
             continue
         bw = cand["box_world"]
         dc = math.hypot(bw["cx"] - cx, bw["cy"] - cy)
+
         ds = abs(bw["dx"] - dx) + abs(bw["dy"] - dy)
         score = dc + (0.35 * ds)
         if score < best_score:
@@ -345,29 +651,136 @@ def _opening_orientation(opening: Dict[str, Any], area_x: float, area_y: float) 
     return "vertical" if min(d_left, d_right) <= min(d_bottom, d_top) else "horizontal"
 
 
+def _opening_front_hint(
+    opening: Dict[str, Any],
+    orientation: str,
+    x: float,
+    y: float,
+    area_x: float,
+    area_y: float,
+) -> int:
+    hinted = _normalize_angle(opening.get("front_hint"))
+    if hinted is None:
+        for key in ("door_front_hint", "rotationZ", "rotation"):
+            hinted = _normalize_angle(opening.get(key))
+            if hinted is not None:
+                break
+
+    if orientation == "vertical":
+        allowed = {90, 270}
+        fallback = 90 if x <= (area_x * 0.5) else 270
+    else:
+        allowed = {0, 180}
+        fallback = 0 if y <= (area_y * 0.5) else 180
+
+    if hinted in allowed:
+        return int(hinted)
+    return int(fallback)
+
+
+def _opening_wall_role(opening: Dict[str, Any]) -> str:
+    room_ids_raw = opening.get("room_ids")
+    if isinstance(room_ids_raw, list):
+        room_ids = [str(r).strip().lower() for r in room_ids_raw if isinstance(r, (str, int, float))]
+        room_ids = [r for r in room_ids if r]
+        if any(r in {"outside", "outdoor", "exterior"} for r in room_ids):
+            return "outer"
+        uniq = {r for r in room_ids if r not in {"outside", "outdoor", "exterior"}}
+        if len(uniq) >= 2:
+            return "interior"
+
+    wall = str(opening.get("wall") or "").strip().lower()
+    if not wall:
+        return "unknown"
+    if any(tok in wall for tok in ("outer", "outside", "exterior", "north", "south", "east", "west")):
+        return "outer"
+    if any(tok in wall for tok in ("_left_wall", "_right_wall", "_top_wall", "_bottom_wall")):
+        return "interior"
+    if any(tok in wall for tok in ("interior", "partition", "shared")):
+        return "interior"
+    return "unknown"
+
+
 def _pick_opening_candidate(
     opening: Dict[str, Any],
     candidates: List[Dict[str, Any]],
     used_uids: set[str],
+    orientation: str,
+    base_width: float,
+    area_x: float,
+    area_y: float,
 ) -> Optional[Dict[str, Any]]:
     want_type = str(opening.get("type") or "").lower()
     want_kind = "window" if want_type == "window" else "door"
     cx = _to_float(opening.get("cx"), 0.0)
     cy = _to_float(opening.get("cy"), 0.0)
+    base_w = max(0.05, abs(base_width))
+    wall_role = _opening_wall_role(opening)
+    outer_band = max(0.25, 0.08 * min(max(area_x, 0.1), max(area_y, 0.1)))
 
     best = None
     best_score = math.inf
+    best_any = None
+    best_any_score = math.inf
     for cand in candidates:
         if cand["uid"] in used_uids or cand["kind"] != want_kind:
             continue
         bw = cand["box_world"]
-        score = math.hypot(bw["cx"] - cx, bw["cy"] - cy)
+        if orientation == "vertical":
+            cand_width = max(0.05, bw["dy"])
+            d_along = abs(bw["cy"] - cy)
+            d_cross = abs(bw["cx"] - cx)
+            cand_orient = "vertical" if bw["dy"] >= bw["dx"] else "horizontal"
+        else:
+            cand_width = max(0.05, bw["dx"])
+            d_along = abs(bw["cx"] - cx)
+            d_cross = abs(bw["cy"] - cy)
+            cand_orient = "horizontal" if bw["dx"] >= bw["dy"] else "vertical"
+
+        width_ratio = cand_width / base_w
+        width_penalty = 0.0
+        if width_ratio < 0.45 or width_ratio > 2.0:
+            width_penalty += 2.0
+        elif width_ratio < 0.65 or width_ratio > 1.6:
+            width_penalty += 0.8
+        if "sliding" in str(cand.get("category") or "").lower() and width_ratio > 1.35:
+            width_penalty += 1.2
+        orient_penalty = 0.0 if cand_orient == orientation else 0.9
+        cand_outer_dist = min(
+            abs(bw["cx"] - 0.0),
+            abs(area_x - bw["cx"]),
+            abs(bw["cy"] - 0.0),
+            abs(area_y - bw["cy"]),
+        )
+        cand_is_outer = cand_outer_dist <= outer_band
+        # Cross-wall mismatch is strongly penalized.
+        score = (
+            d_along
+            + (2.8 * d_cross)
+            + (0.35 * abs(cand_width - base_w))
+            + width_penalty
+            + orient_penalty
+        )
+        if score < best_any_score:
+            best_any_score = score
+            best_any = cand
+
+        wall_role_match = (
+            wall_role == "unknown"
+            or (wall_role == "outer" and cand_is_outer)
+            or (wall_role == "interior" and not cand_is_outer)
+        )
+        if not wall_role_match:
+            continue
+
         if score < best_score:
             best_score = score
             best = cand
-    if best is not None:
-        used_uids.add(best["uid"])
-    return best
+
+    chosen = best if best is not None else best_any
+    if chosen is not None:
+        used_uids.add(chosen["uid"])
+    return chosen
 
 
 def _infer_wall_facing_rotation(x: float, y: float, area_x: float, area_y: float) -> int:
@@ -416,6 +829,67 @@ def _ensure_room_id(
     return default_room_id
 
 
+def _room_bbox_from_polygon(room_polygon: List[Dict[str, float]]) -> Optional[Dict[str, float]]:
+    if not isinstance(room_polygon, list) or len(room_polygon) < 3:
+        return None
+    xs: List[float] = []
+    ys: List[float] = []
+    for p in room_polygon:
+        if not isinstance(p, dict):
+            continue
+        xs.append(_to_float(p.get("X"), 0.0))
+        ys.append(_to_float(p.get("Y"), 0.0))
+    if not xs or not ys:
+        return None
+    return {
+        "xmin": min(xs),
+        "xmax": max(xs),
+        "ymin": min(ys),
+        "ymax": max(ys),
+    }
+
+
+def _project_opening_to_room_edge(
+    opening: Dict[str, Any],
+    room_polygon: List[Dict[str, float]],
+) -> Tuple[float, float]:
+    rb = _room_bbox_from_polygon(room_polygon)
+    if rb is None:
+        return _to_float(opening.get("X"), 0.0), _to_float(opening.get("Y"), 0.0)
+
+    x = _to_float(opening.get("X"), 0.0)
+    y = _to_float(opening.get("Y"), 0.0)
+    orientation = str(opening.get("_orientation") or "").lower()
+
+    if orientation == "vertical":
+        x = rb["xmin"] if abs(x - rb["xmin"]) <= abs(x - rb["xmax"]) else rb["xmax"]
+        y = _clamp(y, rb["ymin"], rb["ymax"])
+    elif orientation == "horizontal":
+        y = rb["ymin"] if abs(y - rb["ymin"]) <= abs(y - rb["ymax"]) else rb["ymax"]
+        x = _clamp(x, rb["xmin"], rb["xmax"])
+    else:
+        dists = [
+            ("left", abs(x - rb["xmin"])),
+            ("right", abs(x - rb["xmax"])),
+            ("bottom", abs(y - rb["ymin"])),
+            ("top", abs(y - rb["ymax"])),
+        ]
+        edge = min(dists, key=lambda kv: kv[1])[0]
+        if edge == "left":
+            x = rb["xmin"]
+            y = _clamp(y, rb["ymin"], rb["ymax"])
+        elif edge == "right":
+            x = rb["xmax"]
+            y = _clamp(y, rb["ymin"], rb["ymax"])
+        elif edge == "bottom":
+            y = rb["ymin"]
+            x = _clamp(x, rb["xmin"], rb["xmax"])
+        else:
+            y = rb["ymax"]
+            x = _clamp(x, rb["xmin"], rb["xmax"])
+    return _r3(x), _r3(y)
+
+
 def build_layout_rule_based(
     *,
     step1_json: Dict[str, Any],
@@ -424,8 +898,6 @@ def build_layout_rule_based(
     opening_objects: Optional[List[Dict[str, Any]]] = None,
     main_room_inner_boundary_hint: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
-    del room_inner_frame_objects
-
     base_area_x, base_area_y = _extract_base_area(step1_json)
     tx = _extract_inner_transform(main_room_inner_boundary_hint, base_area_x, base_area_y)
     area_x = tx["size_x"]
@@ -438,26 +910,26 @@ def build_layout_rule_based(
         {"X": _r3(0.0), "Y": _r3(area_y)},
     ]
 
-    rooms_step1 = step1_json.get("rooms")
-    rooms_out: List[Dict[str, Any]] = []
-    if isinstance(rooms_step1, list):
-        for idx, room in enumerate(rooms_step1):
-            if not isinstance(room, dict):
-                continue
-            room_id = str(room.get("room_id") or f"room_{idx + 1}")
-            room_name = str(room.get("room_name") or room_id)
-            poly_src = room.get("room_polygon")
-            poly_local: List[Dict[str, float]] = []
-            if isinstance(poly_src, list):
-                for p in poly_src:
-                    if not isinstance(p, dict):
-                        continue
-                    x, y = _to_local_xy(_to_float(p.get("X")), _to_float(p.get("Y")), tx)
-                    poly_local.append({"X": _r3(x), "Y": _r3(y)})
-            poly_local = _clean_polygon(poly_local)
-            if len(poly_local) < 3:
-                poly_local = outer_polygon.copy()
-            rooms_out.append({"room_id": room_id, "room_name": room_name, "room_polygon": poly_local, "openings": []})
+    step1_rooms_local = _extract_step1_rooms_local(step1_json, tx, outer_polygon)
+    obstacle_boxes_local = _collect_obstacle_boxes_local(
+        gemini_spatial_json=gemini_spatial_json,
+        tx=tx,
+        base_area_x=base_area_x,
+        base_area_y=base_area_y,
+    )
+    rooms_out = _build_rooms_from_gemini_inner_frames(
+        room_inner_frame_objects=room_inner_frame_objects,
+        step1_rooms_local=step1_rooms_local,
+        tx=tx,
+        base_area_x=base_area_x,
+        base_area_y=base_area_y,
+        area_x=area_x,
+        area_y=area_y,
+        obstacle_boxes_local=obstacle_boxes_local,
+        outer_polygon=outer_polygon,
+    )
+    if rooms_out is None:
+        rooms_out = step1_rooms_local
 
     if not rooms_out:
         rooms_out = [{"room_id": "room_1", "room_name": "room", "room_polygon": outer_polygon.copy(), "openings": []}]
@@ -481,19 +953,25 @@ def build_layout_rule_based(
             height = abs(_to_float(opening.get("h"), DEFAULT_OBJECT_HEIGHT["door"]))
             sill = _to_float(opening.get("sill"), 0.0)
             orientation = _opening_orientation(opening, base_area_x, base_area_y)
-            cand = _pick_opening_candidate(opening, opening_cands, used_opening_uids)
+            cand = _pick_opening_candidate(
+                opening,
+                opening_cands,
+                used_opening_uids,
+                orientation,
+                width,
+                base_area_x,
+                base_area_y,
+            )
             if cand is not None:
                 b_local = _localize_bbox(cand["box_world"], tx)
-                if orientation == "vertical":
-                    local_cx = _clamp(local_cx, 0.0, area_x)
-                    local_cy = _clamp(b_local["cy"], 0.0, area_y)
-                    width = max(0.05, b_local["dy"])
-                else:
-                    local_cx = _clamp(b_local["cx"], 0.0, area_x)
-                    local_cy = _clamp(local_cy, 0.0, area_y)
-                    width = max(0.05, b_local["dx"])
+                # Geometry responsibility: prefer Gemini for openings.
+                orientation = "vertical" if b_local["dy"] >= b_local["dx"] else "horizontal"
+                local_cx = _clamp(b_local["cx"], 0.0, area_x)
+                local_cy = _clamp(b_local["cy"], 0.0, area_y)
+                width = max(0.05, b_local["dy"] if orientation == "vertical" else b_local["dx"])
             room_ids_raw = opening.get("room_ids")
             room_ids = [str(r) for r in room_ids_raw if isinstance(r, (str, int, float))] if isinstance(room_ids_raw, list) else []
+            front_hint = _opening_front_hint(opening, orientation, local_cx, local_cy, area_x, area_y)
             openings_final.append(
                 {
                     "opening_id": opening_id,
@@ -505,6 +983,7 @@ def build_layout_rule_based(
                     "SillHeight": _r3(max(0.0, sill)),
                     "_room_ids": room_ids,
                     "_orientation": orientation,
+                    "_front_hint": int(front_hint),
                 }
             )
 
@@ -516,11 +995,14 @@ def build_layout_rule_based(
             room_ids = op.get("_room_ids") or []
             include = room_id in room_ids if room_ids else _point_in_polygon(op["X"], op["Y"], room_poly)
             if include:
+                ox, oy = op["X"], op["Y"]
+                if op.get("type") == "door" and room_id != primary_room_id:
+                    ox, oy = _project_opening_to_room_edge(op, room_poly)
                 room_openings.append(
                     {
                         "type": op["type"],
-                        "X": op["X"],
-                        "Y": op["Y"],
+                        "X": ox,
+                        "Y": oy,
                         "Width": op["Width"],
                         "Height": op["Height"],
                         "SillHeight": op["SillHeight"],
@@ -628,13 +1110,22 @@ def build_layout_rule_based(
         door_index += 1
         room_ids = [r for r in op.get("_room_ids", []) if str(r).lower() != "outside"]
         room_id = str(room_ids[0]) if room_ids else primary_room_id
+        door_x, door_y = op["X"], op["Y"]
+        if room_id != primary_room_id:
+            target_room = next((r for r in rooms_out if str(r.get("room_id")) == room_id), None)
+            if isinstance(target_room, dict):
+                door_x, door_y = _project_opening_to_room_edge(op, target_room.get("room_polygon") or [])
         orient = op.get("_orientation")
+        rotation = _normalize_angle(op.get("_front_hint"))
+        if rotation is None:
+            if orient == "vertical":
+                rotation = 90 if door_x <= (area_x * 0.5) else 270
+            else:
+                rotation = 0 if door_y <= (area_y * 0.5) else 180
         if orient == "vertical":
-            rotation = 90
             door_length = 0.05
             door_width = op["Width"]
         else:
-            rotation = 180 if op["Y"] >= (area_y * 0.5) else 0
             door_length = op["Width"]
             door_width = 0.05
         area_objects_list.append(
@@ -643,8 +1134,8 @@ def build_layout_rule_based(
                 "category": "door",
                 "search_prompt": DEFAULT_SEARCH_PROMPT["door"],
                 "room_id": room_id,
-                "X": op["X"],
-                "Y": op["Y"],
+                "X": door_x,
+                "Y": door_y,
                 "Length": _r3(max(0.05, door_length)),
                 "Width": _r3(max(0.05, door_width)),
                 "Height": op["Height"],

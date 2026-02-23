@@ -499,6 +499,20 @@ def _draw_overlay(
     furniture_objects: List[Dict[str, Any]],
     out_png: pathlib.Path,
 ) -> None:
+    frame_categories = {"room_inner_frame", "subroom_inner_frame"}
+    cats = {
+        str(obj.get("category") or "").strip().lower().replace("-", "_")
+        for obj in furniture_objects
+        if isinstance(obj, dict)
+    }
+    if cats and cats.issubset(frame_categories):
+        _draw_overlay_room_frames_only(
+            image_path=image_path,
+            furniture_objects=furniture_objects,
+            out_png=out_png,
+        )
+        return
+
     base = Image.open(image_path).convert("RGBA")
     width, height = base.size
 
@@ -555,6 +569,80 @@ def _draw_overlay(
     composed = Image.alpha_composite(composed, box_layer).convert("RGB")
     out_png.parent.mkdir(parents=True, exist_ok=True)
     composed.save(out_png)
+
+
+def _draw_overlay_room_frames_only(
+    image_path: pathlib.Path,
+    furniture_objects: List[Dict[str, Any]],
+    out_png: pathlib.Path,
+) -> None:
+    base = Image.open(image_path).convert("RGBA")
+    draw = ImageDraw.Draw(base, "RGBA")
+
+    frames: List[Dict[str, Any]] = []
+    for obj in furniture_objects:
+        if not isinstance(obj, dict):
+            continue
+        cat = str(obj.get("category") or "").strip().lower().replace("-", "_")
+        if cat not in {"room_inner_frame", "subroom_inner_frame"}:
+            continue
+        box = obj.get("box_2d_px")
+        center = obj.get("center_px")
+        if not (isinstance(box, list) and len(box) >= 4):
+            continue
+        if not (isinstance(center, list) and len(center) >= 2):
+            continue
+
+        x0, y0, x1, y1 = [int(v) for v in box[:4]]
+        if x1 < x0:
+            x0, x1 = x1, x0
+        if y1 < y0:
+            y0, y1 = y1, y0
+        cx, cy = float(center[0]), float(center[1])
+        frames.append(
+            {
+                "id": str(obj.get("id") or cat),
+                "cat": cat,
+                "box": (x0, y0, x1, y1),
+                "center": (cx, cy),
+            }
+        )
+
+    # main first, then subrooms left-to-right.
+    frames.sort(key=lambda f: (0 if f["cat"] == "room_inner_frame" else 1, f["center"][0]))
+
+    colors = [
+        ((46, 125, 50, 255), (46, 125, 50, 230)),      # main: green
+        ((198, 40, 40, 255), (198, 40, 40, 230)),      # sub1: red
+        ((25, 118, 210, 255), (25, 118, 210, 230)),    # sub2: blue
+        ((123, 31, 162, 255), (123, 31, 162, 230)),    # fallback
+    ]
+
+    for i, fr in enumerate(frames):
+        line_col, text_col = colors[i % len(colors)]
+        x0, y0, x1, y1 = fr["box"]
+        cx, cy = fr["center"]
+
+        # box
+        draw.rectangle([x0, y0, x1, y1], outline=line_col, width=6)
+
+        # center point + cross
+        r = 7
+        draw.ellipse([cx - r, cy - r, cx + r, cy + r], fill=line_col)
+        draw.line([(cx - 14, cy), (cx + 14, cy)], fill=line_col, width=3)
+        draw.line([(cx, cy - 14), (cx, cy + 14)], fill=line_col, width=3)
+
+        # label
+        label = f"{i + 1}:{fr['cat']}"
+        tx = x0 + 8
+        ty = max(4, y0 + 8)
+        tw = tx + 10 + 8 * len(label)
+        th = ty + 20
+        draw.rectangle([tx - 4, ty - 3, tw, th], fill=(255, 255, 255, 200), outline=line_col, width=2)
+        draw.text((tx, ty), label, fill=text_col)
+
+    out_png.parent.mkdir(parents=True, exist_ok=True)
+    base.convert("RGB").save(out_png)
 
 
 def build_arg_parser() -> argparse.ArgumentParser:

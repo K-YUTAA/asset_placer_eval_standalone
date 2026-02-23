@@ -24,6 +24,8 @@ Object rules:
 - Include major furniture and fixtures.
 - Keep category names concise snake_case (bed, chair, tv, sink, toilet, storage, sofa, table, cabinet, etc.).
 - Estimate functional front direction as front_hint in {0,90,180,270} when possible, otherwise null.
+- front_hint is the orientation used for 3D asset placement (asset local forward), not label text direction.
+- If "human access side" and "asset forward" differ, prioritize asset forward for front_hint.
 - Generate a generic English asset retrieval prompt per object as search_prompt.
 - search_prompt must describe object type/style/material only (no coordinates, no relative position words like left/right/top/bottom).
 - Provide bbox for each object as [xmin, ymin, xmax, ymax] in world meters.
@@ -35,25 +37,38 @@ Functional front convention (CRITICAL for front_hint):
 - 180: faces -Y (toward bottom)
 - 270: faces -X (toward left)
 
-Functional front cues by category:
-- bed: direction from headboard to foot side.
-- chair/sofa: direction a seated person would face.
-- tv/monitor: screen facing direction.
-- cabinet/storage/wardrobe/drawer: opening/handle side direction.
-- sink: faucet/user standing side direction.
-- toilet: seated facing direction.
-- door/sliding_door: opening direction into usable room side; if ambiguous, face larger adjacent space.
+Functional front (generalized, category-agnostic) cues:
+- Determine front_hint from intrinsic shape/symbol asymmetry in this priority:
+  1) Strong one-sided face cues (screen, faucet face, drawer/door opening face, handle side, bowl opening side) -> front_hint points to that active face.
+  2) Endpoint cues on elongated objects (backboard/backrest/headboard/pillow side vs open side) -> front_hint follows the object's principal axis, not the short-side access direction.
+  3) Seating-context cues for rectangular shared objects (e.g., table) -> front_hint toward dominant seating side.
+  4) If rotationally symmetric or no dominant directional cue -> front_hint=null.
+- Do NOT infer front_hint from text orientation.
+
+Wall-adjacent object rule (generalized):
+- If an object is flush to a wall or in a niche, front_hint should usually point away from that wall into reachable free floor space.
+- Never set front_hint to point into a solid wall unless the drawing explicitly indicates that usage direction.
+- For sink/storage/cabinet along perimeter walls, prioritize interaction/access side toward room interior.
 
 Front-hint estimation procedure:
 1) Prefer geometric/symbolic cues (headboard, faucet, handle, hinge/swing, panel opening side).
-2) Do NOT infer front from overlaid text orientation alone.
-3) If cues are weak, infer from wall adjacency and reachable free space in front of the object.
-4) If still ambiguous, set front_hint=null (do not guess randomly).
+2) For elongated objects with endpoint cues, align front_hint with the long axis (principal axis).
+3) Do NOT infer front_hint from overlaid text orientation alone.
+4) If cues are weak, use reachable free space as tie-breaker (not as primary rule).
+5) For wall-adjacent fixtures, choose the direction opposite the nearest blocking wall unless explicit symbols contradict it.
+6) For rectangular tables, prefer the side with nearby chairs/sofa as functional front; for symmetric seating, use null.
+7) If still ambiguous, set front_hint=null (do not guess randomly).
 
 Opening rules:
 - Include all visible doors/windows.
 - Opening center is on wall edge.
 - Include outer-boundary entry doors if visible.
+- For each door opening, estimate functional front direction as front_hint in {0,90,180,270} when possible, otherwise null.
+- For doors, front_hint is for 3D asset forward alignment and must be consistent with the wall opening normal into usable space.
+- Door front_hint must be perpendicular to the wall segment:
+  - vertical wall: 90 or 270
+  - horizontal wall: 0 or 180
+- Prefer direction toward the usable interior side (for outside-connected entry doors, use the interior-facing direction).
 
 Output MUST be one JSON object only. No markdown, no prose.
 
@@ -85,7 +100,8 @@ Required JSON schema:
       "h": number,
       "sill": number,
       "wall": string,
-      "room_ids": [string, string]
+      "room_ids": [string, string],
+      "front_hint": 0 | 90 | 180 | 270 | null
     }
   ],
   "objects": [
