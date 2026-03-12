@@ -81,9 +81,12 @@ uv run python experiments/src/run_generate_and_eval.py \
 
 最新運用では、生成・評価・可視化の設定を JSON に集約して実行します。
 
+ここで使う `latest_design_v3_gpt_high_frozen_20260312.json` は、現行 parser に整合した latest-design 実行例です。
+固定モード実験の canonical upstream config は `experiments/configs/pipeline/fixed_mode_v2_gpt_high_batch_20260222.json` を参照します。
+
 ```bash
 uv run python experiments/src/run_pipeline_from_json.py \
-  --config experiments/configs/pipeline/latest_design_v2_gpt_high.json
+  --config experiments/configs/pipeline/latest_design_v3_gpt_high_frozen_20260312.json
 ```
 
 主要仕様:

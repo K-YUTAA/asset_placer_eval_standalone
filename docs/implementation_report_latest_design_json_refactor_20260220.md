@@ -1,5 +1,9 @@
 # Implementation Report: Latest Design Refactor + JSON Driven Execution (2026-02-20)
 
+Status note:
+- This report documents the original introduction of `experiments/configs/pipeline/latest_design_v2_gpt_high.json`.
+- As of 2026-03-12, the parser-consistent latest frozen latest-design file is `experiments/configs/pipeline/latest_design_v3_gpt_high_frozen_20260312.json`.
+
 ## 1. 今回やりたかったこと
 
 - 最新設計（GPT Step1 + Gemini Spatial + ルールベース Step2）を、運用しやすい形に整理する。
@@ -30,7 +34,7 @@
 ## 4. 追加・更新ファイル
 
 - `experiments/src/run_pipeline_from_json.py`
-- `experiments/configs/pipeline/latest_design_v2_gpt_high.json`
+- `experiments/configs/pipeline/latest_design_v2_gpt_high.json` (historical)
 - `README.md`
 - `docs/implementation_report_latest_design_json_refactor_20260220.md`
 
@@ -39,6 +43,13 @@
 ```bash
 uv run python experiments/src/run_pipeline_from_json.py \
   --config experiments/configs/pipeline/latest_design_v2_gpt_high.json
+```
+
+Current frozen latest-design example:
+
+```bash
+uv run python experiments/src/run_pipeline_from_json.py \
+  --config experiments/configs/pipeline/latest_design_v3_gpt_high_frozen_20260312.json
 ```
 
 ## 6. 既知の注意点

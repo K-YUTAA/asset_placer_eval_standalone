@@ -1,0 +1,50 @@
+{
+  "stress_version": "v1_targeted",
+  "stress_family": "targeted_diag",
+  "generator_mode": "targeted_diag",
+  "eval_config_path": "experiments/configs/eval/eval_v1.json",
+  "reference_config_path": "experiments/configs/degrade/degrade_v1.json",
+  "variants": [
+    "base",
+    "targeted_bottleneck",
+    "targeted_occlusion"
+  ],
+  "constraints": {
+    "same_room_only": true,
+    "translation_max_m": 0.6,
+    "rotation_max_deg": 30.0,
+    "door_keepout_radius_m": 0.5,
+    "overlap_ratio_max": 0.05,
+    "require_validity": true
+  },
+  "targeted_bottleneck": {
+    "description": "Diagnostic stress that intentionally worsens path clearance while keeping a path available.",
+    "max_moved_objects": 1,
+    "preferred_categories": [
+      "chair",
+      "table",
+      "coffee_table",
+      "sofa"
+    ],
+    "anchor_t": 0.55,
+    "search_radius_m": 0.45,
+    "target_below_tau_clr_m": 0.02,
+    "max_below_tau_clr_m": 0.08,
+    "require_path": true
+  },
+  "targeted_occlusion": {
+    "description": "Diagnostic stress that intentionally worsens entry observability while preserving reachability and clearance.",
+    "max_moved_objects": 1,
+    "preferred_categories": [
+      "storage",
+      "cabinet",
+      "tv_cabinet",
+      "sofa",
+      "table"
+    ],
+    "anchor_t": 0.2,
+    "search_radius_m": 0.5,
+    "primary_metric": "OOE_R_rec_entry_surf",
+    "keep_reach_and_clr": true
+  }
+}

@@ -637,6 +637,23 @@ def _pick_best_candidate(
 
 def _opening_orientation(opening: Dict[str, Any], area_x: float, area_y: float) -> str:
     wall = str(opening.get("wall") or "").lower()
+    wall_norm = wall.replace("-", "_")
+    # Explicit interior-wall axis hints from Step1 (e.g. internal_wall_y_3.55_...)
+    if (
+        "internal_wall_x_" in wall_norm
+        or "_wall_x_" in wall_norm
+        or "partition_x" in wall_norm
+        or "shared_wall_x_" in wall_norm
+    ):
+        return "vertical"
+    if (
+        "internal_wall_y_" in wall_norm
+        or "_wall_y_" in wall_norm
+        or "partition_y" in wall_norm
+        or "shared_wall_y_" in wall_norm
+    ):
+        return "horizontal"
+
     if "partition_x" in wall or wall.startswith("x_") or "_x_" in wall or "east" in wall or "west" in wall:
         return "vertical"
     if "north" in wall or "south" in wall or "partition_y" in wall or wall.startswith("y_"):
@@ -649,6 +666,25 @@ def _opening_orientation(opening: Dict[str, Any], area_x: float, area_y: float) 
     d_bottom = abs(cy - 0.0)
     d_top = abs(cy - area_y)
     return "vertical" if min(d_left, d_right) <= min(d_bottom, d_top) else "horizontal"
+
+
+def _orientation_from_bbox(
+    dx: float,
+    dy: float,
+    *,
+    fallback: str,
+    ambiguity_ratio: float = 1.10,
+) -> str:
+    dxv = max(0.0, float(dx))
+    dyv = max(0.0, float(dy))
+    mn = min(dxv, dyv)
+    mx = max(dxv, dyv)
+    if mn <= 1e-9:
+        return "vertical" if dyv >= dxv else "horizontal"
+    ratio = mx / mn
+    if ratio < float(ambiguity_ratio):
+        return fallback
+    return "vertical" if dyv > dxv else "horizontal"
 
 
 def _opening_front_hint(
@@ -699,6 +735,94 @@ def _opening_wall_role(opening: Dict[str, Any]) -> str:
     if any(tok in wall for tok in ("interior", "partition", "shared")):
         return "interior"
     return "unknown"
+
+
+def _collect_wall_lines_from_rooms(rooms_out: List[Dict[str, Any]]) -> Dict[str, List[Dict[str, float]]]:
+    vertical: List[Dict[str, float]] = []
+    horizontal: List[Dict[str, float]] = []
+    eps = 1e-6
+
+    for room in rooms_out:
+        if not isinstance(room, dict):
+            continue
+        poly = room.get("room_polygon")
+        if not isinstance(poly, list) or len(poly) < 2:
+            continue
+        pts: List[Tuple[float, float]] = []
+        for p in poly:
+            if not isinstance(p, dict):
+                continue
+            pts.append((_to_float(p.get("X"), 0.0), _to_float(p.get("Y"), 0.0)))
+        if len(pts) < 2:
+            continue
+        if pts[0] != pts[-1]:
+            pts.append(pts[0])
+
+        for i in range(len(pts) - 1):
+            x1, y1 = pts[i]
+            x2, y2 = pts[i + 1]
+            if abs(x1 - x2) <= eps:
+                vertical.append({"x": _r3((x1 + x2) * 0.5), "ymin": _r3(min(y1, y2)), "ymax": _r3(max(y1, y2))})
+            elif abs(y1 - y2) <= eps:
+                horizontal.append({"y": _r3((y1 + y2) * 0.5), "xmin": _r3(min(x1, x2)), "xmax": _r3(max(x1, x2))})
+
+    return {"vertical": vertical, "horizontal": horizontal}
+
+
+def _snap_opening_center_to_wall_lines(
+    *,
+    x: float,
+    y: float,
+    orientation: str,
+    area_x: float,
+    area_y: float,
+    wall_lines: Dict[str, List[Dict[str, float]]],
+    max_snap_dist: float = 0.65,
+    axis_margin: float = 0.25,
+) -> Tuple[float, float]:
+    best_val: Optional[float] = None
+    best_dist = float(max_snap_dist)
+
+    if orientation == "vertical":
+        lines = wall_lines.get("vertical") or []
+        for ln in lines:
+            ly0 = _to_float(ln.get("ymin"), 0.0) - float(axis_margin)
+            ly1 = _to_float(ln.get("ymax"), 0.0) + float(axis_margin)
+            if not (ly0 <= y <= ly1):
+                continue
+            xv = _to_float(ln.get("x"), x)
+            d = abs(x - xv)
+            if d <= best_dist:
+                best_dist = d
+                best_val = xv
+        if best_val is None:
+            outer_candidates = [0.0, area_x]
+            xv = min(outer_candidates, key=lambda c: abs(x - c))
+            if abs(x - xv) <= best_dist:
+                best_val = xv
+        if best_val is not None:
+            return _clamp(best_val, 0.0, area_x), _clamp(y, 0.0, area_y)
+        return _clamp(x, 0.0, area_x), _clamp(y, 0.0, area_y)
+
+    lines = wall_lines.get("horizontal") or []
+    for ln in lines:
+        lx0 = _to_float(ln.get("xmin"), 0.0) - float(axis_margin)
+        lx1 = _to_float(ln.get("xmax"), 0.0) + float(axis_margin)
+        if not (lx0 <= x <= lx1):
+            continue
+        yv = _to_float(ln.get("y"), y)
+        d = abs(y - yv)
+        if d <= best_dist:
+            best_dist = d
+            best_val = yv
+    if best_val is None:
+        outer_candidates = [0.0, area_y]
+        yv = min(outer_candidates, key=lambda c: abs(y - c))
+        if abs(y - yv) <= best_dist:
+            best_val = yv
+    if best_val is not None:
+        return _clamp(x, 0.0, area_x), _clamp(best_val, 0.0, area_y)
+    return _clamp(x, 0.0, area_x), _clamp(y, 0.0, area_y)
 
 
 def _pick_opening_candidate(
@@ -781,6 +905,118 @@ def _pick_opening_candidate(
     if chosen is not None:
         used_uids.add(chosen["uid"])
     return chosen
+
+
+def _accept_opening_candidate_geometry(
+    opening: Dict[str, Any],
+    cand: Dict[str, Any],
+    *,
+    orientation: str,
+    base_width: float,
+    area_x: float,
+    area_y: float,
+) -> bool:
+    bw = cand.get("box_world")
+    if not isinstance(bw, dict):
+        return False
+
+    cx = _to_float(opening.get("cx"), 0.0)
+    cy = _to_float(opening.get("cy"), 0.0)
+    base_w = max(0.05, abs(_to_float(base_width, 0.0)))
+    cand_dx = max(0.0, _to_float(bw.get("dx"), 0.0))
+    cand_dy = max(0.0, _to_float(bw.get("dy"), 0.0))
+    cand_cx = _to_float(bw.get("cx"), 0.0)
+    cand_cy = _to_float(bw.get("cy"), 0.0)
+
+    cand_orient = "vertical" if cand_dy >= cand_dx else "horizontal"
+    cand_aspect = max(cand_dx, cand_dy) / max(min(cand_dx, cand_dy), 1e-9)
+    effective_orientation = orientation
+    if cand_orient != orientation and cand_aspect >= 1.10:
+        # Trust Gemini candidate orientation when the box is clearly elongated.
+        effective_orientation = cand_orient
+
+    cand_width = max(0.05, cand_dy if effective_orientation == "vertical" else cand_dx)
+    width_ratio = cand_width / base_w
+    center_dist = math.hypot(cand_cx - cx, cand_cy - cy)
+
+    want_type = str(opening.get("type") or "").lower()
+    is_window = want_type == "window"
+    is_sliding = "sliding" in str(cand.get("category") or "").lower()
+
+    # Global guards
+    if cand_orient != orientation and cand_aspect < 1.10:
+        return False
+    if center_dist > 0.85:
+        return False
+    if width_ratio < 0.55:
+        return False
+    if width_ratio > 1.60:
+        return False
+
+    # Sliding-door guard (avoid pocket/storage region over-coverage)
+    if (not is_window) and is_sliding and width_ratio > 1.25:
+        return False
+
+    # Outer opening should stay near outer boundary band.
+    wall_role = _opening_wall_role(opening)
+    if wall_role == "outer":
+        outer_band = max(0.25, 0.08 * min(max(area_x, 0.1), max(area_y, 0.1)))
+        cand_outer_dist = min(
+            abs(cand_cx - 0.0),
+            abs(area_x - cand_cx),
+            abs(cand_cy - 0.0),
+            abs(area_y - cand_cy),
+        )
+        if cand_outer_dist > (outer_band + 0.20):
+            return False
+
+    return True
+
+
+def _accept_opening_candidate_center(
+    opening: Dict[str, Any],
+    cand: Dict[str, Any],
+    *,
+    area_x: float,
+    area_y: float,
+    max_center_dist: float = 1.20,
+) -> bool:
+    bw = cand.get("box_world")
+    if not isinstance(bw, dict):
+        return False
+
+    cx = _to_float(opening.get("cx"), 0.0)
+    cy = _to_float(opening.get("cy"), 0.0)
+    cand_cx = _to_float(bw.get("cx"), 0.0)
+    cand_cy = _to_float(bw.get("cy"), 0.0)
+    center_dist = math.hypot(cand_cx - cx, cand_cy - cy)
+
+    wall_role = _opening_wall_role(opening)
+    outer_band = max(0.25, 0.08 * min(max(area_x, 0.1), max(area_y, 0.1)))
+    cand_outer_dist = min(
+        abs(cand_cx - 0.0),
+        abs(area_x - cand_cx),
+        abs(cand_cy - 0.0),
+        abs(area_y - cand_cy),
+    )
+    cand_is_outer = cand_outer_dist <= outer_band
+
+    # Step1 opening anchors can be noisy (notably interior sliding doors).
+    # Allow wider center adoption radius when wall-role matches.
+    allowed_center_dist = float(max_center_dist)
+    if wall_role == "interior" and not cand_is_outer:
+        allowed_center_dist = max(allowed_center_dist, 2.40)
+    elif wall_role == "outer" and cand_is_outer:
+        allowed_center_dist = max(allowed_center_dist, 1.60)
+
+    if center_dist > allowed_center_dist:
+        return False
+
+    if wall_role == "outer":
+        if cand_outer_dist > (outer_band + 0.35):
+            return False
+
+    return True
 
 
 def _infer_wall_facing_rotation(x: float, y: float, area_x: float, area_y: float) -> int:
@@ -935,6 +1171,7 @@ def build_layout_rule_based(
         rooms_out = [{"room_id": "room_1", "room_name": "room", "room_polygon": outer_polygon.copy(), "openings": []}]
 
     primary_room_id = max(rooms_out, key=lambda r: _polygon_area(r["room_polygon"]))["room_id"]
+    wall_lines = _collect_wall_lines_from_rooms(rooms_out)
 
     opening_cands = _opening_candidates(opening_objects, base_area_x, base_area_y)
     used_opening_uids: set[str] = set()
@@ -964,11 +1201,52 @@ def build_layout_rule_based(
             )
             if cand is not None:
                 b_local = _localize_bbox(cand["box_world"], tx)
-                # Geometry responsibility: prefer Gemini for openings.
-                orientation = "vertical" if b_local["dy"] >= b_local["dx"] else "horizontal"
-                local_cx = _clamp(b_local["cx"], 0.0, area_x)
-                local_cy = _clamp(b_local["cy"], 0.0, area_y)
-                width = max(0.05, b_local["dy"] if orientation == "vertical" else b_local["dx"])
+                # Center responsibility: prefer Gemini center when the candidate is reasonably close,
+                # even if width/orientation is rejected by strict geometry gate.
+                if _accept_opening_candidate_center(
+                    opening,
+                    cand,
+                    area_x=base_area_x,
+                    area_y=base_area_y,
+                    max_center_dist=1.20,
+                ):
+                    local_cx = _clamp(b_local["cx"], 0.0, area_x)
+                    local_cy = _clamp(b_local["cy"], 0.0, area_y)
+                    orientation = _orientation_from_bbox(
+                        b_local["dx"],
+                        b_local["dy"],
+                        fallback=orientation,
+                        ambiguity_ratio=1.10,
+                    )
+
+                if _accept_opening_candidate_geometry(
+                    opening,
+                    cand,
+                    orientation=orientation,
+                    base_width=width,
+                    area_x=base_area_x,
+                    area_y=base_area_y,
+                ):
+                    # Geometry responsibility: prefer Gemini for openings only when candidate quality is acceptable.
+                    orientation = _orientation_from_bbox(
+                        b_local["dx"],
+                        b_local["dy"],
+                        fallback=orientation,
+                        ambiguity_ratio=1.10,
+                    )
+                    local_cx = _clamp(b_local["cx"], 0.0, area_x)
+                    local_cy = _clamp(b_local["cy"], 0.0, area_y)
+                    width = max(0.05, b_local["dy"] if orientation == "vertical" else b_local["dx"])
+            local_cx, local_cy = _snap_opening_center_to_wall_lines(
+                x=local_cx,
+                y=local_cy,
+                orientation=orientation,
+                area_x=area_x,
+                area_y=area_y,
+                wall_lines=wall_lines,
+                max_snap_dist=0.65,
+                axis_margin=0.25,
+            )
             room_ids_raw = opening.get("room_ids")
             room_ids = [str(r) for r in room_ids_raw if isinstance(r, (str, int, float))] if isinstance(room_ids_raw, list) else []
             front_hint = _opening_front_hint(opening, orientation, local_cx, local_cy, area_x, area_y)

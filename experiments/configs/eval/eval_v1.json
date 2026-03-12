@@ -1,10 +1,15 @@
 {
-  "grid_resolution_m": 0.10,
-  "robot_radius_m": 0.30,
+  "strict_eval_spec": true,
+  "grid_resolution_m": 0.05,
+  "robot_radius_m": 0.28,
+  "clr_feasible_max_m": 2.0,
+  "clr_feasible_tol_m": 0.01,
+  "clr_feasible_max_iters": 14,
+  "occupancy_exclude_categories": ["floor"],
   "task": {
     "start": {
       "mode": "entrance_slidingdoor_center",
-      "in_offset_m": 0.40,
+      "in_offset_m": 0.50,
       "door_selector": { "strategy": "largest_opening" }
     },
     "goal": {
@@ -20,9 +25,11 @@
   "sample_step_m": 0.50,
   "max_sensor_samples": 10,
   "tau_R": 0.90,
-  "tau_clr": 0.20,
-  "tau_V": 0.40,
-  "tau_Delta": 0.15,
+  "tau_clr": 0.10,
+  "tau_clr_feasible": 0.10,
+  "tau_clr_astar": 0.10,
+  "tau_V": 0.60,
+  "tau_Delta": 0.10,
   "lambda_rot": 0.50,
   "entry_observability": {
     "enabled": true,
@@ -33,15 +40,16 @@
     "sensor_height_m": 0.60,
     "num_rays": 720,
     "max_range_m": 10.0,
-    "tau_p": 0.02,
+    "tau_p": 0.05,
     "tau_v": 0.30
   },
   "adopt": {
     "report_both": true,
+    "clearance_metric": "clr_feasible",
     "entry_gate": {
-      "enabled": false,
+      "enabled": true,
       "metric": "OOE_R_rec_entry_surf",
-      "min_value": 0.80
+      "min_value": 0.70
     }
   }
 }

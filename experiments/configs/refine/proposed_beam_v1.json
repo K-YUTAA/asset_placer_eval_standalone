@@ -1,0 +1,15 @@
+{
+  "refine_step_m": 0.1,
+  "refine_rot_deg": 15.0,
+  "refine_max_changed_objects": 3,
+  "refine_beam_width": 5,
+  "refine_depth": 3,
+  "refine_candidate_objects_per_state": 2,
+  "refine_eval_budget": 780,
+  "refine_ooe_primary": "OOE_R_rec_entry_surf",
+  "refine_use_lexicographic": true,
+  "refine_allow_intermediate_regression": true,
+  "refine_door_keepout_radius_m": 0.0,
+  "refine_overlap_ratio_max": 0.05,
+  "refine_delta_weight": 0.3
+}

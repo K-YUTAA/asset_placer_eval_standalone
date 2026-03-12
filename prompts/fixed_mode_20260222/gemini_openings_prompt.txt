@@ -2,6 +2,7 @@ This image is a floor plan. Detect only architectural openings that are explicit
 Return tight bounding boxes around ONLY the clear opening (the gap where wall is absent and people pass through), not around text labels.
 For hinged doors: box only the doorway gap at the wall break (swing arc may be included only if it lies inside the gap).
 For sliding doors: box only the wall-break opening segment; DO NOT include the sliding panel storage/pocket region, door leaf parked area, or rail extension beyond the wall-break gap.
+For each opening, keep the box centered on the wall-break gap only. Do NOT return an over-wide span that extends into adjacent wall/pocket/storage area.
 Do NOT detect furniture doors (e.g., storage/cabinet/closet doors).
 Return a JSON list where each entry has keys "label" and "box_2d".
 Use labels from: "door", "sliding_door", "window".

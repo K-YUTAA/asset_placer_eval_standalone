@@ -1,0 +1,75 @@
+{
+  "description": "Latest design frozen snapshot: GPT(step1) + Gemini spatial(3-pass) + rule-based step2 [high reasoning, parser-consistent]",
+  "continue_on_error": true,
+  "defaults": {
+    "python_exec": ".venv/bin/python",
+    "run_root": "experiments/runs/batch_v2_gpt_high_latest_design_frozen_20260312",
+    "generation_args": {
+      "model": "gpt-5.2",
+      "reasoning_effort": "high",
+      "text_verbosity": "high",
+      "image_detail": "high",
+      "max_output_tokens": 32000,
+      "prompt1_path": "prompts/latest_design_frozen_20260312/step1_openai_prompt.txt",
+      "enable_gemini_spatial": true,
+      "gemini_model": "gemini-3-flash-preview",
+      "gemini_task": "boxes",
+      "gemini_label_language": "English",
+      "gemini_temperature": 0.6,
+      "gemini_thinking_budget": 0,
+      "gemini_max_items": 24,
+      "gemini_resize_max": 640,
+      "gemini_include_non_furniture": false,
+      "gemini_prompt_text_path": "prompts/latest_design_frozen_20260312/gemini_furniture_prompt.txt",
+      "gemini_room_inner_frame_prompt_text_path": "prompts/latest_design_frozen_20260312/gemini_room_inner_frame_prompt.txt",
+      "gemini_openings_prompt_text_path": "prompts/latest_design_frozen_20260312/gemini_openings_prompt.txt",
+      "gemini_openings_retry_max_retries": 1,
+      "gemini_openings_retry_temperature": -1.0,
+      "gemini_openings_retry_min_outer_door_width_ratio": 0.72,
+      "gemini_openings_retry_max_outer_door_width_ratio": 1.28,
+      "gemini_openings_retry_max_outer_center_dist_m": 0.85,
+      "gemini_inner_frame_retry_max_retries": 1,
+      "gemini_inner_frame_retry_min_coverage_x": 0.88,
+      "gemini_inner_frame_retry_min_coverage_y": 0.88,
+      "gemini_inner_frame_retry_min_anchor_inside_ratio": 0.55,
+      "gemini_inner_frame_retry_temperature": -1.0
+    },
+    "eval_args": {
+      "config": "experiments/configs/eval/eval_v1.json"
+    },
+    "plot_args": {
+      "enabled": true,
+      "bg_crop_mode": "none"
+    },
+    "summary_args": {
+      "enabled": true
+    }
+  },
+  "cases": [
+    {
+      "name": "kugayama_A_18_5.93x3.04_v2",
+      "image_path": "inputs_isaac/kugayama_A_18_5.93*3.04_v2.png",
+      "dimensions_path": "inputs_isaac/dimensions_kugaA18.txt"
+    },
+    {
+      "name": "suginamikamiigusa_C_30_5.84x5.14_v2",
+      "image_path": "inputs_isaac/suginamikamiigusa_C_30_5.84*5.14_v2.png",
+      "dimensions_path": "inputs_isaac/dimensions_sugiC30.txt"
+    },
+    {
+      "name": "oizumi-gakuen_C_24_5.19x4.63_v2",
+      "image_path": "inputs_isaac/oizumi-gakuen_C_24_5.19*4.63_v2.png",
+      "dimensions_path": "inputs_isaac/dimensions_oizuC24.txt"
+    },
+    {
+      "name": "komazawakoen_B1_30_5.1x5.88_v2",
+      "image_path": "inputs_isaac/komazawakoen_B1_30_5.1*5.88_v2.png",
+      "dimensions_path": "inputs_isaac/dimensions_komaB130.txt"
+    },
+    {
+      "name": "suginamikamiigusa_B_23_5.75x4.00_v2",
+      "image_path": "inputs_isaac/suginamikamiigusa_B_23_5.75*4.00_v2.png",
+      "dimensions_path": "inputs_isaac/dimensions_sugiB23.txt"
+    }
+  ]
+}

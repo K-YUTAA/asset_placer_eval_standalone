@@ -93,6 +93,40 @@ def _extract_rooms(raw_layout: Dict[str, Any]) -> List[Tuple[str, List[Tuple[flo
     return rooms
 
 
+def _extract_step1_objects(raw_layout: Dict[str, Any]) -> List[Dict[str, Any]]:
+    raw_objects = raw_layout.get("objects")
+    if not isinstance(raw_objects, list):
+        return []
+
+    out: List[Dict[str, Any]] = []
+    for obj in raw_objects:
+        if not isinstance(obj, dict):
+            continue
+        # Step1 semantic schema uses cx/cy/dx/dy/front_hint.
+        if any(k in obj for k in ("cx", "cy", "dx", "dy", "front_hint", "bbox")):
+            out.append(obj)
+    return out
+
+
+def _extract_top_level_openings(raw_layout: Dict[str, Any]) -> List[Dict[str, Any]]:
+    raw_openings = raw_layout.get("openings")
+    if not isinstance(raw_openings, list):
+        return []
+
+    out: List[Dict[str, Any]] = []
+    for op in raw_openings:
+        if not isinstance(op, dict):
+            continue
+        out.append(
+            {
+                "type": str(op.get("type") or "opening"),
+                "cx": as_float(op.get("cx", op.get("X", 0.0)), 0.0),
+                "cy": as_float(op.get("cy", op.get("Y", 0.0)), 0.0),
+            }
+        )
+    return out
+
+
 def _extract_outer_polygon(
     raw_layout: Dict[str, Any], normalized_layout: Dict[str, Any]
 ) -> List[Tuple[float, float]]:
@@ -269,25 +303,102 @@ def _load_json_optional(path_text: Optional[str]) -> Optional[Dict[str, Any]]:
     return None
 
 
+def _resolve_eval_debug_dir(
+    eval_debug_dir_text: Optional[str],
+    path_json_path: Optional[str],
+    task_points_json_path: Optional[str],
+) -> Optional[pathlib.Path]:
+    if eval_debug_dir_text:
+        p = pathlib.Path(eval_debug_dir_text)
+        return p if p.exists() else None
+    if path_json_path:
+        p = pathlib.Path(path_json_path).parent
+        return p if p.exists() else None
+    if task_points_json_path:
+        p = pathlib.Path(task_points_json_path).parent
+        return p if p.exists() else None
+    return None
+
+
+def _extract_eval_bounds(path_json: Optional[Dict[str, Any]]) -> Optional[Tuple[float, float, float, float]]:
+    if not isinstance(path_json, dict):
+        return None
+    bounds = path_json.get("bounds")
+    if not (isinstance(bounds, (list, tuple)) and len(bounds) >= 4):
+        return None
+    min_x = as_float(bounds[0], 0.0)
+    min_y = as_float(bounds[1], 0.0)
+    max_x = as_float(bounds[2], 0.0)
+    max_y = as_float(bounds[3], 0.0)
+    if max_x <= min_x or max_y <= min_y:
+        return None
+    return (min_x, min_y, max_x, max_y)
+
+
+def _load_eval_occupancy_rgba(
+    eval_debug_dir: Optional[pathlib.Path],
+    alpha: float,
+):
+    if eval_debug_dir is None:
+        return None
+    occ_pgm = eval_debug_dir / "occupancy.pgm"
+    if not occ_pgm.exists():
+        return None
+    try:
+        import numpy as np
+        from PIL import Image
+    except Exception:
+        return None
+    arr = None
+    try:
+        raw = occ_pgm.read_bytes()
+        if raw.startswith(b"\xef\xbb\xbf"):
+            raw = raw[3:]
+        if raw.startswith(b"P2"):
+            text = raw.decode("utf-8", errors="ignore")
+            tokens: List[str] = []
+            for line in text.splitlines():
+                s = line.strip()
+                if not s or s.startswith("#"):
+                    continue
+                if "#" in s:
+                    s = s.split("#", 1)[0].strip()
+                if not s:
+                    continue
+                tokens.extend(s.split())
+            if len(tokens) >= 4 and tokens[0] == "P2":
+                w = int(tokens[1])
+                h = int(tokens[2])
+                vmax = max(1, int(tokens[3]))
+                need = w * h
+                vals = tokens[4 : 4 + need]
+                if len(vals) == need:
+                    data = np.array([int(v) for v in vals], dtype=np.float32).reshape((h, w))
+                    if vmax != 255:
+                        data = (data * (255.0 / float(vmax))).clip(0.0, 255.0)
+                    arr = data.astype(np.uint8)
+    except Exception:
+        arr = None
+    if arr is None:
+        arr = np.array(Image.open(occ_pgm).convert("L"), dtype=np.uint8)
+    if arr.ndim != 2:
+        return None
+    rgba = np.zeros((arr.shape[0], arr.shape[1], 4), dtype=float)
+    # occupancy.pgm: occupied=0, free=255, outside-room=128
+    occ_mask = arr <= 32
+    rgba[..., 0] = 0.0
+    rgba[..., 1] = 0.0
+    rgba[..., 2] = 0.0
+    rgba[..., 3] = occ_mask.astype(float) * max(0.0, min(1.0, alpha))
+    return rgba
+
+
 def _draw_metrics_overlay(ax, metrics: Dict[str, Any]) -> None:
-    ordered_keys = [
-        "C_vis",
-        "C_vis_start",
-        "R_reach",
-        "clr_min",
-        "Delta_layout",
-        "OOE_enabled",
-        "OOE_tau_p",
-        "OOE_tau_v",
-        "OOE_C_obj_entry_hit",
-        "OOE_R_rec_entry_hit",
-        "OOE_C_obj_entry_surf",
-        "OOE_R_rec_entry_surf",
-        "validity",
-        "Adopt",
-    ]
-    lines = ["metrics"]
+    ordered_keys = ["clr_feasible", "clr_min_astar", "clr_min"]
+    lines = ["metrics (clearance)"]
     for key in ordered_keys:
+        if key == "clr_min" and "clr_min_astar" in metrics:
+            continue
         if key not in metrics:
             continue
         value = metrics.get(key)
@@ -352,6 +463,32 @@ def _extract_path_xy(path_json: Optional[Dict[str, Any]]) -> List[Tuple[float, f
     return []
 
 
+def _extract_bottleneck_xy(path_json: Optional[Dict[str, Any]]) -> Optional[Tuple[float, float]]:
+    if not isinstance(path_json, dict):
+        return None
+
+    raw_xy = path_json.get("bottleneck_xy")
+    if isinstance(raw_xy, (list, tuple)) and len(raw_xy) >= 2:
+        return (as_float(raw_xy[0], 0.0), as_float(raw_xy[1], 0.0))
+
+    cell = path_json.get("bottleneck_cell")
+    bounds = path_json.get("bounds")
+    resolution = as_float(path_json.get("resolution"), 0.0)
+    if (
+        isinstance(cell, (list, tuple))
+        and len(cell) >= 2
+        and isinstance(bounds, (list, tuple))
+        and len(bounds) >= 4
+        and resolution > 1e-9
+    ):
+        ix = int(as_float(cell[0], 0.0))
+        iy = int(as_float(cell[1], 0.0))
+        min_x = as_float(bounds[0], 0.0)
+        min_y = as_float(bounds[1], 0.0)
+        return (min_x + (ix + 0.5) * resolution, min_y + (iy + 0.5) * resolution)
+    return None
+
+
 def _draw_task_points_overlay(ax, task_points: Dict[str, Any], path_xy: Optional[List[Tuple[float, float]]] = None) -> None:
     anchors = task_points.get("anchors")
     if not isinstance(anchors, dict):
@@ -405,6 +542,17 @@ def _draw_task_points_overlay(ax, task_points: Dict[str, Any], path_xy: Optional
         )
 
 
+def _draw_bottleneck_overlay(ax, bottleneck_xy: Optional[Tuple[float, float]], clr_min: Optional[float]) -> None:
+    if bottleneck_xy is None:
+        return
+    bx, by = bottleneck_xy
+    ax.scatter([bx], [by], s=64, c="#f2c94c", marker="X", edgecolors="#7a5d00", linewidths=0.9, zorder=34)
+    label = " clr_min_astar"
+    if clr_min is not None:
+        label = f" clr_min_astar={float(clr_min):.2f}m"
+    ax.text(bx, by, label, color="#7a5d00", fontsize=8, ha="left", va="bottom", zorder=35)
+
+
 def build_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Quick plot for layout JSON")
     parser.add_argument("--layout", required=True, help="Path to layout JSON (extension or layout contract)")
@@ -434,6 +582,14 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument("--metrics_json", default=None, help="Optional metrics.json path for in-figure metric overlay")
     parser.add_argument("--task_points_json", default=None, help="Optional task_points.json path for anchor overlay (s0,s,t,c,g_bed)")
     parser.add_argument("--path_json", default=None, help="Optional path_cells.json path for A* path overlay")
+    parser.add_argument(
+        "--eval_debug_dir",
+        default=None,
+        help="Optional eval debug dir (contains occupancy.pgm/path_cells.json). If omitted, inferred from path/task JSON.",
+    )
+    parser.add_argument("--show_eval_bounds", action="store_true", help="Use eval bounds from path_cells.json for plot extent")
+    parser.add_argument("--show_eval_occupancy", action="store_true", help="Overlay eval occupancy (occupied cells) as translucent mask")
+    parser.add_argument("--eval_occupancy_alpha", type=float, default=0.22, help="Alpha for eval occupancy overlay [0..1]")
     parser.add_argument(
         "--bg_inner_frame_json",
         default=None,
@@ -467,7 +623,20 @@ def main() -> None:
         if sibling.exists():
             path_json_path = str(sibling)
     path_json = _load_json_optional(path_json_path)
+    eval_debug_dir = _resolve_eval_debug_dir(args.eval_debug_dir, path_json_path, args.task_points_json)
+    eval_bounds = _extract_eval_bounds(path_json)
     path_xy = _extract_path_xy(path_json)
+    bottleneck_xy = _extract_bottleneck_xy(path_json)
+    eval_occupancy_rgba = None
+    if args.show_eval_occupancy:
+        eval_occupancy_rgba = _load_eval_occupancy_rgba(eval_debug_dir, args.eval_occupancy_alpha)
+    clr_min_value: Optional[float] = None
+    if isinstance(metrics_json, dict) and ("clr_min_astar" in metrics_json or "clr_min" in metrics_json):
+        try:
+            raw = metrics_json.get("clr_min_astar", metrics_json.get("clr_min"))
+            clr_min_value = float(raw)
+        except Exception:
+            clr_min_value = None
 
     fig, ax = plt.subplots(figsize=(8, 8), dpi=args.dpi)
     ax.set_aspect("equal", adjustable="box")
@@ -501,8 +670,16 @@ def main() -> None:
             tip = _find_object_front_tip(raw_layout, args.bg_top_from_object, args.arrow_scale)
             if tip is not None:
                 max_y = tip[1]
+        if args.show_eval_bounds and eval_bounds is not None:
+            min_x, min_y, max_x, max_y = eval_bounds
 
         ax.imshow(bg, extent=[min_x, max_x, min_y, max_y], origin="lower", alpha=max(0.0, min(1.0, args.bg_alpha)), zorder=0)
+        if eval_occupancy_rgba is not None and eval_bounds is not None:
+            eb_min_x, eb_min_y, eb_max_x, eb_max_y = eval_bounds
+            ax.imshow(eval_occupancy_rgba, extent=[eb_min_x, eb_max_x, eb_min_y, eb_max_y], origin="lower", zorder=1)
+    elif eval_occupancy_rgba is not None and eval_bounds is not None:
+        eb_min_x, eb_min_y, eb_max_x, eb_max_y = eval_bounds
+        ax.imshow(eval_occupancy_rgba, extent=[eb_min_x, eb_max_x, eb_min_y, eb_max_y], origin="lower", zorder=1)
 
     if len(outer_poly) >= 3:
         ox = [p[0] for p in outer_poly] + [outer_poly[0][0]]
@@ -526,10 +703,20 @@ def main() -> None:
             ax.plot([ox], [oy], marker="o", markersize=3.0, color="#444444", zorder=5)
             ax.text(ox, oy, typ, fontsize=6, ha="left", va="bottom", color="#444444", zorder=5)
 
+    # Step1 parsed JSON often stores openings at top level (not per-room).
+    for opening in _extract_top_level_openings(raw_layout):
+        ox = as_float(opening.get("cx"), 0.0)
+        oy = as_float(opening.get("cy"), 0.0)
+        typ = str(opening.get("type") or "opening")
+        ax.plot([ox], [oy], marker="x", markersize=5.0, color="#333333", zorder=5)
+        ax.text(ox, oy, typ, fontsize=6, ha="left", va="bottom", color="#333333", zorder=5)
+
     legend_once: Dict[str, bool] = {}
     size_mode = str(raw_layout.get("size_mode") or "world").strip().lower()
     ext_objs = raw_layout.get("area_objects_list")
     use_extension_objects = isinstance(ext_objs, list) and len(ext_objs) > 0
+    step1_objs = _extract_step1_objects(raw_layout)
+    use_step1_objects = (not use_extension_objects) and len(step1_objs) > 0
 
     if use_extension_objects:
         for idx, raw_obj in enumerate(ext_objs):
@@ -579,6 +766,62 @@ def main() -> None:
 
             if not args.no_labels:
                 ax.text(x, y, label, fontsize=6.5, ha="center", va="center", color="#111111", zorder=6)
+    elif use_step1_objects:
+        for idx, raw_obj in enumerate(step1_objs):
+            category = str(raw_obj.get("category") or "object")
+            if not args.include_floor and category.lower() == "floor":
+                continue
+            color = _category_color(category)
+            label = str(raw_obj.get("object_id") or raw_obj.get("id") or f"obj_{idx:02d}")
+
+            x = as_float(raw_obj.get("cx"), 0.0)
+            y = as_float(raw_obj.get("cy"), 0.0)
+            length = max(0.05, as_float(raw_obj.get("dx"), 1.0))
+            width = max(0.05, as_float(raw_obj.get("dy"), 1.0))
+            front_hint = raw_obj.get("front_hint")
+            # Step1 front_hint is functional facing, not bbox rotation.
+            # Keep Step1 box axis-aligned; use front_hint only for arrow.
+            corners: List[Tuple[float, float]]
+            bbox = raw_obj.get("bbox")
+            if isinstance(bbox, list) and len(bbox) >= 4:
+                x0 = as_float(bbox[0], x - 0.5 * length)
+                y0 = as_float(bbox[1], y - 0.5 * width)
+                x1 = as_float(bbox[2], x + 0.5 * length)
+                y1 = as_float(bbox[3], y + 0.5 * width)
+                if x1 < x0:
+                    x0, x1 = x1, x0
+                if y1 < y0:
+                    y0, y1 = y1, y0
+                corners = [(x0, y0), (x1, y0), (x1, y1), (x0, y1)]
+            else:
+                corners = _corners_world_axis(x, y, length, width)
+            patch = Polygon(
+                corners,
+                closed=True,
+                facecolor=color,
+                edgecolor="#222222",
+                alpha=0.42,
+                linewidth=1.0,
+                label=category if not legend_once.get(category) else None,
+                zorder=2,
+            )
+            legend_once[category] = True
+            ax.add_patch(patch)
+
+            if front_hint is not None:
+                fx, fy = _rotation_front_unit(front_hint)
+                arrow_len = max(0.1, min(length, width) * max(0.05, args.arrow_scale))
+                ax.annotate(
+                    "",
+                    xy=(x + fx * arrow_len, y + fy * arrow_len),
+                    xytext=(x, y),
+                    arrowprops={"arrowstyle": "-|>", "color": "#111111", "lw": 1.2},
+                    zorder=6,
+                )
+            ax.plot([x], [y], marker="o", markersize=2.5, color="#111111", zorder=6)
+
+            if not args.no_labels:
+                ax.text(x, y, label, fontsize=6.5, ha="center", va="center", color="#111111", zorder=6)
     else:
         for obj in layout.get("objects", []):
             obj_id = str(obj.get("id") or "")
@@ -611,8 +854,14 @@ def main() -> None:
             length = as_float(size[0] if len(size) > 0 else 1.0, 1.0)
             width = as_float(size[1] if len(size) > 1 else 1.0, 1.0)
 
-            # Contract yaw assumes local +X orientation; local +Y (front) is 90 deg CCW from +X.
-            fx, fy = -math.sin(yaw), math.cos(yaw)
+            # Prefer functional front yaw when available.
+            # Fallback keeps backward-compatible behavior for legacy contract-only yaw.
+            functional_yaw = obj.get("functional_yaw_rad")
+            if functional_yaw is not None:
+                fx, fy = _rotation_front_unit(functional_yaw)
+            else:
+                # Contract yaw assumes local +X orientation; local +Y (front) is 90 deg CCW from +X.
+                fx, fy = -math.sin(yaw), math.cos(yaw)
             arrow_len = max(0.1, min(length, width) * max(0.05, args.arrow_scale))
             ax.annotate(
                 "",
@@ -625,7 +874,9 @@ def main() -> None:
             if not args.no_labels and obj_id:
                 ax.text(x, y, obj_id, fontsize=7, ha="center", va="center", zorder=6)
 
-    if len(outer_poly) >= 3:
+    if args.show_eval_bounds and eval_bounds is not None:
+        min_x, min_y, max_x, max_y = eval_bounds
+    elif len(outer_poly) >= 3:
         min_x, min_y, max_x, max_y = room_bbox(outer_poly)
     else:
         base_poly = (layout.get("room") or {}).get("boundary_poly_xy") or []
@@ -654,6 +905,7 @@ def main() -> None:
 
     if task_points_json:
         _draw_task_points_overlay(ax, task_points_json, path_xy=path_xy)
+    _draw_bottleneck_overlay(ax, bottleneck_xy, clr_min_value)
     if metrics_json:
         _draw_metrics_overlay(ax, metrics_json)
 

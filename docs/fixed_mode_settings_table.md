@@ -2,6 +2,10 @@
 
 対象: `experiments/configs/pipeline/fixed_mode_v2_gpt_high_batch_20260222.json`
 
+役割:
+- このファイルを fixed-mode 実験再現の canonical upstream config として扱う。
+- `experiments/configs/pipeline/latest_design_v3_gpt_high_frozen_20260312.json` は latest-design の最新凍結 README / 実行例設定として分離して扱う。
+
 ## 1. ルート設定
 
 | キー | 値 |

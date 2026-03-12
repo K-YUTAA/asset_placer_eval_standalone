@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "experiments/configs/stress/stress_dataset_qa_schema.json",
+  "title": "Stress Dataset QA Report",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "dataset_id",
+    "stress_version",
+    "config_hash",
+    "generator_commit",
+    "expected_case_count",
+    "expected_variant_count_per_case",
+    "case_reports",
+    "summary"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "dataset_id": {
+      "type": "string"
+    },
+    "stress_version": {
+      "type": "string"
+    },
+    "config_path": {
+      "type": "string"
+    },
+    "config_hash": {
+      "type": "string"
+    },
+    "generator_commit": {
+      "type": "string"
+    },
+    "generated_at": {
+      "type": "string"
+    },
+    "expected_case_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "expected_variant_count_per_case": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "case_reports": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "base_case_id",
+          "scene_id",
+          "stress_family",
+          "manifest_path",
+          "exists",
+          "complete",
+          "explainable"
+        ],
+        "properties": {
+          "base_case_id": {
+            "type": "string"
+          },
+          "scene_id": {
+            "type": "string"
+          },
+          "stress_family": {
+            "type": "string"
+          },
+          "manifest_path": {
+            "type": "string"
+          },
+          "exists": {
+            "type": "boolean"
+          },
+          "complete": {
+            "type": "boolean"
+          },
+          "explainable": {
+            "type": "boolean"
+          },
+          "missing_required_fields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "notes": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "summary": {
+      "type": "object",
+      "required": [
+        "case_count",
+        "exists_pass_count",
+        "complete_pass_count",
+        "explainable_pass_count"
+      ],
+      "properties": {
+        "case_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "exists_pass_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "complete_pass_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "explainable_pass_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

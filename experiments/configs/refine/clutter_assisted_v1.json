@@ -1,0 +1,28 @@
+{
+  "recovery_protocol": "clutter_assisted",
+  "grid_step_m": 0.2,
+  "candidate_limit_per_object": 28,
+  "door_keepout_radius_m": 0.5,
+  "overlap_ratio_max": 0.05,
+  "delta_weight": 0.02,
+  "heuristic": {
+    "max_iterations": 4
+  },
+  "proposed": {
+    "beam_width": 6,
+    "depth": 3,
+    "candidate_limit_per_object": 20
+  },
+  "objective_order": [
+    "validity",
+    "Adopt_entry",
+    "Adopt_core",
+    "clr_feasible",
+    "C_vis_start",
+    "OOE_R_rec_entry_surf",
+    "R_reach",
+    "C_vis",
+    "delta_layout_clutter"
+  ]
+}
+

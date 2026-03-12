@@ -72,6 +72,7 @@
 - generate/eval/plot 各ステージでログ＋生成物存在確認を追加
 - `eval_args.enabled` で評価ON/OFFをJSON制御
 - 最新一括設定 `experiments/configs/pipeline/latest_design_v2_gpt_high.json` を追加
+  - これは当時の設定であり、2026-03-12 時点の latest frozen file は `experiments/configs/pipeline/latest_design_v3_gpt_high_frozen_20260312.json`
 - `README.md` をJSON駆動実行前提に更新
 
 ## 3. 今回達成できたこと

@@ -1,0 +1,192 @@
+{
+  "stress_version": "v2_natural",
+  "stress_family": "natural_main",
+  "generator_mode": "natural_main",
+  "eval_config_path": "experiments/configs/eval/eval_v1.json",
+  "frozen_evaluator": true,
+  "frozen_method_protocol": true,
+  "variants": [
+    "base",
+    "usage_shift",
+    "clutter",
+    "compound"
+  ],
+  "constraints": {
+    "same_room_only": true,
+    "translation_max_m": 0.6,
+    "rotation_max_deg": 30.0,
+    "door_keepout_radius_m": 0.5,
+    "overlap_ratio_max": 0.05,
+    "require_validity": true
+  },
+  "fixed_categories": [
+    "bed",
+    "toilet",
+    "sink",
+    "door",
+    "window",
+    "opening",
+    "floor"
+  ],
+  "difficulty_labeling": {
+    "mode": "post_generation_only",
+    "labels": [
+      "mild",
+      "borderline",
+      "hard_recoverable"
+    ],
+    "note": "Labels are assigned after generation from eval deltas. They are not part of the generation objective."
+  },
+  "families": {
+    "base": {
+      "description": "No perturbation. Baseline layout used as the reference for all variants."
+    },
+    "usage_shift": {
+      "description": "Natural furniture drift caused by daily usage.",
+      "parameter_status": "pilot_assumption_pending_5case_visual_freeze",
+      "selection_distribution": [
+        {
+          "moved_object_count": 1,
+          "probability": 0.75
+        },
+        {
+          "moved_object_count": 2,
+          "probability": 0.25
+        }
+      ],
+      "eligible_categories": [
+        "chair",
+        "coffee_table",
+        "small_storage",
+        "table"
+      ],
+      "low_priority_categories": [
+        "sofa",
+        "storage",
+        "tv_cabinet",
+        "cabinet"
+      ],
+      "priors_local_frame": {
+        "chair": {
+          "forward_backward_sigma_m": 0.12,
+          "forward_backward_clip_m": 0.3,
+          "lateral_sigma_m": 0.05,
+          "lateral_clip_m": 0.12,
+          "yaw_sigma_deg": 7.0,
+          "yaw_clip_deg": 15.0
+        },
+        "coffee_table": {
+          "forward_backward_sigma_m": 0.08,
+          "forward_backward_clip_m": 0.2,
+          "lateral_sigma_m": 0.08,
+          "lateral_clip_m": 0.2,
+          "yaw_sigma_deg": 5.0,
+          "yaw_clip_deg": 10.0
+        },
+        "small_storage": {
+          "forward_backward_sigma_m": 0.08,
+          "forward_backward_clip_m": 0.2,
+          "lateral_sigma_m": 0.08,
+          "lateral_clip_m": 0.2,
+          "yaw_sigma_deg": 5.0,
+          "yaw_clip_deg": 10.0
+        },
+        "table": {
+          "forward_backward_sigma_m": 0.05,
+          "forward_backward_clip_m": 0.12,
+          "lateral_sigma_m": 0.05,
+          "lateral_clip_m": 0.12,
+          "yaw_sigma_deg": 3.0,
+          "yaw_clip_deg": 6.0
+        }
+      }
+    },
+    "clutter": {
+      "description": "Externally added temporary obstacles. Existing furniture is not moved.",
+      "count_distribution": [
+        {
+          "added_object_count": 1,
+          "probability": 0.8
+        },
+        {
+          "added_object_count": 2,
+          "probability": 0.2
+        }
+      ],
+      "object_catalog": [
+        {
+          "size_xy_m": [
+            0.35,
+            0.35
+          ],
+          "height_m": 1.0,
+          "weight": 0.6
+        },
+        {
+          "size_xy_m": [
+            0.6,
+            0.4
+          ],
+          "height_m": 1.0,
+          "weight": 0.4
+        }
+      ],
+      "placement_bands": [
+        {
+          "band_id": "entry_staging_band",
+          "anchor": "start_point",
+          "shape": "oriented_rectangle",
+          "tangent_length_m": 1.0,
+          "normal_width_m": 0.6,
+          "selection_probability": 0.45
+        },
+        {
+          "band_id": "path_staging_band",
+          "anchor": "start_goal_segment",
+          "shape": "segment_band",
+          "segment_t_range": [
+            0.25,
+            0.75
+          ],
+          "normal_half_width_m": 0.45,
+          "selection_probability": 0.35
+        },
+        {
+          "band_id": "bedside_staging_band",
+          "anchor": "bed_perimeter_goal_side",
+          "shape": "perimeter_band",
+          "offset_range_m": [
+            0.2,
+            0.8
+          ],
+          "selection_probability": 0.2
+        }
+      ],
+      "pose_jitter": {
+        "position_sampling": "uniform_within_band",
+        "yaw_base_deg": [
+          0.0,
+          90.0
+        ],
+        "yaw_jitter_deg": 10.0,
+        "second_object_rule": "prefer_different_band_then_fallback_same_band"
+      }
+    },
+    "compound": {
+      "description": "Natural furniture drift plus externally added temporary obstacle.",
+      "recipe": [
+        "usage_shift",
+        "clutter"
+      ],
+      "usage_shift_object_count": 1,
+      "clutter_object_count": 1,
+      "record_fields": [
+        "Delta_movable",
+        "num_added_clutter",
+        "added_clutter_area",
+        "compound"
+      ],
+      "delta_total_status": "not_fixed_yet"
+    }
+  }
+}

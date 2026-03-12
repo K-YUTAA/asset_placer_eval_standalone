@@ -206,6 +206,7 @@ def _map_contract_object(raw_obj: Dict[str, Any]) -> Dict[str, Any]:
     y = as_float(pose[1] if len(pose) > 1 else 0.0, 0.0)
     z = as_float(pose[2] if len(pose) > 2 else 0.0, 0.0)
     yaw = yaw_to_rad(pose[3] if len(pose) > 3 else 0.0)
+    functional_yaw = yaw_to_rad(raw_obj.get("functional_yaw_rad", yaw))
 
     return {
         "id": raw_obj.get("id"),
@@ -215,6 +216,7 @@ def _map_contract_object(raw_obj: Dict[str, Any]) -> Dict[str, Any]:
         "scale": list(raw_obj.get("scale") or [1.0, 1.0, 1.0]),
         "size_lwh_m": [length, width, height],
         "pose_xyz_yaw": [x, y, z, yaw],
+        "functional_yaw_rad": functional_yaw,
         "movable": bool(raw_obj.get("movable", True)),
     }
 

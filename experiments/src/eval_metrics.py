@@ -29,8 +29,12 @@ NONE_HIT_ID = 0
 
 def default_eval_config() -> Dict[str, Any]:
     return {
+        "strict_eval_spec": False,
         "grid_resolution_m": 0.10,
         "robot_radius_m": 0.30,
+        "clr_feasible_max_m": 2.0,
+        "clr_feasible_tol_m": 0.01,
+        "clr_feasible_max_iters": 14,
         "occupancy_exclude_categories": ["floor"],
         "start_xy": [0.8, 0.8],
         "goal_xy": [5.0, 5.0],
@@ -38,6 +42,8 @@ def default_eval_config() -> Dict[str, Any]:
         "max_sensor_samples": 10,
         "tau_R": 0.90,
         "tau_clr": 0.20,
+        "tau_clr_feasible": 0.20,
+        "tau_clr_astar": 0.20,
         "tau_V": 0.40,
         "tau_Delta": 0.15,
         "lambda_rot": 0.50,
@@ -53,6 +59,15 @@ def default_eval_config() -> Dict[str, Any]:
             "tau_p": 0.02,
             "tau_v": 0.30,
         },
+        "adopt": {
+            "report_both": True,
+            "clearance_metric": "clr_feasible",
+            "entry_gate": {
+                "enabled": False,
+                "metric": "OOE_R_rec_entry_surf",
+                "min_value": 0.0,
+            },
+        },
     }
 
 
@@ -65,7 +80,95 @@ def merge_eval_config(base: Dict[str, Any], update: Optional[Dict[str, Any]]) ->
             if isinstance(update.get("entry_observability"), dict):
                 eo.update(update.get("entry_observability") or {})
             merged["entry_observability"] = eo
+        if isinstance(base.get("adopt"), dict):
+            adopt = dict(base.get("adopt") or {})
+            if isinstance(update.get("adopt"), dict):
+                adopt.update(update.get("adopt") or {})
+                if isinstance((base.get("adopt") or {}).get("entry_gate"), dict):
+                    entry_gate = dict((base.get("adopt") or {}).get("entry_gate") or {})
+                    if isinstance((update.get("adopt") or {}).get("entry_gate"), dict):
+                        entry_gate.update((update.get("adopt") or {}).get("entry_gate") or {})
+                    adopt["entry_gate"] = entry_gate
+            merged["adopt"] = adopt
     return merged
+
+
+STRICT_REQUIRED_PATHS: Tuple[str, ...] = (
+    "grid_resolution_m",
+    "robot_radius_m",
+    "clr_feasible_max_m",
+    "clr_feasible_tol_m",
+    "clr_feasible_max_iters",
+    "task.start.mode",
+    "task.start.in_offset_m",
+    "task.start.door_selector.strategy",
+    "task.goal.mode",
+    "task.goal.offset_m",
+    "task.goal.bed_selector.strategy",
+    "task.goal.choose",
+    "task.snap.max_radius_cells",
+    "tau_R",
+    "tau_clr",
+    "tau_clr_feasible",
+    "tau_clr_astar",
+    "tau_V",
+    "tau_Delta",
+    "lambda_rot",
+    "entry_observability.enabled",
+    "entry_observability.mode",
+    "entry_observability.sensor_height_m",
+    "entry_observability.num_rays",
+    "entry_observability.max_range_m",
+    "entry_observability.tau_p",
+    "entry_observability.tau_v",
+    "adopt.report_both",
+    "adopt.clearance_metric",
+    "adopt.entry_gate.enabled",
+    "adopt.entry_gate.metric",
+    "adopt.entry_gate.min_value",
+)
+
+ALLOWED_START_MODES = {"manual", "entrance_slidingdoor_center"}
+ALLOWED_GOAL_MODES = {"manual", "bedside"}
+
+
+def _config_has_path(config: Dict[str, Any], path: str) -> bool:
+    cur: Any = config
+    for part in path.split("."):
+        if not isinstance(cur, dict) or part not in cur:
+            return False
+        cur = cur[part]
+    return True
+
+
+def _config_get_path(config: Dict[str, Any], path: str) -> Any:
+    cur: Any = config
+    for part in path.split("."):
+        cur = cur[part]
+    return cur
+
+
+def _as_xy_pair(value: Any) -> bool:
+    return isinstance(value, (list, tuple)) and len(value) >= 2
+
+
+def validate_strict_eval_config(config: Dict[str, Any], *, config_path: Optional[pathlib.Path] = None) -> None:
+    missing = [path for path in STRICT_REQUIRED_PATHS if not _config_has_path(config, path)]
+    if missing:
+        where = str(config_path) if config_path else "<inline>"
+        raise ValueError(f"strict_eval_spec requires missing key(s) in {where}: {missing}")
+
+    start_mode = str(_config_get_path(config, "task.start.mode") or "").strip()
+    goal_mode = str(_config_get_path(config, "task.goal.mode") or "").strip()
+    if start_mode not in ALLOWED_START_MODES:
+        raise ValueError(f"strict_eval_spec: unsupported task.start.mode: {start_mode}")
+    if goal_mode not in ALLOWED_GOAL_MODES:
+        raise ValueError(f"strict_eval_spec: unsupported task.goal.mode: {goal_mode}")
+
+    if start_mode == "manual" and not _as_xy_pair(config.get("start_xy")):
+        raise ValueError("strict_eval_spec: start_xy is required when task.start.mode == 'manual'")
+    if goal_mode == "manual" and not _as_xy_pair(config.get("goal_xy")):
+        raise ValueError("strict_eval_spec: goal_xy is required when task.goal.mode == 'manual'")
 
 
 def _grid_dims(bounds: Tuple[float, float, float, float], resolution: float) -> Tuple[int, int]:
@@ -498,6 +601,77 @@ def _build_free_mask(room_mask: Grid, inflated_occ: Grid) -> Grid:
         for ix in range(nx):
             free[iy][ix] = room_mask[iy][ix] and (not inflated_occ[iy][ix])
     return free
+
+
+def _path_exists(free_mask: Grid, start: Cell, goal: Cell, resolution: float) -> bool:
+    return len(_astar_path(free_mask, start, goal, resolution=resolution)) > 0
+
+
+def _compute_clr_feasible(
+    *,
+    occ: Grid,
+    room_mask: Grid,
+    bounds: Tuple[float, float, float, float],
+    resolution: float,
+    robot_radius: float,
+    start: Cell,
+    goal: Cell,
+    config: Dict[str, Any],
+    dist_to_occ: Optional[List[List[float]]] = None,
+) -> Tuple[float, Dict[str, Any]]:
+    ny = len(room_mask)
+    nx = len(room_mask[0]) if ny > 0 else 0
+    sx, sy = start
+    gx, gy = goal
+    debug: Dict[str, Any] = {
+        "base_path_exists": False,
+        "iterations": 0,
+        "upper_bound_m": 0.0,
+        "tolerance_m": 0.0,
+    }
+
+    if not (0 <= sx < nx and 0 <= sy < ny and 0 <= gx < nx and 0 <= gy < ny):
+        debug["reason"] = "start_or_goal_out_of_bounds"
+        return 0.0, debug
+
+    base_radius_cells = max(0, int(math.ceil(robot_radius / max(resolution, 1e-9))))
+    base_inflated = _inflate_occupancy(occ, base_radius_cells)
+    base_free = _build_free_mask(room_mask, base_inflated)
+    if not _path_exists(base_free, start, goal, resolution):
+        debug["reason"] = "no_base_path"
+        return 0.0, debug
+    debug["base_path_exists"] = True
+
+    dt = dist_to_occ if dist_to_occ is not None else _distance_transform(occ, resolution)
+    start_margin = as_float(dt[sy][sx], 0.0) - robot_radius
+    goal_margin = as_float(dt[gy][gx], 0.0) - robot_radius
+    upper_bound = max(0.0, min(start_margin, goal_margin))
+    cfg_upper = as_float(config.get("clr_feasible_max_m"), upper_bound)
+    if cfg_upper > 0.0:
+        upper_bound = min(upper_bound, cfg_upper)
+    upper_bound = max(0.0, upper_bound)
+
+    tol_m = as_float(config.get("clr_feasible_tol_m"), max(0.01, resolution * 0.5))
+    max_iters = max(1, int(as_float(config.get("clr_feasible_max_iters"), 14)))
+    debug["upper_bound_m"] = upper_bound
+    debug["tolerance_m"] = tol_m
+
+    lo = 0.0
+    hi = upper_bound
+    iters = 0
+    while iters < max_iters and (hi - lo) > tol_m:
+        mid = 0.5 * (lo + hi)
+        radius_cells = max(0, int(math.ceil((robot_radius + mid) / max(resolution, 1e-9))))
+        inflated_mid = _inflate_occupancy(occ, radius_cells)
+        free_mid = _build_free_mask(room_mask, inflated_mid)
+        if _path_exists(free_mid, start, goal, resolution):
+            lo = mid
+        else:
+            hi = mid
+        iters += 1
+    debug["iterations"] = iters
+    debug["final_interval_m"] = [lo, hi]
+    return max(0.0, lo), debug
 
 
 def _neighbors4(ix: int, iy: int, nx: int, ny: int) -> List[Cell]:
@@ -1286,6 +1460,88 @@ def _save_object_visibility_png(
     plt.close(fig)
 
 
+def _save_reachability_png(
+    path: pathlib.Path,
+    values: List[List[int]],
+    bounds: Tuple[float, float, float, float],
+    title: str,
+    settings: Optional[Dict[str, Any]] = None,
+) -> None:
+    try:
+        import numpy as np
+        import matplotlib.pyplot as plt
+        from matplotlib.patches import Patch
+    except Exception:
+        return
+
+    arr = np.array(values, dtype=np.uint8)
+    if arr.size <= 0:
+        return
+
+    rgba = np.zeros((arr.shape[0], arr.shape[1], 4), dtype=float)
+    blocked = arr == 0
+    free_unreachable = arr == 80
+    # reachability view should represent only reachable/unreachable states.
+    # path-marked cells (200) are treated as reachable cells.
+    reachable = (arr == 255) | (arr == 200)
+
+    rgba[blocked] = [0.10, 0.10, 0.10, 0.35]
+    rgba[free_unreachable] = [0.62, 0.62, 0.62, 0.25]
+    rgba[reachable] = [0.00, 0.68, 0.22, 0.60]
+
+    min_x, min_y, max_x, max_y = bounds
+    fig, ax = plt.subplots(figsize=(7.2, 5.6), dpi=180)
+    ax.imshow(
+        rgba,
+        extent=[min_x, max_x, min_y, max_y],
+        origin="lower",
+        interpolation="nearest",
+        zorder=1,
+    )
+    ax.set_xlim(min_x, max_x)
+    ax.set_ylim(min_y, max_y)
+    ax.set_aspect("equal", adjustable="box")
+    ax.grid(True, linestyle="--", alpha=0.3)
+    ax.set_xlabel("X [m]")
+    ax.set_ylabel("Y [m]")
+    ax.set_title(title)
+    legend_handles = [
+        Patch(facecolor=(0.00, 0.68, 0.22, 0.60), edgecolor="none", label="reachable free"),
+        Patch(facecolor=(0.62, 0.62, 0.62, 0.25), edgecolor="none", label="free but unreachable"),
+        Patch(facecolor=(0.10, 0.10, 0.10, 0.35), edgecolor="none", label="blocked"),
+    ]
+    ax.legend(handles=legend_handles, loc="upper right", fontsize=8, frameon=True)
+    if isinstance(settings, dict) and settings:
+        lines: List[str] = ["eval settings"]
+        if settings.get("grid_resolution_m") is not None:
+            lines.append(f"grid_resolution_m: {as_float(settings.get('grid_resolution_m'), 0.0):.2f}")
+        if settings.get("robot_radius_m") is not None:
+            lines.append(f"robot_radius_m: {as_float(settings.get('robot_radius_m'), 0.0):.2f}")
+        if settings.get("start_mode") is not None:
+            lines.append(f"start_mode: {settings.get('start_mode')}")
+        if settings.get("snap_max_radius_cells") is not None:
+            try:
+                lines.append(f"snap_max_radius_cells: {int(settings.get('snap_max_radius_cells'))}")
+            except Exception:
+                pass
+        ax.text(
+            0.01,
+            0.99,
+            "\n".join(lines),
+            transform=ax.transAxes,
+            ha="left",
+            va="top",
+            fontsize=7.5,
+            color="#111111",
+            bbox={"facecolor": "white", "edgecolor": "#222222", "alpha": 0.86, "boxstyle": "round,pad=0.35"},
+            zorder=20,
+        )
+    fig.tight_layout()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(path)
+    plt.close(fig)
+
+
 def evaluate_layout(
     layout: Dict[str, Any],
     baseline_layout: Optional[Dict[str, Any]],
@@ -1337,13 +1593,25 @@ def evaluate_layout(
     )
 
     dist_to_occ = _distance_transform(occ, resolution)
-    clr_min = 0.0
+    clr_min_astar = 0.0
     bottleneck_cell: Optional[Cell] = None
     if path_cells_raw:
         clearance_values = []
         for ix, iy in path_cells_raw:
             clearance_values.append((dist_to_occ[iy][ix] - robot_radius, (ix, iy)))
-        clr_min, bottleneck_cell = min(clearance_values, key=lambda x: x[0])
+        clr_min_astar, bottleneck_cell = min(clearance_values, key=lambda x: x[0])
+
+    clr_feasible, clr_feasible_debug = _compute_clr_feasible(
+        occ=occ,
+        room_mask=room_mask,
+        bounds=bounds,
+        resolution=resolution,
+        robot_radius=robot_radius,
+        start=start,
+        goal=goal,
+        config=config,
+        dist_to_occ=dist_to_occ,
+    )
 
     sensor_cells = []
     if start in reachable:
@@ -1510,12 +1778,31 @@ def evaluate_layout(
 
     tau_r = as_float(config.get("tau_R"), 0.90)
     tau_clr = as_float(config.get("tau_clr"), 0.20)
+    tau_clr_feasible = as_float(config.get("tau_clr_feasible"), tau_clr)
+    tau_clr_astar = as_float(config.get("tau_clr_astar"), tau_clr)
     tau_v = as_float(config.get("tau_V"), 0.40)
     tau_delta = as_float(config.get("tau_Delta"), 0.15)
 
-    adopt_core = int(reach_rate >= tau_r and clr_min >= tau_clr and c_vis >= tau_v and delta_layout <= tau_delta)
-
     adopt_cfg = config.get("adopt") if isinstance(config.get("adopt"), dict) else {}
+    clearance_metric_raw = str(adopt_cfg.get("clearance_metric") or "clr_feasible").strip().lower()
+    if clearance_metric_raw in {"clr_min", "clr_min_astar", "astar", "path"}:
+        clearance_metric_used = "clr_min_astar"
+    else:
+        clearance_metric_used = "clr_feasible"
+    if clearance_metric_used == "clr_min_astar":
+        clearance_value = max(0.0, clr_min_astar)
+        clearance_threshold = tau_clr_astar
+    else:
+        clearance_value = max(0.0, clr_feasible)
+        clearance_threshold = tau_clr_feasible
+
+    adopt_core = int(
+        reach_rate >= tau_r
+        and clearance_value >= clearance_threshold
+        and c_vis >= tau_v
+        and delta_layout <= tau_delta
+    )
+
     entry_gate_cfg = adopt_cfg.get("entry_gate") if isinstance(adopt_cfg.get("entry_gate"), dict) else {}
     entry_gate_enabled = bool(entry_gate_cfg.get("enabled", False))
     entry_gate_metric = str(entry_gate_cfg.get("metric") or "OOE_R_rec_entry_surf")
@@ -1543,11 +1830,16 @@ def evaluate_layout(
     metrics = {
         "C_vis": c_vis,
         "R_reach": reach_rate,
-        "clr_min": max(0.0, clr_min),
+        "clr_min": max(0.0, clr_min_astar),
+        "clr_min_astar": max(0.0, clr_min_astar),
+        "clr_feasible": max(0.0, clr_feasible),
         "Delta_layout": delta_layout,
         "Adopt": adopt,
         "Adopt_core": adopt_core,
         "Adopt_entry": adopt_entry,
+        "Adopt_clearance_metric": clearance_metric_used,
+        "Adopt_clearance_value": clearance_value,
+        "Adopt_clearance_threshold": clearance_threshold,
         "Adopt_entry_gate_enabled": int(entry_gate_enabled),
         "Adopt_entry_metric": entry_gate_metric,
         "Adopt_entry_metric_value": entry_gate_value,
@@ -1586,15 +1878,32 @@ def evaluate_layout(
         "visible_objects_start": visible_objects_start,
         "visible_object_summary": visible_object_summary,
         "distance_to_occ": dist_to_occ,
+        "eval_settings": {
+            "strict_eval_spec": int(bool(config.get("strict_eval_spec", False))),
+            "grid_resolution_m": float(resolution),
+            "robot_radius_m": float(robot_radius),
+            "start_mode": str((task_spec.get("start") or {}).get("mode") if isinstance(task_spec, dict) and isinstance(task_spec.get("start"), dict) else "manual"),
+            "snap_max_radius_cells": int((((task_spec.get("snap") if isinstance(task_spec, dict) else {}) or {}).get("max_radius_cells", 30))),
+        },
     }
     debug["adopt"] = {
         "core": adopt_core,
         "entry": adopt_entry,
+        "clearance_metric": clearance_metric_used,
+        "clearance_value": clearance_value,
+        "clearance_threshold": clearance_threshold,
         "entry_gate_enabled": int(entry_gate_enabled),
         "entry_metric": entry_gate_metric,
         "entry_metric_value": entry_gate_value,
         "entry_metric_threshold": entry_gate_min,
         "entry_gate_ok": int(entry_gate_ok),
+    }
+    debug["clearance"] = {
+        "clr_min_astar": max(0.0, clr_min_astar),
+        "clr_feasible": max(0.0, clr_feasible),
+        "metric_used_for_adopt": clearance_metric_used,
+        "threshold_used_for_adopt": clearance_threshold,
+        "feasible_debug": clr_feasible_debug,
     }
     if task_points_debug is not None:
         debug["task_points"] = task_points_debug
@@ -1683,6 +1992,13 @@ def _save_debug_maps(debug: Dict[str, Any], out_dir: pathlib.Path) -> None:
             bbox,
             "C_vis_start visible-free area (start only)",
         )
+        _save_reachability_png(
+            out_dir / "reachability_area.png",
+            reach_img,
+            bbox,
+            "Reachability area (R_reach)",
+            settings=debug.get("eval_settings") if isinstance(debug.get("eval_settings"), dict) else None,
+        )
         if len(visible_objects_path) == ny and ny > 0 and len(visible_objects_path[0]) == nx:
             _save_object_visibility_png(
                 out_dir / "c_vis_objects_area.png",
@@ -1703,6 +2019,14 @@ def _save_debug_maps(debug: Dict[str, Any], out_dir: pathlib.Path) -> None:
         min_y = as_float(bounds[1], 0.0)
         path_xy = [[min_x + (ix + 0.5) * resolution, min_y + (iy + 0.5) * resolution] for ix, iy in path_cells]
         path_xy_raw = [[min_x + (ix + 0.5) * resolution, min_y + (iy + 0.5) * resolution] for ix, iy in path_cells_raw]
+        bottleneck_cell = debug.get("bottleneck_cell")
+        bottleneck_cell_out: List[int] = []
+        bottleneck_xy_out: List[float] = []
+        if isinstance(bottleneck_cell, (list, tuple)) and len(bottleneck_cell) >= 2:
+            bx = int(as_float(bottleneck_cell[0], -1))
+            by = int(as_float(bottleneck_cell[1], -1))
+            bottleneck_cell_out = [bx, by]
+            bottleneck_xy_out = [min_x + (bx + 0.5) * resolution, min_y + (by + 0.5) * resolution]
         write_json(
             out_dir / "path_cells.json",
             {
@@ -1710,6 +2034,8 @@ def _save_debug_maps(debug: Dict[str, Any], out_dir: pathlib.Path) -> None:
                 "resolution": resolution,
                 "start_cell": list(debug.get("start_cell") or []),
                 "goal_cell": list(debug.get("goal_cell") or []),
+                "bottleneck_cell": bottleneck_cell_out,
+                "bottleneck_xy": bottleneck_xy_out,
                 "path_cells_raw": [[int(ix), int(iy)] for ix, iy in path_cells_raw],
                 "path_xy_raw": path_xy_raw,
                 "path_cells": [[int(ix), int(iy)] for ix, iy in path_cells],
@@ -1780,7 +2106,13 @@ def main() -> None:
 
     cfg = default_eval_config()
     if args.config:
-        cfg = merge_eval_config(cfg, json.loads(pathlib.Path(args.config).read_text(encoding="utf-8-sig")))
+        config_path = pathlib.Path(args.config)
+        raw_cfg = json.loads(config_path.read_text(encoding="utf-8-sig"))
+        if bool(raw_cfg.get("strict_eval_spec", False)):
+            validate_strict_eval_config(raw_cfg, config_path=config_path)
+            cfg = raw_cfg
+        else:
+            cfg = merge_eval_config(cfg, raw_cfg)
 
     layout = load_layout_contract(pathlib.Path(args.layout))
     baseline_layout = load_layout_contract(pathlib.Path(args.baseline_layout)) if args.baseline_layout else None

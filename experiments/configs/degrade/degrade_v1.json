@@ -1,0 +1,67 @@
+{
+  "seed": 20260225,
+  "movable_categories": [
+    "chair",
+    "table",
+    "coffee_table",
+    "small_storage",
+    "storage",
+    "tv_cabinet",
+    "cabinet",
+    "sofa"
+  ],
+  "fixed_categories": [
+    "bed",
+    "toilet",
+    "sink",
+    "door",
+    "window",
+    "opening",
+    "floor"
+  ],
+  "constraints": {
+    "same_room_only": true,
+    "translation_max_m": 0.6,
+    "rotation_max_deg": 30.0,
+    "door_keepout_radius_m": 0.5,
+    "overlap_ratio_max": 0.05
+  },
+  "search": {
+    "translation_step_m": 0.1,
+    "rotation_step_deg": 15.0,
+    "top_candidates_per_object": 80,
+    "clutter_beam_width": 8
+  },
+  "output": {
+    "variants": ["base", "bottleneck", "occlusion", "clutter"]
+  },
+  "scenarios": {
+    "bottleneck": {
+      "max_moved_objects": 1,
+      "preferred_categories": ["chair", "table", "coffee_table", "sofa"],
+      "anchor_t": 0.55,
+      "search_radius_m": 0.45,
+      "target_below_tau_clr_m": 0.02,
+      "max_below_tau_clr_m": 0.08,
+      "require_path": true
+    },
+    "occlusion": {
+      "max_moved_objects": 1,
+      "preferred_categories": ["storage", "cabinet", "tv_cabinet", "sofa", "table"],
+      "anchor_t": 0.20,
+      "search_radius_m": 0.50,
+      "primary_metric": "OOE_R_rec_entry_surf",
+      "keep_reach_and_clr": true
+    },
+    "clutter": {
+      "max_added_objects": 2,
+      "object_sizes_xy_m": [[0.35, 0.35], [0.60, 0.40]],
+      "object_height_m": 1.0,
+      "anchor_t_1": 0.45,
+      "anchor_t_2": 0.60,
+      "search_radius_m": 0.45,
+      "target_mode": "entry_only_or_reach_drop",
+      "delta_disturb_per_added_object": 0.02
+    }
+  }
+}

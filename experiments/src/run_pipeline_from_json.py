@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 import os
@@ -23,6 +24,10 @@ def _load_json(path: pathlib.Path) -> Dict[str, Any]:
 def _write_json(path: pathlib.Path, payload: Dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+def _sha256_file(path: pathlib.Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def _as_bool(value: Any, default: bool) -> bool:
@@ -335,6 +340,8 @@ def _run_single_case(
     eval_enabled = _as_bool(eval_args.pop("enabled", True), True)
     if eval_args.get("config"):
         eval_args["config"] = _to_abs(repo_root, eval_args["config"])
+    eval_config_path = pathlib.Path(str(eval_args.get("config"))) if eval_args.get("config") else None
+    eval_hash = _sha256_file(eval_config_path) if eval_config_path and eval_config_path.exists() else None
     if eval_enabled:
         eval_cmd: List[str] = [
             python_exec,
@@ -354,6 +361,7 @@ def _run_single_case(
         bg_image = _to_abs(repo_root, plot_args.get("bg_image") or image_path)
         if not bg_image:
             raise ValueError(f"case={case_name}: plot enabled but bg_image is empty")
+        eval_debug_dir = _to_abs(repo_root, plot_args.get("eval_debug_dir") or str(debug_dir))
         bg_inner_frame_json = _to_abs(
             repo_root,
             plot_args.get("bg_inner_frame_json") or str(out_dir / "gemini_room_inner_frame_output.json"),
@@ -378,12 +386,14 @@ def _run_single_case(
         path_cells_path = debug_dir / "path_cells.json"
         if path_cells_path.exists():
             plot_cmd.extend(["--path_json", str(path_cells_path)])
+        if eval_debug_dir and pathlib.Path(eval_debug_dir).exists():
+            plot_cmd.extend(["--eval_debug_dir", eval_debug_dir])
         if bg_inner_frame_json and pathlib.Path(bg_inner_frame_json).exists():
             plot_cmd.extend(["--bg_inner_frame_json", bg_inner_frame_json])
         passthrough = {
             k: v
             for k, v in plot_args.items()
-            if k not in {"enabled", "bg_image", "bg_crop_mode", "bg_inner_frame_json"}
+            if k not in {"enabled", "bg_image", "bg_crop_mode", "bg_inner_frame_json", "eval_debug_dir"}
         }
         plot_cmd.extend(_cli_args_from_options(passthrough))
         _run_checked(plot_cmd, stage=STAGE_PLOT, env_overrides=env_overrides)
@@ -394,6 +404,9 @@ def _run_single_case(
         "image_path": image_path,
         "dimensions_path": dimensions_path,
         "out_dir": str(out_dir),
+        "eval_config_path": str(eval_config_path) if eval_config_path else None,
+        "eval_config_name": eval_config_path.name if eval_config_path else None,
+        "eval_hash": eval_hash,
         "outputs": {
             "layout_json": str(layout_json),
             "metrics_json": str(metrics_json),
@@ -445,7 +458,7 @@ def main() -> None:
     run_root.mkdir(parents=True, exist_ok=True)
 
     default_generation_args = defaults.get("generation_args") or {}
-    default_eval_args = defaults.get("eval_args") or {"config": "experiments/configs/eval/default_eval.json"}
+    default_eval_args = defaults.get("eval_args") or {"config": "experiments/configs/eval/eval_v1.json"}
     default_eval_args = dict(default_eval_args)
     if default_eval_args.get("config"):
         default_eval_args["config"] = _to_abs(repo_root, default_eval_args["config"])
@@ -513,6 +526,7 @@ def main() -> None:
         "config_path": str(config_path),
         "run_root": str(run_root),
         "python_exec": python_exec,
+        "eval_hashes": sorted({str(r.get("eval_hash")) for r in results if r.get("eval_hash")}),
         "started_at_epoch": int(batch_started),
         "runtime_sec": round(time.time() - batch_started, 3),
         "case_count_requested": len(selected_cases),

@@ -11,6 +11,14 @@ from eval_metrics import default_eval_config, evaluate_layout, merge_eval_config
 from layout_tools import as_float, load_layout_contract, obb_corners_xy, point_in_polygon, write_json
 
 
+def _clearance_value(metrics: Dict[str, Any]) -> float:
+    if "clr_feasible" in metrics:
+        return as_float(metrics.get("clr_feasible"), 0.0)
+    if "clr_min_astar" in metrics:
+        return as_float(metrics.get("clr_min_astar"), 0.0)
+    return as_float(metrics.get("clr_min"), 0.0)
+
+
 def _point_to_segment_distance(px: float, py: float, ax: float, ay: float, bx: float, by: float) -> float:
     abx = bx - ax
     aby = by - ay
@@ -36,7 +44,7 @@ def _score(metrics: Dict[str, Any], alpha: float = 1.0, beta: float = 1.0, eta: 
     return (
         alpha * as_float(metrics.get("C_vis"), 0.0)
         + beta * as_float(metrics.get("R_reach"), 0.0)
-        + eta * max(0.0, min(cmax, as_float(metrics.get("clr_min"), 0.0)))
+        + eta * max(0.0, min(cmax, _clearance_value(metrics)))
         - gamma * as_float(metrics.get("Delta_layout"), 0.0)
         - penalty
     )
@@ -47,6 +55,26 @@ def _find_object(layout: Dict[str, Any], object_id: str) -> Optional[Dict[str, A
         if obj.get("id") == object_id:
             return obj
     return None
+
+
+def _recovery_protocol(config: Dict[str, Any]) -> str:
+    return str((config or {}).get("recovery_protocol", "layout_only") or "layout_only").strip().lower()
+
+
+def _candidate_objects(layout: Dict[str, Any], protocol: str) -> List[Dict[str, Any]]:
+    out: List[Dict[str, Any]] = []
+    for obj in layout.get("objects", []):
+        oid = str(obj.get("id") or "")
+        if not oid:
+            continue
+        cat = str(obj.get("category") or "").strip().lower()
+        if protocol == "clutter_assisted":
+            if bool(obj.get("movable_in_clutter_recovery", cat == "clutter")) and cat == "clutter":
+                out.append(obj)
+            continue
+        if bool(obj.get("movable", True)):
+            out.append(obj)
+    return out
 
 
 def _object_inside_room(obj: Dict[str, Any], room_poly: List[List[float]]) -> bool:
@@ -64,7 +92,8 @@ def _select_target_object(
     changed_ids: Set[str],
     max_changed_objects: int,
 ) -> Optional[str]:
-    movable = [obj for obj in layout.get("objects", []) if bool(obj.get("movable", True))]
+    protocol = _recovery_protocol(config)
+    movable = _candidate_objects(layout, protocol)
     if not movable:
         return None
 
@@ -72,6 +101,8 @@ def _select_target_object(
         movable = [obj for obj in movable if obj.get("id") in changed_ids]
         if not movable:
             return None
+    else:
+        movable = [obj for obj in movable if obj.get("id") not in changed_ids]
 
     resolution = as_float(config.get("grid_resolution_m"), 0.1)
     bounds = debug["bounds"]
@@ -132,12 +163,14 @@ def run_refinement(
     current = copy.deepcopy(layout)
     current_metrics, current_debug = evaluate_layout(current, baseline_layout, config)
     current_score = _score(current_metrics)
+    protocol = _recovery_protocol(config)
 
     room_poly = current["room"]["boundary_poly_xy"]
     changed_ids: Set[str] = set()
     logs: List[Dict[str, Any]] = []
 
     rot_rad = math.radians(rot_deg)
+    rot_candidates = (0.0,) if protocol == "clutter_assisted" else (-rot_rad, 0.0, rot_rad)
 
     for iteration in range(1, max_iterations + 1):
         target_id = _select_target_object(current, current_debug, config, changed_ids, max_changed_objects)
@@ -156,7 +189,7 @@ def run_refinement(
 
         for dx in (-step_m, 0.0, step_m):
             for dy in (-step_m, 0.0, step_m):
-                for dtheta in (-rot_rad, 0.0, rot_rad):
+                for dtheta in rot_candidates:
                     if abs(dx) < 1e-12 and abs(dy) < 1e-12 and abs(dtheta) < 1e-12:
                         continue
 
@@ -181,7 +214,7 @@ def run_refinement(
                     # Non-regression guard on reachability/clearance.
                     if as_float(metrics.get("R_reach"), 0.0) + 1e-9 < as_float(current_metrics.get("R_reach"), 0.0):
                         continue
-                    if as_float(metrics.get("clr_min"), 0.0) + 1e-9 < as_float(current_metrics.get("clr_min"), 0.0):
+                    if _clearance_value(metrics) + 1e-9 < _clearance_value(current_metrics):
                         continue
 
                     score = _score(metrics)

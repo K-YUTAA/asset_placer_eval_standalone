@@ -23,7 +23,7 @@
       "gemini_openings_prompt_text_path": "prompts/fixed_mode_20260222/gemini_openings_prompt.txt"
     },
     "eval_args": {
-      "config": "experiments/configs/eval/default_eval.json"
+      "config": "experiments/configs/eval/eval_v1.json"
     },
     "plot_args": {
       "enabled": true,

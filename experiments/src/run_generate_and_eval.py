@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
+import json
 import pathlib
 import subprocess
 import sys
@@ -11,7 +13,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument("--image_path", required=True)
     parser.add_argument("--dimensions_path", required=True)
     parser.add_argument("--out_dir", required=True)
-    parser.add_argument("--eval_config", default="experiments/configs/eval/default_eval.json")
+    parser.add_argument("--eval_config", default="experiments/configs/eval/eval_v1.json")
 
     parser.add_argument("--prompt1_path", default=None)
     parser.add_argument("--prompt2_path", default=None)
@@ -45,6 +47,10 @@ def build_arg_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def _sha256_file(path: pathlib.Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
 def main() -> None:
     parser = build_arg_parser()
     args = parser.parse_args()
@@ -56,6 +62,10 @@ def main() -> None:
     metrics_json = out_dir / "metrics.json"
     debug_dir = out_dir / "debug"
     script_dir = pathlib.Path(__file__).resolve().parent
+    repo_root = script_dir.parents[1]
+    eval_config_path = pathlib.Path(args.eval_config)
+    if not eval_config_path.is_absolute():
+        eval_config_path = (repo_root / eval_config_path).resolve()
 
     gen_cmd = [
         sys.executable,
@@ -148,8 +158,25 @@ def main() -> None:
             str(debug_dir / "task_points.json"),
             "--path_json",
             str(debug_dir / "path_cells.json"),
+            "--eval_debug_dir",
+            str(debug_dir),
         ]
         subprocess.run(plot_cmd, check=True)
+
+    run_manifest = {
+        "eval_config_path": str(eval_config_path),
+        "eval_config_name": eval_config_path.name,
+        "eval_config_sha256": _sha256_file(eval_config_path),
+        "outputs": {
+            "layout_json": str(layout_json),
+            "metrics_json": str(metrics_json),
+            "plot_with_bg_png": str(out_dir / "plot_with_bg.png") if args.bg_image else None,
+        },
+    }
+    (out_dir / "run_manifest.json").write_text(
+        json.dumps(run_manifest, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
 
 
 if __name__ == "__main__":

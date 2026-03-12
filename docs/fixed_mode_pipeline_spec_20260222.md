@@ -15,6 +15,10 @@
 ## 実行設定ファイル
 - `experiments/configs/pipeline/fixed_mode_v2_gpt_high_batch_20260222.json`
 
+## Role
+- This file is the canonical upstream config for fixed-mode experiment reproduction.
+- `experiments/configs/pipeline/latest_design_v3_gpt_high_frozen_20260312.json` is treated separately as the latest frozen README/example config, not as the experiment authority.
+
 ## このブランチで設定として触る Gemini キー（最小）
 - `enable_gemini_spatial`
 - `gemini_model`

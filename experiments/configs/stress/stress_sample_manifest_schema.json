@@ -1,0 +1,166 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "experiments/configs/stress/stress_sample_manifest_schema.json",
+  "title": "Stress Sample Manifest",
+  "type": "object",
+  "required": [
+    "stress_version",
+    "stress_family",
+    "base_case_id",
+    "scene_id",
+    "seed",
+    "config_hash",
+    "generator_commit",
+    "selected_from_pool_index",
+    "pool_size",
+    "validity_checks",
+    "rejection_summary",
+    "moved_objects",
+    "added_clutter",
+    "metrics_before",
+    "metrics_after",
+    "metric_deltas",
+    "difficulty_label",
+    "selection_notes"
+  ],
+  "properties": {
+    "stress_version": {
+      "type": "string"
+    },
+    "stress_family": {
+      "type": "string",
+      "enum": [
+        "base",
+        "usage_shift",
+        "clutter",
+        "compound",
+        "targeted_bottleneck",
+        "targeted_occlusion"
+      ]
+    },
+    "base_case_id": {
+      "type": "string"
+    },
+    "scene_id": {
+      "type": "string"
+    },
+    "seed": {
+      "type": "integer"
+    },
+    "config_path": {
+      "type": "string"
+    },
+    "config_hash": {
+      "type": "string"
+    },
+    "generator_commit": {
+      "type": "string"
+    },
+    "selected_from_pool_index": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "pool_size": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "validity_checks": {
+      "type": "object"
+    },
+    "rejection_summary": {
+      "type": "object"
+    },
+    "moved_objects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "object_id",
+          "category",
+          "dx_local",
+          "dy_local",
+          "dtheta_deg",
+          "same_room_ok"
+        ],
+        "properties": {
+          "object_id": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "dx_local": {
+            "type": "number"
+          },
+          "dy_local": {
+            "type": "number"
+          },
+          "dtheta_deg": {
+            "type": "number"
+          },
+          "same_room_ok": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "added_clutter": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "clutter_id",
+          "size_xy",
+          "height",
+          "pose"
+        ],
+        "properties": {
+          "clutter_id": {
+            "type": "string"
+          },
+          "size_xy": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "items": {
+              "type": "number"
+            }
+          },
+          "height": {
+            "type": "number"
+          },
+          "pose": {
+            "type": "array",
+            "minItems": 3,
+            "items": {
+              "type": "number"
+            }
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "metrics_before": {
+      "type": "object"
+    },
+    "metrics_after": {
+      "type": "object"
+    },
+    "metric_deltas": {
+      "type": "object"
+    },
+    "difficulty_label": {
+      "type": "string",
+      "enum": [
+        "mild",
+        "borderline",
+        "hard_recoverable"
+      ]
+    },
+    "selection_notes": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": true
+}

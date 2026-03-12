@@ -60,6 +60,8 @@ DEFAULT_GEMINI_OPENINGS_PROMPT = (
     "For sliding doors: box only the wall-break opening segment; DO NOT include the sliding panel storage/pocket region, "
     "door leaf parked area, or rail extension beyond the wall-break gap. "
     "Do NOT detect furniture doors (e.g., storage/cabinet/closet doors). "
+    "For each detected opening, the box must correspond to a wall-break gap and be centered on that gap segment. "
+    "Never return an over-wide box that extends into adjacent wall, storage pocket, or non-gap rail/panel area. "
     "Return a JSON list where each entry has keys \"label\" and \"box_2d\". "
     "Use labels from: \"door\", \"sliding_door\", \"window\". "
     "Do not include furniture, room areas, walls, or other non-opening elements."
@@ -904,6 +906,7 @@ def _evaluate_openings_quality_for_retry(
     opening_objects: List[Dict[str, Any]],
     *,
     min_outer_door_width_ratio: float,
+    max_outer_door_width_ratio: float,
     max_outer_center_dist_m: float,
 ) -> Dict[str, Any]:
     area = _extract_area_size_xy(step1_json)
@@ -985,7 +988,11 @@ def _evaluate_openings_quality_for_retry(
         ratio = best["width"] / op_w if op_w > 1e-9 else 1.0
         total_score += _score(best)
 
-        if ratio < float(min_outer_door_width_ratio) or center_dist > float(max_outer_center_dist_m):
+        if (
+            ratio < float(min_outer_door_width_ratio)
+            or ratio > float(max_outer_door_width_ratio)
+            or center_dist > float(max_outer_center_dist_m)
+        ):
             issues.append(
                 {
                     "opening_id": op.get("opening_id"),
@@ -1001,6 +1008,89 @@ def _evaluate_openings_quality_for_retry(
         "issues": issues,
         "evaluated_outer_doors": int(evaluated),
     }
+
+
+def _build_openings_prompt_with_constraints(
+    base_prompt: str,
+    step1_json: Dict[str, Any],
+) -> str:
+    area = _extract_area_size_xy(step1_json)
+    openings = step1_json.get("openings")
+    if area is None or not isinstance(openings, list):
+        return base_prompt
+    area_x, area_y = area
+
+    lines: List[str] = []
+    for idx, op in enumerate(openings):
+        if not isinstance(op, dict):
+            continue
+        op_type_raw = str(op.get("type") or "").strip().lower()
+        op_type = "window" if op_type_raw == "window" else "door"
+        oid = str(op.get("opening_id") or f"opening_{idx + 1}")
+        cx = float(op.get("cx") or 0.0)
+        cy = float(op.get("cy") or 0.0)
+        width = max(0.05, abs(float(op.get("w") or 0.0)))
+        orient = _opening_orientation_step1(op, area_x, area_y)
+        role = _opening_wall_role_step1(op)
+        lines.append(
+            f"- {oid}: type={op_type}, wall_role={role}, orientation={orient}, "
+            f"center=({cx:.3f},{cy:.3f})m, expected_width={width:.3f}m"
+        )
+
+    if not lines:
+        return base_prompt
+
+    constraints = (
+        "TARGET_OPENINGS_FROM_STEP1:\n"
+        + "\n".join(lines)
+        + "\n\nMATCHING_RULES:\n"
+        "- Return one opening box per target opening above (same count, same type semantics).\n"
+        "- Keep each box centered near the listed target center and aligned to the listed orientation.\n"
+        "- Use only the wall-break gap width; do not extend into wall, pocket, or storage region.\n"
+        "- Width should stay near expected_width (roughly within 0.7x to 1.3x unless image evidence is very strong).\n"
+    )
+    return f"{base_prompt}\n\n{constraints}"
+
+
+def _build_openings_refine_prompt_from_pass1(
+    *,
+    base_prompt: str,
+    opening_objects: List[Dict[str, Any]],
+    area_x: float,
+    area_y: float,
+) -> str:
+    lines: List[str] = []
+    for idx, obj in enumerate(opening_objects):
+        if not isinstance(obj, dict):
+            continue
+        cat = str(obj.get("category") or obj.get("label") or "").strip().lower().replace("-", "_")
+        if "window" in cat:
+            kind = "window"
+        elif "door" in cat:
+            kind = "door"
+        else:
+            continue
+        bw = _box_norm_to_world(obj.get("box_2d_norm"), area_x, area_y)
+        if bw is None:
+            continue
+        orientation = "vertical" if bw["dy"] >= bw["dx"] else "horizontal"
+        width = bw["dy"] if orientation == "vertical" else bw["dx"]
+        lines.append(
+            f"- cand_{idx}: kind={kind}, label={cat}, center=({bw['cx']:.3f},{bw['cy']:.3f})m, "
+            f"orientation={orientation}, width={width:.3f}m"
+        )
+
+    candidates_block = "PASS1_CANDIDATES:\n" + ("\n".join(lines) if lines else "- (none)")
+    refine_rules = (
+        "REFINE_RULES:\n"
+        "- Re-evaluate candidates against wall-break geometry in the image.\n"
+        "- Keep only true architectural openings (door/sliding_door/window).\n"
+        "- For sliding doors, keep ONLY the actual opening gap where wall is absent.\n"
+        "- Remove pocket/storage/rail or parked-panel regions from the box.\n"
+        "- If a candidate center is on solid wall/pocket area, move center to the true opening gap center.\n"
+        "- Output labels only from: door, sliding_door, window.\n"
+    )
+    return f"{base_prompt}\n\n{candidates_block}\n\n{refine_rules}"
 
 
 def _is_openings_eval_better(new_eval: Dict[str, Any], old_eval: Dict[str, Any]) -> bool:
@@ -1126,7 +1216,9 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument("--gemini_openings_retry_max_retries", type=int, default=1)
     parser.add_argument("--gemini_openings_retry_temperature", type=float, default=-1.0)
     parser.add_argument("--gemini_openings_retry_min_outer_door_width_ratio", type=float, default=0.72)
+    parser.add_argument("--gemini_openings_retry_max_outer_door_width_ratio", type=float, default=1.28)
     parser.add_argument("--gemini_openings_retry_max_outer_center_dist_m", type=float, default=0.85)
+    parser.add_argument("--gemini_openings_refine_pass", action="store_true")
     parser.add_argument("--gemini_inner_frame_retry_max_retries", type=int, default=1)
     parser.add_argument("--gemini_inner_frame_retry_min_coverage_x", type=float, default=0.88)
     parser.add_argument("--gemini_inner_frame_retry_min_coverage_y", type=float, default=0.88)
@@ -1351,7 +1443,8 @@ def main() -> None:
         }
 
         if openings_enabled:
-            openings_prompt = gemini_openings_prompt_text or DEFAULT_GEMINI_OPENINGS_PROMPT
+            openings_prompt_base = gemini_openings_prompt_text or DEFAULT_GEMINI_OPENINGS_PROMPT
+            openings_prompt = openings_prompt_base
             openings_result = _run_gemini_spatial(
                 image_path=image_path,
                 out_dir=out_dir,
@@ -1370,11 +1463,45 @@ def main() -> None:
             )
             opening_json = openings_result["spatial_json"]
             opening_objects = _extract_opening_objects(opening_json)
+            refine_pass_result: Optional[Dict[str, Any]] = None
+            refine_pass_objects: List[Dict[str, Any]] = []
+            area_xy = _extract_area_size_xy(step1_json)
+            if args.gemini_openings_refine_pass and area_xy is not None:
+                area_x, area_y = area_xy
+                openings_refine_prompt = _build_openings_refine_prompt_from_pass1(
+                    base_prompt=openings_prompt_base,
+                    opening_objects=opening_objects,
+                    area_x=area_x,
+                    area_y=area_y,
+                )
+                refine_pass_result = _run_gemini_spatial(
+                    image_path=image_path,
+                    out_dir=out_dir,
+                    output_stem="gemini_openings_output_refined",
+                    gemini_api_key=args.gemini_api_key,
+                    gemini_model=args.gemini_model,
+                    gemini_task="boxes",
+                    gemini_target_prompt="doors, sliding doors, windows",
+                    gemini_label_language="English",
+                    gemini_temperature=args.gemini_temperature,
+                    gemini_thinking_budget=args.gemini_thinking_budget,
+                    gemini_max_items=args.gemini_max_items,
+                    gemini_resize_max=args.gemini_resize_max,
+                    gemini_prompt_text=openings_refine_prompt,
+                    gemini_include_non_furniture=True,
+                )
+                refine_pass_objects = _extract_opening_objects(refine_pass_result["spatial_json"])
+                if refine_pass_objects:
+                    openings_result = refine_pass_result
+                    opening_objects = refine_pass_objects
+
             openings_retry_info: Dict[str, Any] = {
                 "enabled": int(args.gemini_openings_retry_max_retries) > 0,
                 "max_retries": int(max(0, int(args.gemini_openings_retry_max_retries))),
                 "attempts": 1,
                 "retried": False,
+                "refine_pass_enabled": int(args.gemini_openings_refine_pass),
+                "refine_pass_used": int(refine_pass_result is not None and len(refine_pass_objects) > 0),
             }
             best_openings_result = openings_result
             best_opening_objects = opening_objects
@@ -1382,11 +1509,15 @@ def main() -> None:
                 step1_json=step1_json,
                 opening_objects=best_opening_objects,
                 min_outer_door_width_ratio=float(args.gemini_openings_retry_min_outer_door_width_ratio),
+                max_outer_door_width_ratio=float(args.gemini_openings_retry_max_outer_door_width_ratio),
                 max_outer_center_dist_m=float(args.gemini_openings_retry_max_outer_center_dist_m),
             )
             openings_retry_info["first_eval"] = best_eval
 
             max_retries = int(max(0, int(args.gemini_openings_retry_max_retries)))
+            if args.gemini_openings_refine_pass and refine_pass_result is not None and len(refine_pass_objects) > 0:
+                max_retries = 0
+                openings_retry_info["retry_skipped_reason"] = "use_refine_pass_output"
             retry_idx = 0
             while retry_idx < max_retries and int(best_eval.get("issue_count", 0)) > 0:
                 retry_idx += 1
@@ -1397,9 +1528,10 @@ def main() -> None:
                 retry_prompt = (
                     f"{openings_prompt}\n\n"
                     "RETRY_INSTRUCTION:\n"
-                    "- Previous result likely truncated one or more outer sliding-door openings.\n"
-                    "- For each labeled door/sliding door, box the FULL wall-break opening span between jamb endpoints.\n"
+                    "- Previous result likely had outer-door geometry mismatch (too short, too wide, or center shifted).\n"
+                    "- For each labeled door/sliding door, box exactly the wall-break opening span between jamb endpoints.\n"
                     "- Do not keep only a short center segment of the opening.\n"
+                    "- Do not return an over-wide span that includes pocket/rail/storage region.\n"
                     "- Keep strict exclusion of pocket/storage/rail regions outside the opening gap.\n"
                 )
                 retry_result = _run_gemini_spatial(
@@ -1423,6 +1555,7 @@ def main() -> None:
                     step1_json=step1_json,
                     opening_objects=retry_objects,
                     min_outer_door_width_ratio=float(args.gemini_openings_retry_min_outer_door_width_ratio),
+                    max_outer_door_width_ratio=float(args.gemini_openings_retry_max_outer_door_width_ratio),
                     max_outer_center_dist_m=float(args.gemini_openings_retry_max_outer_center_dist_m),
                 )
 

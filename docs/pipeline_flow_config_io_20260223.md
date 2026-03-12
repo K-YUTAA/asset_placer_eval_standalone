@@ -1,7 +1,12 @@
 # Pipeline flow with config meaning and input output
 
 Updated: 2026-02-23  
-Target config: `experiments/configs/pipeline/latest_design_v2_gpt_high.json`
+Historical target config: `experiments/configs/pipeline/latest_design_v2_gpt_high.json`
+
+Status note:
+- This document originally explained the `latest_design_v2_gpt_high.json` template/example config.
+- The latest frozen latest-design file is `experiments/configs/pipeline/latest_design_v3_gpt_high_frozen_20260312.json`.
+- The canonical upstream config for fixed-mode experiment reproduction is `experiments/configs/pipeline/fixed_mode_v2_gpt_high_batch_20260222.json`.
 
 ---
 
