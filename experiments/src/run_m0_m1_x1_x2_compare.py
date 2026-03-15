@@ -77,6 +77,7 @@ def _build_trial_config(
     method: str,
     protocol: str,
     layout_input: pathlib.Path,
+    layout_axis_alignment_prior_path: str = "",
 ) -> Dict[str, Any]:
     base_case = str(entry.get("base_case") or "")
     variant = str(entry.get("variant") or "")
@@ -107,6 +108,8 @@ def _build_trial_config(
         trial_cfg["refine_step_m"] = 0.1
         trial_cfg["refine_rot_deg"] = 15.0
         trial_cfg["refine_max_changed_objects"] = 3
+    if layout_axis_alignment_prior_path and protocol in {"M1", "X2"}:
+        trial_cfg["layout_axis_alignment_prior_path"] = layout_axis_alignment_prior_path
     return trial_cfg
 
 
@@ -192,6 +195,7 @@ def _summaries(rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         for r in rows
         if r["protocol"] == "M0"
     }
+    fallback_baseline_cache: Dict[tuple[str, str], Dict[str, Any]] = {}
     groups: Dict[tuple[str, str, str], List[Dict[str, Any]]] = defaultdict(list)
     for row in rows:
         if row["protocol"] == "M0":
@@ -224,7 +228,30 @@ def _summaries(rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
             summary[f"mean_delta_{key}"] = 0.0
 
         for item in items:
-            base = baseline_map[(item["base_case"], item["variant"])]
+            base_key = (item["base_case"], item["variant"])
+            base = baseline_map.get(base_key)
+            if base is None:
+                if base_key not in fallback_baseline_cache:
+                    stress_manifest_path = pathlib.Path(str(item.get("stress_manifest_path") or ""))
+                    stress_case_dir = stress_manifest_path.parent if stress_manifest_path.exists() else None
+                    metrics = {}
+                    if stress_case_dir is not None:
+                        metrics_path = stress_case_dir / "metrics.json"
+                        if metrics_path.exists():
+                            try:
+                                metrics = _load_json(metrics_path)
+                            except Exception:
+                                metrics = {}
+                    fallback_row: Dict[str, Any] = {
+                        "base_case": base_key[0],
+                        "variant": base_key[1],
+                        "protocol": "M0",
+                        "method": "baseline",
+                    }
+                    for key in METRIC_KEYS:
+                        fallback_row[key] = metrics.get(key, 0.0)
+                    fallback_baseline_cache[base_key] = fallback_row
+                base = fallback_baseline_cache[base_key]
             if int(base.get("Adopt_core", 0)) == 0 and int(item.get("Adopt_core", 0)) == 1:
                 summary["core_recovered"] += 1
             if int(base.get("Adopt_entry", 0)) == 0 and int(item.get("Adopt_entry", 0)) == 1:
@@ -291,6 +318,10 @@ def main() -> None:
     parser.add_argument("--eval_config", default="experiments/configs/eval/eval_v1.json")
     parser.add_argument("--out_root", default="experiments/runs/m0_m1_x1_x2_compare_from_latest_design_frozen_20260312")
     parser.add_argument("--python_exec", default="/Users/yuuta/Research/asset_placer_eval_standalone/.venv/bin/python")
+    parser.add_argument("--layout_axis_alignment_prior", default="")
+    parser.add_argument("--variants", nargs="*", default=None)
+    parser.add_argument("--protocols", nargs="*", default=None)
+    parser.add_argument("--methods", nargs="*", default=None)
     args = parser.parse_args()
 
     repo_root = _repo_root()
@@ -304,11 +335,18 @@ def main() -> None:
     if not eval_config.is_absolute():
         eval_config = (repo_root / eval_config).resolve()
     python_exec = pathlib.Path(args.python_exec)
+    alignment_prior = str(args.layout_axis_alignment_prior or "")
+    selected_variants = {str(v).strip() for v in (args.variants or []) if str(v).strip()} or None
+    selected_protocols = {str(p).strip().upper() for p in (args.protocols or []) if str(p).strip()} or None
+    selected_methods = {str(m).strip().lower() for m in (args.methods or []) if str(m).strip()} or None
 
     manifest = _load_json(stress_root / "stress_cases_manifest.json")
     entries = manifest.get("entries") if isinstance(manifest.get("entries"), list) else []
     entries_sorted = sorted(
-        entries,
+        [
+            e for e in entries
+            if selected_variants is None or str(e.get("variant") or "") in selected_variants
+        ],
         key=lambda e: (
             VARIANT_ORDER.index(str(e.get("variant") or "base")),
             str(e.get("base_case") or ""),
@@ -322,70 +360,98 @@ def main() -> None:
         base_case = str(entry.get("base_case") or "")
         variant = str(entry.get("variant") or "")
         stress_layout = pathlib.Path(str(entry.get("layout_path") or ""))
-        rows.append(_baseline_row(entry))
+        if selected_protocols is None or "M0" in selected_protocols:
+            rows.append(_baseline_row(entry))
 
         for method in METHODS:
+            if selected_methods is not None and method not in selected_methods:
+                continue
             method_stage_root = out_root / f"{method}_m1_run"
             x1_stage_root = out_root / f"{method}_x1_run"
             x2_stage_root = out_root / f"{method}_x2_run"
 
-            trial_cfg_m1 = _build_trial_config(entry=entry, method=method, protocol="M1", layout_input=stress_layout)
-            cfg_m1_path = trial_cfg_root / f"{trial_cfg_m1['trial_id']}.json"
-            _write_json(cfg_m1_path, trial_cfg_m1)
-            _run(
-                [
-                    str(python_exec),
-                    str(repo_root / "experiments/src/run_trial.py"),
-                    "--trial_config",
-                    str(cfg_m1_path),
-                    "--eval_config",
-                    str(eval_config),
-                    "--out_root",
-                    str(method_stage_root),
-                ],
-                repo_root,
-            )
-            m1_run_dir = _latest_run_dir(method_stage_root, str(trial_cfg_m1["trial_id"]))
-            rows.append(_trial_row(entry=entry, protocol="M1", method=method, run_dir=m1_run_dir))
+            m1_run_dir = None
+            if selected_protocols is None or "M1" in selected_protocols or "X2" in selected_protocols:
+                trial_cfg_m1 = _build_trial_config(
+                    entry=entry,
+                    method=method,
+                    protocol="M1",
+                    layout_input=stress_layout,
+                    layout_axis_alignment_prior_path=alignment_prior,
+                )
+                cfg_m1_path = trial_cfg_root / f"{trial_cfg_m1['trial_id']}.json"
+                _write_json(cfg_m1_path, trial_cfg_m1)
+                _run(
+                    [
+                        str(python_exec),
+                        str(repo_root / "experiments/src/run_trial.py"),
+                        "--trial_config",
+                        str(cfg_m1_path),
+                        "--eval_config",
+                        str(eval_config),
+                        "--out_root",
+                        str(method_stage_root),
+                    ],
+                    repo_root,
+                )
+                m1_run_dir = _latest_run_dir(method_stage_root, str(trial_cfg_m1["trial_id"]))
+                if selected_protocols is None or "M1" in selected_protocols:
+                    rows.append(_trial_row(entry=entry, protocol="M1", method=method, run_dir=m1_run_dir))
 
-            trial_cfg_x1 = _build_trial_config(entry=entry, method=method, protocol="X1", layout_input=stress_layout)
-            cfg_x1_path = trial_cfg_root / f"{trial_cfg_x1['trial_id']}.json"
-            _write_json(cfg_x1_path, trial_cfg_x1)
-            _run(
-                [
-                    str(python_exec),
-                    str(repo_root / "experiments/src/run_trial.py"),
-                    "--trial_config",
-                    str(cfg_x1_path),
-                    "--eval_config",
-                    str(eval_config),
-                    "--out_root",
-                    str(x1_stage_root),
-                ],
-                repo_root,
-            )
-            x1_run_dir = _latest_run_dir(x1_stage_root, str(trial_cfg_x1["trial_id"]))
-            rows.append(_trial_row(entry=entry, protocol="X1", method=method, run_dir=x1_run_dir))
+            if selected_protocols is None or "X1" in selected_protocols:
+                trial_cfg_x1 = _build_trial_config(
+                    entry=entry,
+                    method=method,
+                    protocol="X1",
+                    layout_input=stress_layout,
+                    layout_axis_alignment_prior_path=alignment_prior,
+                )
+                cfg_x1_path = trial_cfg_root / f"{trial_cfg_x1['trial_id']}.json"
+                _write_json(cfg_x1_path, trial_cfg_x1)
+                _run(
+                    [
+                        str(python_exec),
+                        str(repo_root / "experiments/src/run_trial.py"),
+                        "--trial_config",
+                        str(cfg_x1_path),
+                        "--eval_config",
+                        str(eval_config),
+                        "--out_root",
+                        str(x1_stage_root),
+                    ],
+                    repo_root,
+                )
+                x1_run_dir = _latest_run_dir(x1_stage_root, str(trial_cfg_x1["trial_id"]))
+                rows.append(_trial_row(entry=entry, protocol="X1", method=method, run_dir=x1_run_dir))
 
-            m1_layout_input = m1_run_dir / "layout_refined.json"
-            trial_cfg_x2 = _build_trial_config(entry=entry, method=method, protocol="X2", layout_input=m1_layout_input)
-            cfg_x2_path = trial_cfg_root / f"{trial_cfg_x2['trial_id']}.json"
-            _write_json(cfg_x2_path, trial_cfg_x2)
-            _run(
-                [
-                    str(python_exec),
-                    str(repo_root / "experiments/src/run_trial.py"),
-                    "--trial_config",
-                    str(cfg_x2_path),
-                    "--eval_config",
-                    str(eval_config),
-                    "--out_root",
-                    str(x2_stage_root),
-                ],
-                repo_root,
-            )
-            x2_run_dir = _latest_run_dir(x2_stage_root, str(trial_cfg_x2["trial_id"]))
-            rows.append(_trial_row(entry=entry, protocol="X2", method=method, run_dir=x2_run_dir, source_protocol="M1"))
+            if selected_protocols is None or "X2" in selected_protocols:
+                if m1_run_dir is None:
+                    raise RuntimeError("X2 requires M1 run dir to exist")
+                m1_layout_input = m1_run_dir / "layout_refined.json"
+                trial_cfg_x2 = _build_trial_config(
+                    entry=entry,
+                    method=method,
+                    protocol="X2",
+                    layout_input=m1_layout_input,
+                    layout_axis_alignment_prior_path=alignment_prior,
+                )
+                cfg_x2_path = trial_cfg_root / f"{trial_cfg_x2['trial_id']}.json"
+                _write_json(cfg_x2_path, trial_cfg_x2)
+                _run(
+                    [
+                        str(python_exec),
+                        str(repo_root / "experiments/src/run_trial.py"),
+                        "--trial_config",
+                        str(cfg_x2_path),
+                        "--eval_config",
+                        str(eval_config),
+                        "--out_root",
+                        str(x2_stage_root),
+                    ],
+                    repo_root,
+                )
+                x2_run_dir = _latest_run_dir(x2_stage_root, str(trial_cfg_x2["trial_id"]))
+                rows.append(_trial_row(entry=entry, protocol="X2", method=method, run_dir=x2_run_dir, source_protocol="M1"))
 
     fieldnames = [
         "base_case",

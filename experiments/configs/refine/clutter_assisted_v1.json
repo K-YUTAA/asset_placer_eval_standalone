@@ -5,6 +5,9 @@
   "door_keepout_radius_m": 0.5,
   "overlap_ratio_max": 0.05,
   "delta_weight": 0.02,
+  "rotation_mode": "rectangular_clutter_room_axis_only",
+  "square_clutter_rotation": false,
+  "square_tolerance_m": 0.05,
   "heuristic": {
     "max_iterations": 4
   },
@@ -25,4 +28,3 @@
     "delta_layout_clutter"
   ]
 }
-

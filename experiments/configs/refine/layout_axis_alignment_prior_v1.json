@@ -1,0 +1,16 @@
+{
+  "layout_axis_alignment_prior": {
+    "enabled": true,
+    "apply_to_protocols": ["layout_only"],
+    "apply_to_chair": true,
+    "max_off_axis_deg": 15.0,
+    "off_axis_degrees": [10.0, 15.0],
+    "dedup_deg": 5.0,
+    "rotation_penalty_weight": 0.5,
+    "major_gain_thresholds": {
+      "clr_feasible": 0.03,
+      "C_vis_start": 0.05,
+      "OOE_R_rec_entry_surf": 0.10
+    }
+  }
+}

@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from typing import Any, Dict, List, Optional, Sequence, Set, Tuple
 
 from eval_metrics import evaluate_layout
-from layout_tools import as_float, obb_corners_xy, point_in_polygon
+from layout_tools import as_float, obb_corners_xy, orthogonal_yaws, point_in_polygon, room_axis_for_object
 
 
 Vec2 = Tuple[float, float]
@@ -155,6 +155,38 @@ def _candidate_clutter_objects(layout: Dict[str, Any], changed_ids: Set[str], ma
     return out
 
 
+def _is_square_clutter(obj: Dict[str, Any], square_tolerance_m: float) -> bool:
+    size = obj.get("size_lwh_m") or [0.0, 0.0, 0.0]
+    lx = as_float(size[0], 0.0)
+    ly = as_float(size[1], 0.0)
+    return abs(lx - ly) <= max(0.0, square_tolerance_m)
+
+
+def _candidate_clutter_yaws(
+    layout: Dict[str, Any],
+    obj: Dict[str, Any],
+    *,
+    square_tolerance_m: float,
+) -> List[float]:
+    pose = list(obj.get("pose_xyz_yaw") or [0.0, 0.0, 0.0, 0.0])
+    while len(pose) < 4:
+        pose.append(0.0)
+    current_yaw = as_float(pose[3], 0.0)
+    if _is_square_clutter(obj, square_tolerance_m):
+        return [current_yaw]
+    axis = room_axis_for_object(layout, obj)
+    yaws = orthogonal_yaws(axis)
+    dedup: List[float] = []
+    seen: Set[int] = set()
+    for yaw in yaws:
+        key = int(round(math.degrees(yaw) * 10.0))
+        if key in seen:
+            continue
+        seen.add(key)
+        dedup.append(yaw)
+    return dedup or [current_yaw]
+
+
 def _boundary_score(x: float, y: float, bounds: Tuple[float, float, float, float]) -> float:
     min_x, min_y, max_x, max_y = bounds
     d = min(x - min_x, max_x - x, y - min_y, max_y - y)
@@ -289,8 +321,8 @@ def _score_tuple(metrics: Dict[str, Any], *, delta_weight: float, ooe_primary: s
     return (valid, adopt_entry, adopt_core, cont)
 
 
-def _state_key(layout: Dict[str, Any]) -> Tuple[Tuple[str, int, int], ...]:
-    rec: List[Tuple[str, int, int]] = []
+def _state_key(layout: Dict[str, Any]) -> Tuple[Tuple[str, int, int, int], ...]:
+    rec: List[Tuple[str, int, int, int]] = []
     for obj in layout.get("objects", []):
         oid = str(obj.get("id") or "")
         cat = str(obj.get("category") or "").strip().lower()
@@ -299,7 +331,11 @@ def _state_key(layout: Dict[str, Any]) -> Tuple[Tuple[str, int, int], ...]:
         if not bool(obj.get("movable_in_clutter_recovery", True)):
             continue
         x, y = _object_center(obj)
-        rec.append((oid, int(round(x * 100.0)), int(round(y * 100.0))))
+        pose = list(obj.get("pose_xyz_yaw") or [0.0, 0.0, 0.0, 0.0])
+        while len(pose) < 4:
+            pose.append(0.0)
+        yaw_deg = math.degrees(as_float(pose[3], 0.0))
+        rec.append((oid, int(round(x * 100.0)), int(round(y * 100.0)), int(round(yaw_deg * 10.0))))
     rec.sort(key=lambda item: item[0])
     return tuple(rec)
 
@@ -317,6 +353,7 @@ def _run_heuristic(
     overlap_ratio_max: float,
     delta_weight: float,
     ooe_primary: str,
+    square_tolerance_m: float,
 ) -> Tuple[Dict[str, Any], Dict[str, Any], List[Dict[str, Any]]]:
     current = copy.deepcopy(layout)
     current_metrics, current_debug = evaluate_layout(current, baseline_layout, config)
@@ -335,6 +372,14 @@ def _run_heuristic(
         best_move = None
 
         for oid in object_ids:
+            base_obj = _find_object(current, oid)
+            if base_obj is None:
+                continue
+            yaw_candidates = _candidate_clutter_yaws(
+                current,
+                base_obj,
+                square_tolerance_m=square_tolerance_m,
+            )
             positions = _generate_candidate_positions(
                 current,
                 oid,
@@ -346,34 +391,39 @@ def _run_heuristic(
                 config=config,
             )
             for px, py in positions:
-                cand = copy.deepcopy(current)
-                obj = _find_object(cand, oid)
-                if obj is None:
-                    continue
-                pose = list(obj.get("pose_xyz_yaw") or [0.0, 0.0, 0.0, 0.0])
-                while len(pose) < 4:
-                    pose.append(0.0)
-                before_x, before_y = as_float(pose[0], 0.0), as_float(pose[1], 0.0)
-                if abs(before_x - px) < 1e-9 and abs(before_y - py) < 1e-9:
-                    continue
-                pose[0] = px
-                pose[1] = py
-                obj["pose_xyz_yaw"] = pose
-                metrics, debug = evaluate_layout(cand, baseline_layout, config)
-                if int(metrics.get("validity", 0)) != 1:
-                    continue
-                score = _score_tuple(metrics, delta_weight=delta_weight, ooe_primary=ooe_primary)
-                if score > best_score:
-                    best_layout = cand
-                    best_metrics = metrics
-                    best_debug = debug
-                    best_score = score
-                    best_move = {
-                        "object_id": oid,
-                        "from_xy": [before_x, before_y],
-                        "to_xy": [px, py],
-                        "disp_m": math.hypot(px - before_x, py - before_y),
-                    }
+                for yaw in yaw_candidates:
+                    cand = copy.deepcopy(current)
+                    obj = _find_object(cand, oid)
+                    if obj is None:
+                        continue
+                    pose = list(obj.get("pose_xyz_yaw") or [0.0, 0.0, 0.0, 0.0])
+                    while len(pose) < 4:
+                        pose.append(0.0)
+                    before_x, before_y = as_float(pose[0], 0.0), as_float(pose[1], 0.0)
+                    before_yaw = as_float(pose[3], 0.0)
+                    if abs(before_x - px) < 1e-9 and abs(before_y - py) < 1e-9 and abs(before_yaw - yaw) < 1e-9:
+                        continue
+                    pose[0] = px
+                    pose[1] = py
+                    pose[3] = yaw
+                    obj["pose_xyz_yaw"] = pose
+                    metrics, debug = evaluate_layout(cand, baseline_layout, config)
+                    if int(metrics.get("validity", 0)) != 1:
+                        continue
+                    score = _score_tuple(metrics, delta_weight=delta_weight, ooe_primary=ooe_primary)
+                    if score > best_score:
+                        best_layout = cand
+                        best_metrics = metrics
+                        best_debug = debug
+                        best_score = score
+                        best_move = {
+                            "object_id": oid,
+                            "from_xy": [before_x, before_y],
+                            "to_xy": [px, py],
+                            "from_yaw_deg": math.degrees(before_yaw),
+                            "to_yaw_deg": math.degrees(yaw),
+                            "disp_m": math.hypot(px - before_x, py - before_y),
+                        }
 
         if best_layout is None or best_metrics is None or best_debug is None:
             break
@@ -412,6 +462,7 @@ def _run_proposed(
     overlap_ratio_max: float,
     delta_weight: float,
     ooe_primary: str,
+    square_tolerance_m: float,
 ) -> Tuple[Dict[str, Any], Dict[str, Any], List[Dict[str, Any]]]:
     initial_layout = copy.deepcopy(layout)
     initial_metrics, initial_debug = evaluate_layout(initial_layout, baseline_layout, config)
@@ -433,6 +484,14 @@ def _run_proposed(
         for node in beam:
             object_ids = _candidate_clutter_objects(node.layout, node.changed_ids, max_changed_objects)
             for oid in object_ids:
+                base_obj = _find_object(node.layout, oid)
+                if base_obj is None:
+                    continue
+                yaw_candidates = _candidate_clutter_yaws(
+                    node.layout,
+                    base_obj,
+                    square_tolerance_m=square_tolerance_m,
+                )
                 positions = _generate_candidate_positions(
                     node.layout,
                     oid,
@@ -444,49 +503,54 @@ def _run_proposed(
                     config=config,
                 )
                 for px, py in positions:
-                    cand = copy.deepcopy(node.layout)
-                    obj = _find_object(cand, oid)
-                    if obj is None:
-                        continue
-                    pose = list(obj.get("pose_xyz_yaw") or [0.0, 0.0, 0.0, 0.0])
-                    while len(pose) < 4:
-                        pose.append(0.0)
-                    before_x, before_y = as_float(pose[0], 0.0), as_float(pose[1], 0.0)
-                    if abs(before_x - px) < 1e-9 and abs(before_y - py) < 1e-9:
-                        continue
-                    pose[0] = px
-                    pose[1] = py
-                    obj["pose_xyz_yaw"] = pose
-                    state_key = _state_key(cand)
-                    if state_key in visited:
-                        continue
-                    metrics, debug = evaluate_layout(cand, baseline_layout, config)
-                    if int(metrics.get("validity", 0)) != 1:
-                        continue
-                    visited.add(state_key)
-                    score = _score_tuple(metrics, delta_weight=delta_weight, ooe_primary=ooe_primary)
-                    steps = list(node.steps)
-                    steps.append(
-                        {
-                            "object_id": oid,
-                            "from_xy": [before_x, before_y],
-                            "to_xy": [px, py],
-                            "disp_m": math.hypot(px - before_x, py - before_y),
-                        }
-                    )
-                    changed = set(node.changed_ids)
-                    changed.add(oid)
-                    child = SearchNode(
-                        layout=cand,
-                        metrics=metrics,
-                        debug=debug,
-                        changed_ids=changed,
-                        steps=steps,
-                        score_tuple=score,
-                    )
-                    layer_nodes.append(child)
-                    if child.score_tuple > best.score_tuple:
-                        best = child
+                    for yaw in yaw_candidates:
+                        cand = copy.deepcopy(node.layout)
+                        obj = _find_object(cand, oid)
+                        if obj is None:
+                            continue
+                        pose = list(obj.get("pose_xyz_yaw") or [0.0, 0.0, 0.0, 0.0])
+                        while len(pose) < 4:
+                            pose.append(0.0)
+                        before_x, before_y = as_float(pose[0], 0.0), as_float(pose[1], 0.0)
+                        before_yaw = as_float(pose[3], 0.0)
+                        if abs(before_x - px) < 1e-9 and abs(before_y - py) < 1e-9 and abs(before_yaw - yaw) < 1e-9:
+                            continue
+                        pose[0] = px
+                        pose[1] = py
+                        pose[3] = yaw
+                        obj["pose_xyz_yaw"] = pose
+                        state_key = _state_key(cand)
+                        if state_key in visited:
+                            continue
+                        metrics, debug = evaluate_layout(cand, baseline_layout, config)
+                        if int(metrics.get("validity", 0)) != 1:
+                            continue
+                        visited.add(state_key)
+                        score = _score_tuple(metrics, delta_weight=delta_weight, ooe_primary=ooe_primary)
+                        steps = list(node.steps)
+                        steps.append(
+                            {
+                                "object_id": oid,
+                                "from_xy": [before_x, before_y],
+                                "to_xy": [px, py],
+                                "from_yaw_deg": math.degrees(before_yaw),
+                                "to_yaw_deg": math.degrees(yaw),
+                                "disp_m": math.hypot(px - before_x, py - before_y),
+                            }
+                        )
+                        changed = set(node.changed_ids)
+                        changed.add(oid)
+                        child = SearchNode(
+                            layout=cand,
+                            metrics=metrics,
+                            debug=debug,
+                            changed_ids=changed,
+                            steps=steps,
+                            score_tuple=score,
+                        )
+                        layer_nodes.append(child)
+                        if child.score_tuple > best.score_tuple:
+                            best = child
         if not layer_nodes:
             break
         layer_nodes.sort(key=lambda node: node.score_tuple, reverse=True)
@@ -512,6 +576,7 @@ def run_refinement(
     depth: int,
     ooe_primary: str,
 ) -> Tuple[Dict[str, Any], Dict[str, Any], List[Dict[str, Any]]]:
+    square_tolerance_m = as_float(config.get("square_tolerance_m"), 0.05)
     clutter_ids = _candidate_clutter_objects(copy.deepcopy(layout), set(), max_changed_objects=max_changed_objects)
     if not clutter_ids:
         metrics, _ = evaluate_layout(layout, baseline_layout, config)
@@ -530,6 +595,7 @@ def run_refinement(
             overlap_ratio_max=overlap_ratio_max,
             delta_weight=delta_weight,
             ooe_primary=ooe_primary,
+            square_tolerance_m=square_tolerance_m,
         )
     return _run_heuristic(
         layout,
@@ -543,4 +609,5 @@ def run_refinement(
         overlap_ratio_max=overlap_ratio_max,
         delta_weight=delta_weight,
         ooe_primary=ooe_primary,
+        square_tolerance_m=square_tolerance_m,
     )

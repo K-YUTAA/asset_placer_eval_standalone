@@ -259,6 +259,8 @@ def run_trial(args: argparse.Namespace) -> Dict[str, Any]:
     method_hash = _sha256_payload(method_spec)
     method_config_path = None
     method_config_sha256 = None
+    alignment_prior_config_path = None
+    alignment_prior_config_sha256 = None
     if recovery_protocol == "clutter_assisted":
         clutter_cfg_path = repo_root / "experiments" / "configs" / "refine" / "clutter_assisted_v1.json"
         if clutter_cfg_path.exists():
@@ -269,6 +271,18 @@ def run_trial(args: argparse.Namespace) -> Dict[str, Any]:
         if proposed_cfg_path.exists():
             method_config_path = str(proposed_cfg_path)
             method_config_sha256 = _sha256_file(proposed_cfg_path)
+
+    alignment_prior_path_raw = trial_cfg.get("layout_axis_alignment_prior_path")
+    if alignment_prior_path_raw:
+        alignment_prior_path = pathlib.Path(str(alignment_prior_path_raw))
+        if not alignment_prior_path.is_absolute():
+            alignment_prior_path = (repo_root / alignment_prior_path).resolve()
+        if alignment_prior_path.exists():
+            alignment_prior_payload = _load_json(alignment_prior_path)
+            prior_section = alignment_prior_payload.get("layout_axis_alignment_prior")
+            cfg["layout_axis_alignment_prior"] = prior_section if isinstance(prior_section, dict) else alignment_prior_payload
+            alignment_prior_config_path = str(alignment_prior_path)
+            alignment_prior_config_sha256 = _sha256_file(alignment_prior_path)
 
     inputs = trial_cfg.get("inputs", {})
 
@@ -419,6 +433,8 @@ def run_trial(args: argparse.Namespace) -> Dict[str, Any]:
                 "resolved_method_hash": method_hash,
                 "method_config_path": method_config_path,
                 "method_config_sha256": method_config_sha256,
+                "alignment_prior_config_path": alignment_prior_config_path,
+                "alignment_prior_config_sha256": alignment_prior_config_sha256,
                 "movement_breakdown": movement_breakdown,
                 "v0_outputs": v0_outputs,
                 "summary": summary,

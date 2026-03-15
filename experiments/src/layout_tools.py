@@ -335,6 +335,30 @@ def obb_corners_xy(obj: Dict[str, Any]) -> List[Tuple[float, float]]:
     return corners
 
 
+def obb_sample_points_xy(
+    obj: Dict[str, Any],
+    spacing_m: float = 0.05,
+    include_center: bool = True,
+) -> List[Tuple[float, float]]:
+    corners = obb_corners_xy(obj)
+    if len(corners) != 4:
+        return corners
+    out: List[Tuple[float, float]] = list(corners)
+    if include_center:
+        pose = obj.get("pose_xyz_yaw") or [0.0, 0.0, 0.0, 0.0]
+        out.append((as_float(pose[0], 0.0), as_float(pose[1], 0.0)))
+    spacing = max(1e-3, float(spacing_m))
+    for i in range(4):
+        x0, y0 = corners[i]
+        x1, y1 = corners[(i + 1) % 4]
+        length = math.hypot(x1 - x0, y1 - y0)
+        steps = max(1, int(math.floor(length / spacing)))
+        for k in range(1, steps):
+            t = k / steps
+            out.append((x0 + (x1 - x0) * t, y0 + (y1 - y0) * t))
+    return out
+
+
 def point_in_obb(x: float, y: float, obj: Dict[str, Any]) -> bool:
     size = obj.get("size_lwh_m") or [1.0, 1.0, 1.0]
     pose = obj.get("pose_xyz_yaw") or [0.0, 0.0, 0.0, 0.0]
@@ -352,4 +376,58 @@ def point_in_obb(x: float, y: float, obj: Dict[str, Any]) -> bool:
     local_y = sin_yaw * dx + cos_yaw * dy
 
     return abs(local_x) <= 0.5 * length and abs(local_y) <= 0.5 * width
+
+
+def angle_diff_rad(a: float, b: float) -> float:
+    return abs(wrap_angle(a - b))
+
+
+def dominant_axis_from_polygon(polygon: Sequence[Sequence[float]]) -> float:
+    if len(polygon) < 2:
+        return 0.0
+    best_len = -1.0
+    best_angle = 0.0
+    n = len(polygon)
+    for i in range(n):
+        p0 = polygon[i]
+        p1 = polygon[(i + 1) % n]
+        dx = as_float(p1[0], 0.0) - as_float(p0[0], 0.0)
+        dy = as_float(p1[1], 0.0) - as_float(p0[1], 0.0)
+        seg_len = math.hypot(dx, dy)
+        if seg_len <= 1e-9:
+            continue
+        angle = math.atan2(dy, dx) % math.pi
+        if seg_len > best_len:
+            best_len = seg_len
+            best_angle = angle
+    return best_angle
+
+
+def orthogonal_yaws(axis_rad: float) -> List[float]:
+    return [wrap_angle(axis_rad + 0.5 * math.pi * k) for k in range(4)]
+
+
+def nearest_orthogonal_yaw(theta_rad: float, axis_rad: float) -> float:
+    cands = orthogonal_yaws(axis_rad)
+    return min(cands, key=lambda c: angle_diff_rad(theta_rad, c))
+
+
+def orthogonal_deviation_rad(theta_rad: float, axis_rad: float) -> float:
+    return angle_diff_rad(theta_rad, nearest_orthogonal_yaw(theta_rad, axis_rad))
+
+
+def room_polygon_for_object(layout: Dict[str, Any], obj: Dict[str, Any]) -> List[List[float]]:
+    pose = obj.get("pose_xyz_yaw") or [0.0, 0.0, 0.0, 0.0]
+    x = as_float(pose[0], 0.0)
+    y = as_float(pose[1], 0.0)
+    for room in layout.get("rooms", []) or []:
+        poly = room.get("room_polygon") or []
+        if poly and point_in_polygon(x, y, poly):
+            return [[as_float(p[0], 0.0), as_float(p[1], 0.0)] for p in poly]
+    room_poly = ((layout.get("room") or {}).get("boundary_poly_xy")) or []
+    return [[as_float(p[0], 0.0), as_float(p[1], 0.0)] for p in room_poly]
+
+
+def room_axis_for_object(layout: Dict[str, Any], obj: Dict[str, Any]) -> float:
+    return dominant_axis_from_polygon(room_polygon_for_object(layout, obj))
 

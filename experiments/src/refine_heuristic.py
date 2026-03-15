@@ -8,7 +8,19 @@ import pathlib
 from typing import Any, Dict, List, Optional, Set, Tuple
 
 from eval_metrics import default_eval_config, evaluate_layout, merge_eval_config
-from layout_tools import as_float, load_layout_contract, obb_corners_xy, point_in_polygon, write_json
+from layout_tools import (
+    angle_diff_rad,
+    as_float,
+    load_layout_contract,
+    obb_corners_xy,
+    obb_sample_points_xy,
+    orthogonal_deviation_rad,
+    orthogonal_yaws,
+    point_in_polygon,
+    room_polygon_for_object,
+    room_axis_for_object,
+    write_json,
+)
 
 
 def _clearance_value(metrics: Dict[str, Any]) -> float:
@@ -33,7 +45,77 @@ def _point_to_segment_distance(px: float, py: float, ax: float, ay: float, bx: f
     return math.hypot(px - cx, py - cy)
 
 
-def _score(metrics: Dict[str, Any], alpha: float = 1.0, beta: float = 1.0, eta: float = 1.0, gamma: float = 0.5) -> float:
+def _object_center(obj: Dict[str, Any]) -> Tuple[float, float]:
+    pose = obj.get("pose_xyz_yaw") or [0.0, 0.0, 0.0, 0.0]
+    return as_float(pose[0], 0.0), as_float(pose[1], 0.0)
+
+
+def _distance(a: Tuple[float, float], b: Tuple[float, float]) -> float:
+    return math.hypot(a[0] - b[0], a[1] - b[1])
+
+
+def _collect_door_centers(layout: Dict[str, Any]) -> List[Tuple[float, float]]:
+    out: List[Tuple[float, float]] = []
+    for obj in layout.get("objects", []):
+        if str(obj.get("category") or "").strip().lower() == "door":
+            out.append(_object_center(obj))
+    return out
+
+
+def _obb_aabb(obj: Dict[str, Any]) -> Tuple[float, float, float, float]:
+    corners = obb_corners_xy(obj)
+    xs = [c[0] for c in corners]
+    ys = [c[1] for c in corners]
+    return (min(xs), min(ys), max(xs), max(ys))
+
+
+def _aabb_intersection(a: Tuple[float, float, float, float], b: Tuple[float, float, float, float]) -> float:
+    x0 = max(a[0], b[0])
+    y0 = max(a[1], b[1])
+    x1 = min(a[2], b[2])
+    y1 = min(a[3], b[3])
+    if x1 <= x0 or y1 <= y0:
+        return 0.0
+    return (x1 - x0) * (y1 - y0)
+
+
+def _aabb_area(a: Tuple[float, float, float, float]) -> float:
+    return max(0.0, a[2] - a[0]) * max(0.0, a[3] - a[1])
+
+
+def _has_excess_overlap(layout: Dict[str, Any], moved_object_id: str, max_ratio: float) -> bool:
+    obj = _find_object(layout, moved_object_id)
+    if obj is None:
+        return True
+    cat = str(obj.get("category") or "").strip().lower()
+    if cat in {"floor", "door", "window", "opening"}:
+        return False
+    a = _obb_aabb(obj)
+    for other in layout.get("objects", []):
+        oid = str(other.get("id") or "")
+        if oid == moved_object_id:
+            continue
+        ocat = str(other.get("category") or "").strip().lower()
+        if ocat in {"floor", "door", "window", "opening"}:
+            continue
+        b = _obb_aabb(other)
+        inter = _aabb_intersection(a, b)
+        if inter <= 0.0:
+            continue
+        den = min(_aabb_area(a), _aabb_area(b))
+        if den > 1e-9 and inter / den > max_ratio + 1e-9:
+            return True
+    return False
+
+
+def _score(
+    metrics: Dict[str, Any],
+    alpha: float = 1.0,
+    beta: float = 1.0,
+    eta: float = 1.0,
+    gamma: float = 0.5,
+    extra_penalty: float = 0.0,
+) -> float:
     cmax = 1.0
     penalty = 0.0
     if metrics.get("validity", 0) == 0:
@@ -46,6 +128,7 @@ def _score(metrics: Dict[str, Any], alpha: float = 1.0, beta: float = 1.0, eta: 
         + beta * as_float(metrics.get("R_reach"), 0.0)
         + eta * max(0.0, min(cmax, _clearance_value(metrics)))
         - gamma * as_float(metrics.get("Delta_layout"), 0.0)
+        - extra_penalty
         - penalty
     )
 
@@ -78,11 +161,176 @@ def _candidate_objects(layout: Dict[str, Any], protocol: str) -> List[Dict[str, 
 
 
 def _object_inside_room(obj: Dict[str, Any], room_poly: List[List[float]]) -> bool:
-    corners = obb_corners_xy(obj)
-    for x, y in corners:
-        if not point_in_polygon(x, y, room_poly):
+    for x, y in obb_sample_points_xy(obj, spacing_m=0.05, include_center=True):
+        if point_in_polygon(x, y, room_poly):
+            continue
+        on_edge = False
+        n = len(room_poly)
+        for i in range(n):
+            ax, ay = room_poly[i]
+            bx, by = room_poly[(i + 1) % n]
+            if _point_to_segment_distance(x, y, ax, ay, bx, by) <= 1e-4:
+                on_edge = True
+                break
+        if not on_edge:
             return False
     return True
+
+
+def _room_edge_clearance(obj: Dict[str, Any], room_poly: List[List[float]]) -> float:
+    if not room_poly or len(room_poly) < 2:
+        return float("inf")
+    corners = obb_sample_points_xy(obj, spacing_m=0.05, include_center=True)
+    best = float("inf")
+    n = len(room_poly)
+    for x, y in corners:
+        for i in range(n):
+            ax, ay = room_poly[i]
+            bx, by = room_poly[(i + 1) % n]
+            d = _point_to_segment_distance(x, y, ax, ay, bx, by)
+            if d < best:
+                best = d
+    return best
+
+
+def _alignment_prior_cfg(config: Dict[str, Any], protocol: str) -> Optional[Dict[str, Any]]:
+    if protocol == "clutter_assisted":
+        return None
+    raw = config.get("layout_axis_alignment_prior")
+    if not isinstance(raw, dict) or not bool(raw.get("enabled", False)):
+        return None
+    protocols = raw.get("apply_to_protocols")
+    if isinstance(protocols, list) and protocols:
+        allowed = {str(x).strip().lower() for x in protocols}
+        if protocol not in allowed:
+            return None
+    return raw
+
+
+def _is_rectangular_table(obj: Dict[str, Any]) -> bool:
+    cat = str(obj.get("category") or "").strip().lower()
+    if cat != "table":
+        return False
+    size = obj.get("size_lwh_m") or [1.0, 1.0, 1.0]
+    length = as_float(size[0], 1.0)
+    width = as_float(size[1], 1.0)
+    return abs(length - width) > 0.1
+
+
+def _use_alignment_prior(obj: Dict[str, Any], prior_cfg: Optional[Dict[str, Any]]) -> bool:
+    if prior_cfg is None:
+        return False
+    cat = str(obj.get("category") or "").strip().lower()
+    if cat in {"clutter", "door", "window", "opening", "toilet", "floor"}:
+        return False
+    if cat == "chair":
+        return bool(prior_cfg.get("apply_to_chair", True))
+    if cat == "table":
+        return _is_rectangular_table(obj)
+    target_cats = {
+        "bed",
+        "sofa",
+        "storage",
+        "tv_cabinet",
+        "sink",
+        "cabinet",
+        "coffee_table",
+        "small_storage",
+    }
+    return cat in target_cats
+
+
+def _strict_orthogonal_category(obj: Dict[str, Any], prior_cfg: Optional[Dict[str, Any]]) -> bool:
+    if prior_cfg is None:
+        return False
+    cat = str(obj.get("category") or "").strip().lower()
+    strict = prior_cfg.get("strict_orthogonal_categories")
+    if isinstance(strict, list):
+        return cat in {str(x).strip().lower() for x in strict}
+    return cat in {"sink", "storage", "tv_cabinet", "cabinet"}
+
+
+def _candidate_yaws(layout: Dict[str, Any], obj: Dict[str, Any], config: Dict[str, Any], protocol: str, rot_deg: float) -> List[float]:
+    pose = obj.get("pose_xyz_yaw") or [0.0, 0.0, 0.0, 0.0]
+    current_yaw = as_float(pose[3], 0.0)
+    prior_cfg = _alignment_prior_cfg(config, protocol)
+    if not _use_alignment_prior(obj, prior_cfg):
+        rot_rad = math.radians(rot_deg)
+        return [current_yaw - rot_rad, current_yaw, current_yaw + rot_rad]
+
+    axis = room_axis_for_object(layout, obj)
+    candidates = orthogonal_yaws(axis)
+    if _strict_orthogonal_category(obj, prior_cfg):
+        return candidates
+    max_off_axis_deg = as_float(prior_cfg.get("max_off_axis_deg"), 15.0)
+    off_axis_degrees = prior_cfg.get("off_axis_degrees") or [10.0, 15.0]
+    nearest = min(candidates, key=lambda c: angle_diff_rad(current_yaw, c))
+    for deg in off_axis_degrees:
+        d = as_float(deg, 0.0)
+        if d <= 1e-9 or d > max_off_axis_deg + 1e-9:
+            continue
+        dr = math.radians(d)
+        candidates.append(nearest - dr)
+        candidates.append(nearest + dr)
+
+    dedup_deg = as_float(prior_cfg.get("dedup_deg"), 5.0)
+    dedup_rad = math.radians(dedup_deg)
+    out: List[float] = []
+    for cand in candidates:
+        wrapped = ((cand + math.pi) % (2.0 * math.pi)) - math.pi
+        if any(angle_diff_rad(wrapped, existing) < dedup_rad for existing in out):
+            continue
+        out.append(wrapped)
+    return out
+
+
+def _major_gain_ok(current_metrics: Dict[str, Any], candidate_metrics: Dict[str, Any], prior_cfg: Dict[str, Any]) -> bool:
+    if int(candidate_metrics.get("validity", 0)) != 1:
+        return False
+    if int(current_metrics.get("Adopt_core", 0)) == 1 and int(candidate_metrics.get("Adopt_core", 0)) == 0:
+        return False
+    if int(current_metrics.get("Adopt_entry", 0)) == 1 and int(candidate_metrics.get("Adopt_entry", 0)) == 0:
+        return False
+    if int(current_metrics.get("Adopt_core", 0)) == 0 and int(candidate_metrics.get("Adopt_core", 0)) == 1:
+        return True
+    if int(current_metrics.get("Adopt_entry", 0)) == 0 and int(candidate_metrics.get("Adopt_entry", 0)) == 1:
+        return True
+
+    major = prior_cfg.get("major_gain_thresholds") if isinstance(prior_cfg.get("major_gain_thresholds"), dict) else {}
+    if as_float(candidate_metrics.get("clr_feasible"), 0.0) - as_float(current_metrics.get("clr_feasible"), 0.0) >= as_float(major.get("clr_feasible"), 0.03):
+        return True
+    if as_float(candidate_metrics.get("C_vis_start"), 0.0) - as_float(current_metrics.get("C_vis_start"), 0.0) >= as_float(major.get("C_vis_start"), 0.05):
+        return True
+    if as_float(candidate_metrics.get("OOE_R_rec_entry_surf"), 0.0) - as_float(current_metrics.get("OOE_R_rec_entry_surf"), 0.0) >= as_float(major.get("OOE_R_rec_entry_surf"), 0.10):
+        return True
+    return False
+
+
+def _rotation_penalty(
+    layout: Dict[str, Any],
+    obj: Dict[str, Any],
+    yaw_rad: float,
+    current_metrics: Dict[str, Any],
+    candidate_metrics: Dict[str, Any],
+    config: Dict[str, Any],
+    protocol: str,
+) -> float:
+    prior_cfg = _alignment_prior_cfg(config, protocol)
+    if not _use_alignment_prior(obj, prior_cfg):
+        return 0.0
+    axis = room_axis_for_object(layout, obj)
+    deviation = orthogonal_deviation_rad(yaw_rad, axis)
+    if deviation <= 1e-9:
+        return 0.0
+
+    max_off_axis_deg = as_float(prior_cfg.get("max_off_axis_deg"), 15.0)
+    max_off_axis_rad = math.radians(max_off_axis_deg)
+    if deviation > max_off_axis_rad + 1e-9:
+        return float("inf")
+    if not _major_gain_ok(current_metrics, candidate_metrics, prior_cfg):
+        return float("inf")
+    weight = as_float(prior_cfg.get("rotation_penalty_weight"), 0.5)
+    return weight * (deviation / max_off_axis_rad) ** 2
 
 
 def _select_target_object(
@@ -164,13 +412,14 @@ def run_refinement(
     current_metrics, current_debug = evaluate_layout(current, baseline_layout, config)
     current_score = _score(current_metrics)
     protocol = _recovery_protocol(config)
+    prior_cfg = _alignment_prior_cfg(config, protocol)
+    overlap_ratio_max = 0.0 if prior_cfg is None else as_float(prior_cfg.get("overlap_ratio_max"), 0.0)
+    wall_margin_m = 0.0 if prior_cfg is None else as_float(prior_cfg.get("wall_margin_m"), 0.0)
+    door_keepout_radius_m = 0.0 if prior_cfg is None else as_float(prior_cfg.get("door_keepout_radius_m"), 0.0)
 
-    room_poly = current["room"]["boundary_poly_xy"]
+    door_centers = _collect_door_centers(current)
     changed_ids: Set[str] = set()
     logs: List[Dict[str, Any]] = []
-
-    rot_rad = math.radians(rot_deg)
-    rot_candidates = (0.0,) if protocol == "clutter_assisted" else (-rot_rad, 0.0, rot_rad)
 
     for iteration in range(1, max_iterations + 1):
         target_id = _select_target_object(current, current_debug, config, changed_ids, max_changed_objects)
@@ -180,6 +429,9 @@ def run_refinement(
         base_obj = _find_object(current, target_id)
         if base_obj is None:
             break
+        room_poly = room_polygon_for_object(current, base_obj) or current["room"]["boundary_poly_xy"]
+
+        yaw_candidates = _candidate_yaws(current, base_obj, config, protocol, rot_deg)
 
         best_layout = None
         best_metrics = None
@@ -189,8 +441,9 @@ def run_refinement(
 
         for dx in (-step_m, 0.0, step_m):
             for dy in (-step_m, 0.0, step_m):
-                for dtheta in rot_candidates:
-                    if abs(dx) < 1e-12 and abs(dy) < 1e-12 and abs(dtheta) < 1e-12:
+                for yaw_candidate in yaw_candidates:
+                    current_yaw = as_float((base_obj.get("pose_xyz_yaw") or [0.0, 0.0, 0.0, 0.0])[3], 0.0)
+                    if abs(dx) < 1e-12 and abs(dy) < 1e-12 and angle_diff_rad(yaw_candidate, current_yaw) < 1e-12:
                         continue
 
                     candidate = copy.deepcopy(current)
@@ -201,10 +454,18 @@ def run_refinement(
                     pose = list(obj.get("pose_xyz_yaw") or [0.0, 0.0, 0.0, 0.0])
                     pose[0] = as_float(pose[0], 0.0) + dx
                     pose[1] = as_float(pose[1], 0.0) + dy
-                    pose[3] = as_float(pose[3], 0.0) + dtheta
+                    pose[3] = yaw_candidate
                     obj["pose_xyz_yaw"] = pose
 
                     if not _object_inside_room(obj, room_poly):
+                        continue
+                    if wall_margin_m > 0.0 and _room_edge_clearance(obj, room_poly) + 1e-9 < wall_margin_m:
+                        continue
+                    if door_keepout_radius_m > 0.0:
+                        c = _object_center(obj)
+                        if any(_distance(c, dc) < door_keepout_radius_m - 1e-9 for dc in door_centers):
+                            continue
+                    if overlap_ratio_max > 0.0 and _has_excess_overlap(candidate, target_id, overlap_ratio_max):
                         continue
 
                     metrics, debug = evaluate_layout(candidate, baseline_layout, config)
@@ -217,13 +478,23 @@ def run_refinement(
                     if _clearance_value(metrics) + 1e-9 < _clearance_value(current_metrics):
                         continue
 
-                    score = _score(metrics)
+                    rotation_penalty = _rotation_penalty(candidate, obj, yaw_candidate, current_metrics, metrics, config, protocol)
+                    if not math.isfinite(rotation_penalty):
+                        continue
+
+                    score = _score(metrics, extra_penalty=rotation_penalty)
                     if score > best_score + 1e-9:
                         best_score = score
                         best_layout = candidate
                         best_metrics = metrics
                         best_debug = debug
-                        best_move = {"object_id": target_id, "dx": dx, "dy": dy, "dtheta_deg": math.degrees(dtheta)}
+                        best_move = {
+                            "object_id": target_id,
+                            "dx": dx,
+                            "dy": dy,
+                            "yaw_deg": math.degrees(yaw_candidate),
+                            "rotation_penalty": rotation_penalty,
+                        }
 
         if best_layout is None:
             break
